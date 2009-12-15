@@ -1,0 +1,25 @@
+test01 Richardson solver (Jacobi preconditioner)
+test02 Chebychev solver (Jacobi preconditioner)
+test03 CG solver (SOR preconditioner)
+test04 GMRES solver (Jacobi preconditioner)
+test05 TCQMR solver (SOR preconditioner)
+test06 BCGS solver (Jacobi preconditioner)
+test07 CGS solver (SOR preconditioner)
+test08 TFQMR solver (SOR preconditioner)
+test09 Conjugate Residual solver (SOR preconditioner)
+test10 Least Squares solver (Jacobi preconditioner)
+test11 BiCG solver (Jacobi preconditioner)
+test12 MG preconditioner (all preconditioner tests are with GMRES solver)
+test13 DD preconditioner
+test14 coarse grid preconditioner
+test15 Jacobi preconditioner
+test16 Block Jacobi preconditioner
+test17 SOR preconditioner
+test18 Eisenstat preconditioner    TEMP doesn't work (error 56)
+test19 ICC preconditioner          TEMP doesn't work (error 56)
+test20 ILU preconditioner          TEMP doesn't work (error 56)
+test21 Additive Schwarz preconditioner
+test22 matrix free, GMRES solver, MG preconditioner
+test23 degree=4, CG solver, SOR preconditioner
+
+TEMP not testing parameters to PETSc methods

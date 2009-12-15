@@ -1,0 +1,581 @@
+This file is no longer maintained.  This information is now in the
+Upgrading subsection of the Release Notes in the User's Guide, which can
+be found in <phaml_home>/doc/user_guide.pdf or on the PHAML web page
+http://math.nist.gov/phaml
+
+
+
+
+This file contains any violations of upward compatibility, and clearly
+spells out how to address them.  By upward compatibility I mean that the
+user's code should not have to be changed when upgrading to a new version.
+It is likely that mkmkfile.sh (the Makefile generation script) will change
+with each release, so you should keep the original to do a "diff" to see
+what changes you made.
+
+Version 1.3.1
+-------------
+
+Fully compatible.
+
+Version 1.3.0
+-------------
+
+You must add a new subroutine to the file where you define your problem,
+usually pde.f90.  The function subroutine regularity was added for guiding
+hp-adaptive refinement by the APRIORI strategy.  You can copy a dummy version
+from the end of examples/simple/pde.f90.
+
+The symbolic constants for hp_strategy have been changed.  If you are
+using hp adaptive refinement, you will have change this.  HP_AS2 is now
+HP_APRIORI.  HP_RAS1E is now HP_PRIOR3P_E.  HP_RAS1H1 is now HP_PRIOR3P_H1.
+
+If you are using the AS2 (now APRIORI) hp-adaptive stragegy, the means for
+specifying irregularity as been changed.  The argument singular_points
+has been removed.  Instead, you must write a function subroutine called
+regularity to indicate that a triangle contains an irregular part of the
+solution.  See the end of examples/L-domain/pde.f90 for a working example of
+this subroutine.  To duplicate prior behavior, regularity should return a
+value less than 1.0 if one of the given triangle vertices is a point that
+you would have given in singular_points.
+
+The default value for max_deg was changed to 22, which is the maximum for
+the new higher order quadrature rules.  To duplicate the previous behavior,
+use max_deg=10.
+
+The order of the quadrature rule for elemental matrices was increased to be
+exact for the mass matrix instead of the stiffness matrix.
+If you have a u term in your PDE or your right hand side is not a polynomial
+of sufficiently small degree, this will cause a slight change in your
+results.  To duplicate the previous behavior, use inc_quad_order=-1
+for linear elements, or -2 for high order elements.
+
+Optional arguments for second derivatives were added to phaml_evaluate_old,
+but not at the end of the list.  If you used this routine with comp and/or
+eigen given as non-keyword arguments, you will need to change that call.
+
+In phaml_evaluate, the returned solution soln was replaced by u, ux, uy,
+uxx, uyy.  If you designated soln as a keyword argument, it will have to be
+changed to u.  If you used this routine with comp and/or eigen given as
+non-keyword arguments, you will need to change that call.
+
+Many of the changes in this release will cause slight changes in the
+numerical results.  Your computed solution should have roughly the same
+accuracy, but don't expect it to be exactly the same as that computed by
+the previous release.
+
+mkmkfile.sh from 1.2.0 should still work.
+
+Version 1.2.0
+-------------
+
+There were slight changes to how most of the error indicators are computed.
+You might see a small difference in your results.
+
+The option to compute two error indicators was removed.  If you were using
+this, you might need to change some of the arguments to phaml_solve_pde
+and phaml_query by removing the 2 or 12 from the end of the symbolic constant.
+
+The default error indicator was changed to EXPLICIT_ERRIND which is much
+faster.  This will cause a small change in your results.  To (nearly) get
+the previous results, use error_estimator=LOCAL_PROBLEM_H.
+
+The was a change in how the initial condition is assigned from function iconds.
+If you use this, you might see a slight change in your results.
+
+The restriction that neighboring elements differ in degree by at most 1 was
+removed.  If you use p or hp refinement, you might see a slight change
+in your results.
+
+The interface to PETSc was upgraded to version 2.3.3.  If you are using an
+older version of PETSc then you may need to make some changes in mkmkfile.sh,
+petsc_init.F90 and petsc_interf.F90.  Search for "before" to find the changes.
+
+The control over selecting what version of hypre you use (if you use hypre)
+was removed from mkmkfile.sh.  Instead, it is controlled by commenting out
+source lines of hypre_fix.c.  If you use hypre, check that file to see if you
+need to make any changes.  Also check mkmkfile.sh and search for "hypre
+version".
+
+There are changes in mkmkfile.sh that might effect you if you use PETSc.
+Otherwise, mkmkfile.sh from Version 1.1.0 should still work.
+
+Version 1.1.0
+-------------
+
+The multigrid F cycle was removed, including FMG_PRECONDITION.  If you used
+the FMG preconditioner, replace it with MG_PRECONDITION with a sufficient
+number of cycles.
+
+The test for convergence of the hierarchical basis multigrid method was
+changed from using the absolute residual to using the relative residual.
+It is possible that this may change your answers slightly (perhaps in the
+third significant digit).  There is no way to recover the previous behavior.
+
+There are important changes in mkmkfile.sh, so you will have to make a new one.
+
+Version 1.0.0
+-------------
+
+To facilitate more general error estimators and hp adaptive strategies,
+the notion of always having h and p error indicators was replaced by having
+an error indicator and sometimes having a second error indicator.  This
+caused several changes in the argument lists and defined constants.  The
+defaults remain equivalent.  If you used any of the following, you should
+make the substitution:
+
+arguments to phaml_solve_pde:
+
+  term_h_energy_err --> term_energy_err
+  term_p_energy_err --> term_energy_err2
+  term_h_Linf_err   --> term_Linf_err
+  term_p_Linf_err   --> term_Linf_err2
+  term_h_L2_err     --> term_L2_err
+  term_p_L2_err     --> term_L2_err2
+
+arguments to phaml_query:
+
+  max_h_error_indicator   --> max_error_indicator
+  max_p_error_indicator   --> max_error_indicator2
+  energy_h_error_estimate --> energy_error_estimate
+  energy_p_error_estimate --> energy_error_estimate
+  linf_h_error_estimate   --> linf_error_estimate
+  linf_p_error_estimate   --> linf_error_estimate2
+  l2_h_error_estimate     --> l2_error_estimate
+  l2_p_error_estimate     --> l2_error_estimate2
+
+defined constants for print_errest_what:
+
+  those ending with _HERREST  now end with _ERREST
+  those ending with _PERREST  now end with _ERREST2
+  those ending with _HPERREST now end with _ERREST12
+
+If you use task=SET_INITIAL, you now get a warning if the error estimator
+is not INITIAL_CONDITION.  To get rid of the warning, either use
+error_estimator=INITIAL_CONDITION or print_warnings=.false.
+
+There is now a choice of what hp-adaptive strategy to use, and the default
+is not the strategy in previous versions.  If you use hp-adaptive refinement
+and want the same strategy as in the past, use hp_strategy=HP_BIGGER_ERRIND.
+
+mkmkfile.sh has a couple minor fixes that may or may not effect you.  You
+can probably use your mkmkfile.sh from 0.9.26, but would be better off
+modifying the new one.
+
+Version 0.9.26
+--------------
+
+In subroutines phaml_integrate, phaml_scale, phaml_evaluate,
+phaml_evaluate_old and phaml_query, the argument evec was renamed to eigen.
+If you use one of these routines and pass evec as a keyword argument, you
+will need to change it to eigen.
+
+You must change your subroutines iconds, trues, truexs and trueys.  Formerly,
+these routines received an integer, soln, that encoded the component (for
+multicomponent solutions) and eigenfunction (for eigenvalue problems when
+more than one eigenvalue is computed) in a single argument.  They now
+receive two integers, comp and eigen, that specify these choices individually.
+If you do not use these arguments (i.e. you are solving a scalar boundary
+value problem) and you have these routines in pde.f90 and formerly used soln
+as the name of the argument (as in the examples subdirectory), then you can
+probably make this change with the command
+sed -e "s/soln/comp,eigen/;s/trues(x,y,1)/trues(x,y,1,1)/" pde.f90 > newpde
+and then use "diff pde.f90 newpde" to see what changes happened and make
+sure it didn't destroy your pde.f90.  If it looks good, move pde.f90 to a
+different name (in case the new one isn't right) and move newpde to pde.f90.
+If you are solving a multicomponent problem or an eigenvalue problem, you
+will probably need to edit these routines by hand.
+
+mkmkfile.sh has important changes; you should use the new version.
+
+Version 0.9.25
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.24 should still work.
+
+Version 0.9.24
+--------------
+
+Fully compatible.
+mkmkfile.sh has many changes; you should use the new version.
+
+Version 0.9.23
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.22 should still work.
+
+Version 0.9.22
+--------------
+
+This is a major upgrade to PHAML with many changes to the user interface.
+Except as noted, all references to arguments are arguments of phaml_solve_pde.
+
+The domain can now be defined through three subroutines boundary_npiece,
+boundary_param and boundary_point.  You must provide these subroutines
+even if you are still defining the domain through the Triangle data files.
+You can copy dummy versions of them from examples/simple/pde.f90.  For an
+example of how to use these subroutines to define the boundary, see
+examples/curved/pde.f90.
+
+The method for computing the energy norm of the error has been changed to a
+more accurate approach.  It no longer uses function true_energies_sq; you
+can remove that function from pde.f90 or whereever you have it.  However,
+you must provide functions truexs and trueys with the first derivatives of
+the true solution if you want to print the energy norm of the error.  See
+USER_GUIDE and the examples.
+
+Creation of the initial grid was moved from phaml_solve_pde to phaml_create.
+In that process, the arguments eq_type and triangle_files were moved to
+phaml_create.  You must move them if you have them in your call to
+phaml_solve_pde.  INITIAL_CONDITION is no longer valid as a value for eq_type;
+instead use task=SET_INITIAL.  init_form has been replaced by task, to better
+reflect the purpose of the argument.  USE_AS_IS and NEW_GRID are no longer
+supported in the new context.  The new default for task is BALANCE_REFINE_SOLVE
+which behaves the same as the old init_form=USE_AS_IS.  For the equivalent of
+the old init_form=NEW_GRID, call phaml_destroy followed by phaml_create.
+
+LAPLACE and HIERARCHIC_QUADRASECT have been removed from the list of error
+indicator methods.  If you used one of them, you will have to change to a
+different method -- see the USER_GUIDE for the list.  The default for
+error_estimator has been changed to LOCAL_PROBLEM.  To use the same indicator
+as the old default, use error_estimator=HIERARCHICAL_COEFFICIENT.
+
+The default for debug_command was changed from dbx to gdb.  To use dbx as
+the debugger, use debug_command="dbx" in phaml_create.
+
+max_lev is no longer a termination criterion; elements are quietly not refined
+if their level would exceed max_lev.
+
+You now have control over exactly which norms of the error and error estimates
+are printed.  To get the old behaviour, use print_error_what=ENERGY_LINF_ERR
+and print_errest_what=ENERGY_LINF_HERREST.
+
+logical uniform was replaced by reftype.  To get a uniform h refinement of the
+grid (the same as uniform=.true.), use reftype=H_UNIFORM.  To get an adaptive
+h refinement of the grid (the same as uniform=.false.), use reftype=H_ADAPTIVE.
+
+The default for refterm was changed to DOUBLE_NEQ_SMOOTH.  To get the old
+behaviour, use refterm=DOUBLE_NVERT.
+
+The default way of determining how many multigrid cycles to perform has
+changed from using a fixed number of cycles to iterating until the residual
+is below some value.  To get the old behaviour, use mg_tol=MG_NO_TOL.
+
+final_solves and final_mg_cycles were removed.  To get extra solutions at
+the end, call phaml_solve_pde again with task=SOLVE_ONLY.
+
+The selection of which solution to use, when there are multiple components
+(system of equations) or multiple eigenvectors, in phaml_integrate,
+phaml_scale, phaml_evaluate and phaml_query has changed.  Formerly you
+encoded the component and eigenvector into a single variable.  They are now
+passed separately through comp and evec.  If you used this feature with a
+system of elliptic boundary value problems, there is no change.  If you used it
+with a multiple eigenvalue problem, you must pass the choice through evec
+instead of comp.  If you used it with a system of elliptic eigenvalue problems
+with multiple eigenvalues, you should pass the choices individually through
+comp and evec instead of encoding them in comp.
+
+overlap was removed.  Only one amount of overlap at the partition boundaries
+is now supported.
+
+draw_reftree_who was removed from phaml_create and draw_reftree_when was
+removed from phaml_solve_pde.  The graphics no longer supports drawing the
+refinement tree.
+
+comm_freq was removed.  You can no longer limit how often communication occurs.
+
+partition_size was removed.  You can no longer specify the initial memory
+allocation.
+
+num_ggb was removed.  Implementation of the Generalized Global Basis was
+never completed and has been removed.
+
+In phaml_query, the following arguments were renamed for consistency:
+  max_error             -> linf_error
+  max_error_indicator   -> max_h_error_indicator
+  max_error_estimate    -> linf_h_error_estimate
+  energy_error_estimate -> energy_h_error_estimate
+  max_solution          -> linf_solution
+
+Changes have been made to mkmkfile.sh.
+
+Version 0.9.21
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.19 or later should still work.
+
+Version 0.9.20
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.19 should still work.
+
+Version 0.9.19
+--------------
+
+The nomenclature was changed from nodes to vertices.  Consequently the
+following keyword argument names and symbolic constants must be changed:
+
+Keyword arguments in phaml_solve_pde:
+max_node -> max_vert
+sequential_node -> sequential_vert
+
+Keyword arguments in phaml_query:
+nnode -> nvert
+nnode_proc -> nvert_proc
+nnode_own -> nvert_own
+
+Symbolic constants:
+BALANCE_NODES -> BALANCE_VERTICES
+DOUBLE_NNODE -> DOUBLE_NVERT
+KEEP_NNODE -> KEEP_NVERT
+
+mkmkfile.sh was changed.  You cannot use an old one and will have to
+modify it with your paths, etc.
+
+Version 0.9.18
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.17 should still work.
+
+Version 0.9.17
+--------------
+
+In this version the burdon of creating of the initial grid was removed from
+the user.  The initial grid is now created by PHAML from data files in the
+"triangle" data format.  For some domains, these files can be found in the
+examples.  In general, the user will create either a .node or .poly file to
+define the domain, and then run triangle with the -n, -e, -q and -j flags to
+create the required .node, .ele, .neigh and .edge files.  Information on
+triangle and the source code for triangle are available at
+http://www-2.cs.cmu.edu/~quake/triangle.html
+
+Changes in your code:
+
+1) delete subroutine init_grid from your pde.f90 or whereever you have it.
+
+2) bconds now takes another argument, bmark:
+subroutine bconds(x,y,bmark,itype,c,rs)
+integer, intent(in) :: bmark
+
+(bmark is the boundary marker defined in the triangle data files, and can be
+used to determine what boundary condition to use in mixed boundary conditions.
+See examples/elliptic.)
+
+Version 0.9.16
+--------------
+
+The addition of support for coupled systems required a change in the
+interface of the user provided routines that define the differential
+equations and boundary conditions, which also makes a good time to remove
+some old ideas that didn't pan out.  In general 1) the new routine names are
+a plural version of the old names (e.g. bconds instead of bcond), 2) the
+return arguments are no longer optional, 3) the point at which to evaluate
+is now a scalar instead of an array of points, 4) argument names have changed,
+5) the return values are arrays to support coupled systems, aka multi-
+component solutions.
+
+See the examples for the new versions of the routines, in particular look at
+examples/simple/pde.f90 to get started.
+
+You should eventually rewrite your routines with the new interface, but there
+is a quick fix for the impatient.  The file doc/pde_upgrade_0.9.16.f90
+contains versions of the new routines that call the old routines.  If you
+simply insert this file into the file that contains your pde, bcond, etc.,
+it should work.
+
+Version 0.9.15
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.14 should still work.
+
+Version 0.9.14
+--------------
+
+predictive has been replaced by prebalance and postbalance for more flexability.
+Use the following substitutions to replace predictive:
+
+predictive = .true.    =>    prebalance =  BALANCE_ELEMENTS
+                             postbalance = BALANCE_NONE
+
+predictive = .false.   =>    prebalance =  BALANCE_NONE
+                             postbalance = BALANCE_ELEMENTS
+
+mkmkfile.sh from 0.9.13 should still work.
+
+Version 0.9.13
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.12 should still work.
+
+Version 0.9.12
+--------------
+
+Renamed petsc_ilu_dtcount to petsc_ilu_maxrowcount.  If you used this as a
+keyword argument, you should change it.
+mkmkfile.sh from 0.9.11 should still work.
+
+Version 0.9.11
+--------------
+
+Fully compatible.  mkmkfile.sh from 0.9.10 should still work
+
+Version 0.9.10
+--------------
+
+Fully compatible.  However, for eigenvalue problems the scaling of the
+solution has changed, so you may see some differences.
+mkmkfile.sh from 0.9.9 should still work
+
+Version 0.9.9
+-------------
+
+Fully compatible.
+
+Version 0.9.8
+-------------
+
+petsc_eisenstat_nodiagonalscaling was changed to petsc_eisenstat_nodiagscaling
+because it was more than 31 characters.  If you use this option, you will
+have to change it to the new name.
+
+If you print the error, the output will not be the same as in previous
+versions.  An estimate of the max norm of the error has been added.  If
+you set true=huge(0.0_my_real) then the error will not be printed, only
+the error estimates.
+
+Version 0.9.7
+-------------
+
+Some parameters that were passed on to optional packages were replaced by
+package-specific parameters.  In particular, the following parameters to
+phaml_solve_pde have been removed: krylov_dim, iterations
+If you use any of them, you should make the following substitutions in your
+call to phaml_solve_pde:
+krylov_dim --> arpack_ncv
+iterations --> petsc_maxits or dd_iterations
+
+Version 0.9.6
+-------------
+
+Fully compatible, for user application programs.
+
+But the shell variables for mkmkfile.sh have changed.  If you use PHAML_LOADBAL,
+PHAML_EIGEN or PHAML_SOLVER, they have been replaced with PHAML_ZOLTAN,
+PHAML_ARPACK, PHAML_PETSC and PHAML_MUMPS.  For example, PHAML_EIGEN=arpack
+has been replaced with PHAML_ARPACK=yes.
+
+Version 0.9.5
+-------------
+
+Fully compatible.
+
+Version 0.9.4
+-------------
+
+The names of all public routines (create, solve_pde, etc.) are now prefixed
+with phaml_ (phaml_create, phaml_solve_pde, etc.) to avoid possible namespace
+conflicts.  You will have to change your application to use these names.
+This can either be done by changing all the calls, or by using the
+renaming feature of the use statement (use phaml, create => phaml_create).
+
+[Note: As of version 0.9.6 both FORMATTED and UNFORMATTED are supported,
+so the following paragraph no longer applies.]
+The files written when using subroutines store/restore are now UNFORMATTED,
+making them considerably smaller.  Files written by previous versions, which
+are FORMATTED, can still be read, but this capability will be removed in a
+future version.  Therefore, you should convert these files if will need them
+in the future.  To do this, popen the files as FORMATTED and call restore.
+Then popen new files as UNFORMATTED and call store.
+
+The soln argument in popen and pclose has been moved from the last argument
+to the first argument, to more easily accomodate optional arguments like
+form in popen.  Any programs that call popen or pclose will have to be
+changed accordingly.
+
+The filename argument in popen has been changed to file, so that the
+arguments for popen and pclose all agree with the Fortran open and
+close statement.  If you used a keyword argument for filename in a
+call to popen, you will have to change it from filename to file.
+
+The approach to compiling PHAML has been changed from including the PHAML
+code with the application, to building a library that links with the
+application.  This will require several changes in code that worked with
+version 0.9.3:
+
+  The main mkmkfile.sh is now in the root directory instead of src.  Make your
+  system specific changes (path names, etc.) in this file.  You should not
+  have to change mkmkfile.sh in src or examples.
+
+  You are no longer required to write your application in the four files
+  user.f90, pde.f90, usermod.f90 and user77.f.  You can now use whatever
+  files you want for your application; see the examples.  You are no longer
+  required to have a module phaml_user_mod.
+
+  You will have to make a Makefile for your application.  After running
+  mkmkfile.sh you can look at the Makefiles in the examples for guidance.
+  Or you can take a mkmkfile.sh from one of the examples and modify it for your
+  application.  If you place your application under the examples directory
+  and it contains a mkmkfile.sh, then running mkmkfile.sh in the root directory
+  will build the Makefile for your application.
+
+  Running "make" from the root directory will build the PHAML library, and
+  place the library in the lib directory and the module files in the modules
+  directory.  lib and modules will also contain a CONFIG file indicating the
+  system configuration for which the library was built.  "make clean" will
+  remove all files created by make (.o etc) in src and the examples.
+  "make reallyclean" will also remove the contents of lib and modules, and
+  the Makefiles.
+
+  The array pde(:) is now provided in module phaml.  You must remove it
+  from phaml_user_mod (if you still have phaml_user_mod).  It is an allocatable
+  array, and must be allocated in your program if you use it.
+
+  subroutine update_usermod must be an external subroutine. You must remove
+  it from phaml_user_mod and place it somewhere outside of modules.  If your
+  update_usermod calls exchange_user_param (which it should unless it's a
+  dummy version), then you must now include a "use phaml" statement and change
+  the name from exchange_user_param to master_to_slaves. (exchange_user_param
+  has been renamed and placed in module phaml.)
+
+  You must provide a new subroutine called phaml_integral_kernel.  See file
+  pde.f90 in example simple for a dummy version that you can use if you are
+  not computing any integrals of the computed solution.
+
+Version 0.9.3
+-------------
+The file user77.f was added as a place the user can put legacy fixed
+form codes.  It has been added to the makefile, therefore you must have
+a file by this name.  If you just need a dummy version, you can use
+the one in the examples/simple directory.
+
+The Makefile has changed (addition of user77.f and calgo582.f), so you
+will have to use the new version of mkmkfile.sh.  You should do a diff
+between your mkmkfile.sh and the original mkmkfile.sh in version 0.9.2
+to see what changes you have made, and make those changes to the new
+mkmkfile.sh.
+
+Version 0.9.2
+-------------
+
+Definition of the grid_type has replaced the component "reverse" with "in",
+"out" and "order".  This requires changes in subroutine init_grid in
+file pde.f90.  Compare examples/simple/pde.f90 of this version with the
+same file from a previous version to see the changes required.
+Also, you can now have Zoltan determine in, out and order by setting
+auto_coarse_order=.true. in init_grid (the variable is in module global).
+However, if you do not use Zoltan then you must set these variables.  The
+examples show how to set them for a rectangular domain; more complicated
+grids will probably require contacting the author.
+
+Version 0.9.1
+-------------
+
+mkmkfile.sh has changed.  If you customized it, you will have to do that
+again with the new version.
+
+Since support for PETSc was added, the internal implementations of Conjugate
+Gradients and BCG-Stab are no longer needed.  The following values for
+solver or preconditioner are no longer supported:
+   CG_SOLVER, use PETSC_CG_SOLVER instead
+   BCGSTAB_SOLVER, use PETSC_BCGS_SOLVER instead
+   DIAG_PRECONDITION, use PETSC_JACOBI_PRECONDITION instead

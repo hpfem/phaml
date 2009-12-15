@@ -1,0 +1,16 @@
+This example illustrates solving a nonlinear elliptic PDE by Picard iteration.
+The PDE is
+
+                 u
+   u   + u   = -e   in Omega = (0,1)X(0,1)
+    xx    yy
+
+           u = 0    on the boundary of Omega
+
+
+The Picard iteration is
+
+                        (n)
+    (n+1)    (n+1)     U
+   U      + U      = -e
+    xx       yy

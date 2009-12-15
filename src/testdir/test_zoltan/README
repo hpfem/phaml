@@ -1,0 +1,8 @@
+test01 RCB
+test02 Octree
+test03 REFTREE
+test04 RIB
+test05 HSFC
+test06 FILE
+test07 ParMETIS
+test08 DRUM  (DRUM does not work on a computer that is not on a network)

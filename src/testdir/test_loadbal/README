@@ -1,0 +1,7 @@
+test1  prebalance elements
+test2  prebalance vertices
+test3  prebalance equations
+test4  postbalance elements
+test5  postbalance vertices
+test6  postbalance equations
+test7  prebalance elements and postbalance equations, degree=4

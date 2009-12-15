@@ -1,0 +1,11 @@
+test01  smallest eigenvalue
+test02  3 smallest eigenvalues
+test03  3 eigenvalues closest to 50
+test04  scale by SCALE_LINF
+test05  scale by SCALE_L2
+test06  scale by SCALE_M
+test07  degree=4
+test08  arpack_ncv, arpack_maxit and arpack_tol
+test09  arpack and eigenvalue query options
+test10  EIGEN_LEFT
+test11  EIGEN_RIGHT

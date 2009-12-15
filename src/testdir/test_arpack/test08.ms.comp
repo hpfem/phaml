@@ -1,0 +1,170 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from the master process
+  PDE id is     0
+  Number of slave processors is     4
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert                 1000
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     MASTER
+  print_linsys_when  NEVER
+  print_error_when   PHASES
+  print_error_who    MASTER
+  print_error_what   ENERGY_LINF_ERR
+  print_errest_what  ENERGY_LINF_ERREST
+  print_time_when    NEVER
+  print_eval_when    PHASES
+  print_eval_who     MASTER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           250
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles                  10
+  mg_tol             MG_NO_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+  eigensolver        ARPACK_SOLVER
+  num_eval                    1
+  lambda0            -infinity
+  scale_evec         SCALE_LINF
+  arpack_ncv                  5
+  arpack_maxit                1
+  arpack_tol          1.0000000000E-01
+---------------------------------------------------------
+
+Total Grid:
+   number of vertices      =         145
+   number of leaf elements =         256
+   number of levels        =           1
+   degrees of freedom      =         145
+   min and max degree      =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       8.5658380409E-01
+   energy error estimate      3.3354746408E-01
+      effectivity             3.8939268112E-01
+   Linf norm of error         1.3375783342E-01
+   Linf error estimate        9.8652144015E-02
+      effectivity             7.3754292734E-01
+
+Total Grid:
+   number of vertices      =         283
+   number of leaf elements =         532
+   number of levels        =           7
+   degrees of freedom      =         283
+   min and max degree      =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       3.7056708316E-01
+      reduced by              4.3261042456E-01
+   energy error estimate      9.2466417340E-02
+      reduced by              2.7722116730E-01
+      effectivity             2.4952679702E-01
+   Linf norm of error         2.6783071225E-02
+      reduced by              2.0023553417E-01
+   Linf error estimate        4.2286884929E-03
+      reduced by              4.2864638525E-02
+      effectivity             1.5788661642E-01
+
+Eigenvalues and error estimates:
+     9.8569429511E+00  6.2450976312E-02
+
+Total Grid:
+   number of vertices      =         591
+   number of leaf elements =        1148
+   number of levels        =           8
+   degrees of freedom      =         591
+   min and max degree      =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       1.9573128252E-01
+      reduced by              2.6409696302E-01
+   energy error estimate      5.0403383215E-02
+      reduced by              2.7254967082E-01
+      effectivity             2.5751317095E-01
+   Linf norm of error         6.7829803044E-03
+      reduced by              2.5325625457E-01
+   Linf error estimate        1.3489370158E-03
+      reduced by              3.1899654422E-01
+      effectivity             1.9887084368E-01
+
+Eigenvalues and error estimates:
+     9.7155816750E+00  2.1137882996E-02
+
+Total Grid:
+   number of vertices      =        1295
+   number of leaf elements =        2556
+   number of levels        =          10
+   degrees of freedom      =        1295
+   min and max degree      =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       1.2472352060E-01
+      reduced by              6.3721812375E-01
+   energy error estimate      3.1692247767E-02
+      reduced by              6.2877223204E-01
+      effectivity             2.5410000947E-01
+   Linf norm of error         3.7085980514E-03
+      reduced by              5.4675052632E-01
+   Linf error estimate        5.4297128078E-04
+      reduced by              4.0251788958E-01
+      effectivity             1.4640877044E-01
+
+Eigenvalues and error estimates:
+     9.6822301408E+00  8.2965720676E-03
+
+Total Grid:
+   number of vertices      =        1295
+   number of leaf elements =        2556
+   number of levels        =          10
+   degrees of freedom      =        1295
+   min and max degree      =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       1.2472352060E-01
+   energy error estimate      3.1692247767E-02
+      effectivity             2.5410000947E-01
+   Linf norm of error         3.7085980514E-03
+   Linf error estimate        5.4297128078E-04
+      effectivity             1.4640877044E-01
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           3
+termination condition:
+  maximum vertices achieved
+---------------------------------------------------------

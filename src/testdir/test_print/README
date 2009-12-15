@@ -1,0 +1,8 @@
+test01 MASTER PHASES
+test02 MASTER FINAL no header or trailer
+test03 MASTER FREQUENTLY
+test04 MASTER TOO_MUCH
+test05 MASTER_ALL PHASES
+test06 SLAVES FINAL plus header and trailer
+test07 EVERYONE PHASES
+test08 MASTER relative error

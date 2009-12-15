@@ -1,0 +1,29 @@
+This is the same as the simple example, except that there are several
+domains provided.  To try different domains you must have
+Jonathan Richard Shewchuk's mesh generation program Triangle.
+http://www-2.cs.cmu.edu/~quake/triangle.html
+
+This requires that you generate .node, .ele, .edge and .neigh files.
+They are provided for the superior domain; for the others you must create
+them with Triangle.  Triangle creates .nod and .ele files by default.
+.edge and .neigh files are generated with the -e and -n switch of Triangle.
+You should also use -q to get a quality mesh, and -j to jettison any
+unused vertices.  e.g.
+
+triangle -e -n -q -j mesh01.poly
+
+The number of attributes must be 0.  The number of boundary markers can be
+either 0 or 1, and given for either nodes or segments or both.  If only
+node boundary markers or no boundary markers are given, you can define the
+domain with a .node file.  If segment boundary markers are given, you must
+define a .poly file.  The boundary markers are passed to subroutine bcond
+through bmark and can be used to determine which boundary condition to use
+in mixed boundary conditions.  See the information on boundary markers on
+the Triangle web page for further information.
+
+The domains from mesh01.poly - mesh09.poly were taken from
+http://www.csit.fsu.edu/~burkardt/f_src/test_mesh/test_mesh.html
+
+superior.poly was obtained from
+http://www-2.cs.cmu.edu/~guyb/real-world/assignments/assign4.html
+and is apparently attributed to Jim Rupert.

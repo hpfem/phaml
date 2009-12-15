@@ -1,0 +1,10 @@
+This example shows how to create an initial grid based on a uniform
+ngridx X ngridy coarse grid on a rectangular domain.  Other than
+that, it is the same as the simple example.
+
+The approach used is to write a .poly file containing the grid points of a
+uniform ngridx X ngridy mesh and the boundary edges with bmark, and then run
+triangle to create the triangle data files.  The initial grid will then be an
+ngridx X ngridy array of rectangles each cut into 4 triangles by an X.  See
+subroutine make_data_files in master.f90 for the creation of the .poly file
+and the assignment of bmark values.

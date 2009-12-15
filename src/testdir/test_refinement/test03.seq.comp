@@ -1,0 +1,191 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop            3
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    FINAL
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles          infinity
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =          75
+   degrees of freedom I own =          75
+   min and max degree       =           1          1
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           3
+termination condition:
+  maximum loops through phases achieved
+---------------------------------------------------------
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq                   1000
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            P_UNIFORM
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles          infinity
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =          75
+   degrees of freedom I own =          75
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =         257
+   degrees of freedom I own =         257
+   min and max degree       =           2          2
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =         547
+   degrees of freedom I own =         547
+   min and max degree       =           3          3
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =         945
+   degrees of freedom I own =         945
+   min and max degree       =           4          4
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =        1451
+   degrees of freedom I own =        1451
+   min and max degree       =           5          5
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =        1451
+   degrees of freedom I own =        1451
+   min and max degree       =           5          5
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           4
+termination condition:
+  maximum equations achieved
+---------------------------------------------------------

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# This script can be used to run the PHAML tests on a batch system with
+# PBS or Torque/Maui when LAM is the MPI library.
+# Submit it with "qsub PBStest.lam"
+
+# specify number of processors
+
+#PBS -l nodes=5
+
+# queue size, join stdout and stderr, and pass environment variables to PBS
+
+#PBS -q small
+#PBS -j oe
+#PBS -V
+
+# By default, the noninteractive tests are run.  For a quick test, use
+# WHAT=first.  Or you can specify individual tests, for example WHAT=arpack.
+# Do not omit "what=" and do not request WHAT=interactive.
+
+WHAT=noninteractive
+
+# make sure this script is run by qsub
+
+if [ "x$PBS_NODEFILE" = "x" ] ; then
+  echo "This script must be submitted to qsub."
+  exit 1
+fi
+
+# run the tests.
+
+cd $PBS_O_WORKDIR
+make test what=$WHAT
+
+exit 0

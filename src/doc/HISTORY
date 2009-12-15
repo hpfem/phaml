@@ -1,0 +1,417 @@
+This file is no longer maintained.  This information is now in the Summary
+of Changes subsection of the Release Notes in the User's Guide, which can
+be found in <phaml_home>/doc/user_guide.pdf or on the PHAML web page
+http://math.nist.gov/phaml
+
+
+Version 1.3.1 1/28/08
+
+  - bug in linsys_io.f90; mixed kinds in max
+
+Version 1.3.0 1/24/08
+
+  - added quadrature rules of order 21 to 45 for triangles
+  - changed default max_deg to 22
+  - replaced singular_points with function regularity
+  - renamed HP_AS2 to HP_APRIORI
+  - renamed HP_RAS1E and HP_RAS1H1 to HP_PRIOR2P_E and HP_PRIOR2P_H1
+  - removed degree >= 3 restriction for the PRIOR2P strategy
+  - new parallel implementation of conjugate gradients
+  - added option of printing relative error instead of absolute error
+  - added norms of true solution to phaml_query
+  - added MUMPS nonsymmetric solver
+  - added second derivatives uxx and uyy to phaml_evaluate_oldsoln
+  - added first and second derivatives to phaml_evaluate
+  - reorganized refinement loop
+  - added missing special case to LOCAL_PROBLEM_P error indicator
+  - slight change in order of high order relaxation in HBMG
+  - use quadrature order high enough for exact integrals in phaml_integrate
+  - increased quad order for elemental matrices to be exact for mass matrix
+  - more extensive use of double precision in graphics
+  - removed old farg kludge for MPICH
+  - in graphics, scale true by maxabstrue instead of maxabssolut
+  - improve vertical scaling in graphics
+  - removed extraneous choices for displaying error indicator
+  - added processor number to graphics postscript file name
+  - removed printing of error before first solution
+  - removed extra relaxation pass for linear elements in hbmg
+  - removed old farg kludge for MPICH
+  - removed GRAPHICS_TREE from messpass modules
+  - in run_tests scripts under testdir, don't assume . is in the path
+  - reduce roundoff error in computing barycentric coordinates
+  - minor bug in petsc_interf.F90
+  - allocation bug in superlu_interf.f90
+  - bug in evaluate_oldsoln_local; using unallocated pointer
+  - bug in graphics; contour plot of error
+  - fixed floating point incompatibility between LAPACK source and gfortran
+  - bug in graphics from phaml_restore; initialized twice
+  - bug in printing convergence history of conjugate gradients
+
+Version 1.2.0 10/11/07
+
+  - added explicit error indicator
+  - made explicit error indicator the default
+  - added optional inc_quad_order to phaml_store_matrix
+  - added optional error_estimator to phaml_query
+  - added second derivatives to basis and evaluation routines
+  - added an estimate of the error in the eigenvalues
+  - extended hierarchical coefficient error indicator to high order elements
+  - changed how error indicators are computed
+  - changed how initial solution is set during refinement with SET_INITIAL
+  - removed option to compute two error indicators
+  - added warning when ARPACK eigenvalue is not close to the Raleigh quotient
+  - removed restriction that neighboring elements differ in degree by at most 1
+  - removed some dead code related to error indicators
+  - keep quadrature points inside triangles when necessary
+  - faster finding of element that contains a given point
+  - upgraded PETSc to version 2.3.3
+  - moved control of hypre version from mkmkfile.sh to source code
+  - removed BoomerAMG_IOutDat
+  - removed some unused variables
+  - added PBS scripts for running tests on batch systems with PBS or Torque/Maui
+  - removed doc/USER_GUIDE
+  - bug in deallocation in petsc_interf.F90
+  - bug in assignment of vertices to edge with periodic b.c.
+  - bug in src/mkmkfile.sh with zoltanP_r_f_dum.f90
+  - bug: uninitialized loc_Linf_norm in norm_error
+
+Version 1.1.0 7/3/07
+
+  - added native conjugate gradients and GMRES solvers
+  - added ZOLTAN_FILE to partition methods
+  - added support for DRUM
+  - added routine to store matrix as a Matrix Market file
+  - changed HBMG convergence test to use relative residual instead of absolute
+  - changed tests with high order elements to use CG_SOLVER and run parallel
+  - changed mkmkfile.sh handling of Zoltan optional third party libraries
+  - changed tests where the solution was a smaller degree than the approx space
+  - removed multigrid F cycle
+  - bug in eigen.f90; static condensation needs contribution of other procs
+  - bug: uninitialized variables in graphics with SEQUENTIAL
+  - bug in maintaining high order oldsoln during derefinement in parallel
+
+Version 1.0.0 5/4/07
+
+  - added refterm=ONE_REF_HALF_ERRIND
+  - added hp_strategy to phaml_solve_pde arguments, and value HP_BIGGER_ERRIND
+  - added hp_strategy=HP_AS2 and singular_points
+  - added hp_strategy=HP_RAS1E and HP_RAS1H1
+  - changed h and p error estimates to an error estimate and sometimes a second
+  - added error_estimator=LOCAL_PROBLEM_H and LOCAL_PROBLEM_P
+  - added choice of individual or collective scaling of components in graphics
+  - added a data structure for the data from triangle
+  - added a fourth approach to pairing triangles in the pre-initial grid
+  - replaced subroutine phaml_sendinfo with phaml_alltoall
+  - return to using message passing for fixing the quadrature error
+  - nodal/h-hierarchical basis change for mass matrix
+  - check for existance of triangle before running test_domain
+  - make test automatically removes .exe files as it proceeds
+  - start edge GIDs smaller
+  - don't h-refine if edge GID would overflow
+  - replaced array(1) dummy args in blas.f with assumed size
+  - added mass matrix to print_linear_system
+  - compute error indicators in phaml_query without checking up2date
+  - changed nonlinear example to use oldsoln
+  - bug in mkmkfile.sh when no libraries are linked
+  - bug in message size in evaluate_soln
+  - bug in message size in redistribute
+  - bug in create_linsys, not setting neq_* to 0 for master
+  - bug in initial solution after refinement with periodic b.c.
+  - bug in mass matrix for multicomponent elliptic eigenvalue problems
+  - bug in graphics scaling of error
+
+Version 0.9.26 1/16/07
+
+  - added a new comprehensive user's guide in pdf (NISTIR 7374)
+  - support for version 2.0.0 of hypre
+  - added finalize_mpi to phaml_destroy to allow for not calling mpi_finalize
+  - added selection of what tests to perform via "make test what=something"
+  - added print_warnings to phaml_solve_pde to allow suppressing warnings
+  - changed use of pointers in grid data structure to reduce memory use
+  - changed linked list to array when finding column indices to reduce memory
+  - changed soln argument that encodes comp and eigen to individual arguments
+  - changed evec to eigen when refering to eigenfunctions
+  - changed soln to eigen and eigenvector to eigenfunction in graphics
+  - bug fixes
+
+Version 0.9.25 9/26/06
+
+  - scripts in testdir no longer assume ./ is in the path
+  - find available i/o unit for triangle files instead of hard coded unit no.
+  - changed default degree to 0, meaning use existing degree in each element
+  - added minimum and maximum polynomial degrees to phaml_query
+  - increased quadrature order for computing energy and L2 norms and number
+      of points for computing L-infinity norms
+  - added continuous L infinity, L2 and energy and discrete energy norms of
+      the solution to phaml_query
+  - added spmd.f90 to examples/parabolic
+  - bug fixes
+
+Version 0.9.24 7/18/06
+
+  - added oldsoln to do time dep and nonlinear problems w/o multiple pde vars
+  - changed parabolic example to use oldsoln
+  - reduced number of digits in floating point format
+  - call update_usermod from phaml_create under control of update_umod
+  - include graphics in update_usermod
+  - added moveable light to graphics
+  - mkmkfile.sh checks validity of configuration variables
+  - added test suite
+  - bug fixes
+
+Version 0.9.23 4/11/06
+
+  - faster h-hierarchical basis change
+  - don't compute error estimates for termination if not used
+  - don't load balance if number of processors is 1
+  - strengthened condition for performing derefinement
+  - new control over lines in contour plots
+  - striped color scheme
+  - fixed several bugs
+
+Version 0.9.22 2/14/06
+
+  - add p uniform, p adaptive and hp adaptive refinement
+      NOTE: hp adaptive refinement is still experimental
+  - add both h and p forms of local problem error indicators
+  - new multigrid method for high order elements (sequential only at this time)
+  - support for curved domains (see UPGRADING)
+  - improvements in evaluation of basis functions, and what bases are supported
+  - graphics for sequential compilations
+  - separate support for hypre 1.6.0 and 1.9.0b
+  - several parts of code reorganized
+  - several changes to user interface (see UPGRADING)
+  - several enhancements to graphics
+  - deleted dead code
+  - bug fixes
+
+Version 0.9.21 1/13/05
+
+  - fixed bug in vertex order / basis change
+  - changed default order of quadrature rule to be exact for Helmholtz
+  - added ability to adjust order of quadrature rule
+
+Version 0.9.20 1/6/05
+
+  - repaired periodic boundary conditions
+
+Version 0.9.19 11/10/04
+
+  - high order methods
+  -   high order quadrature rules
+  -   high order basis functions
+  -   generalization of minor issues that restrict to linear bases
+  -   new gid for equations
+  -   new procedure for relating equations to grid entities
+  -   edge data structure and high order components in element data structure
+  -   changed nomenclature from nodes to vertices
+  -   generate linear system for high order elements
+  -   load balancing for high order methods
+  -   "exact" solution for high order bases (Dirichlet b.c., i.c., true error)
+  -   HB multigrid (but needs larger number of relaxations for high order)
+  - graphics: color edge by owner, color edge or element by degree, label edge
+  - print summary of linear system
+  - update to PETSc 2.2.1
+
+Version 0.9.18 9/10/2004
+
+  - generalized the handling of quadrature
+  - fixed two bugs, one in hierarchic_quadrasect_errind and
+    one in doc/pde_upgrade_0.9.16.f90
+
+Version 0.9.17 9/8/2004
+
+  - create initial grid from data files created by Triangle
+
+Version 0.9.16 6/9/2004
+
+  - added direct solution of coupled systems of linear pdes (aka multi-
+    component solutions)
+  - added coupled system example; moved old system example to system_ss
+  - rewrote basis conversion routines to be more general and explicit
+  - removed grid argument from many places it was not necessary
+  - sped up derefinement
+  - changed the hash function
+  - fixed some minor bugs
+
+Version 0.9.15 3/15/2004
+
+  - fixed two mistakes in the interfaces in dummy routines
+
+Version 0.9.14 3/11/2004
+
+  - added better control over load balancing
+  - added drawing partition boundary to graphics
+  - added L domain example
+  - removed some unnecessary communication in eigen.f90 (setting shadow
+      values when not needed) and linsys_util.f90 (oversending r_others)
+  - began adding Generalized Global Basis enhancement to preconditioners
+     (not yet ready for prime time)
+
+Version 0.9.13 11/25/2003
+
+  - periodic boundary conditions
+  - separated equation hash table from node hash table
+
+Version 0.9.12 11/17/2003
+
+  - removed multiple partitions per processor
+  - added user callable routine phaml_compress to remove unused memory
+  - added coloring elements and edges by element size to graphics
+  - added a routine to test new error indicators
+  - minor bug fixes
+
+Version 0.9.11 8/26/2003
+
+  - phaml_save no longer writes unused elements, nodes and hash table entries
+  - Added arpack_info to phaml_query
+  - MUMPS error messages written to errunit instead of outunit
+  - Use 0.0 for pivot threshold (cntl(3)) in MUMPS
+  - Add coloring edges by solution to graphics
+
+Version 0.9.10 7/22/2003
+
+  - Added sending message to other processors in fatal error handler
+  - Added to phaml_query: max norm of solution, l2 norm of solution,
+      max and average residuals of lineary systems in eigensolver,
+      l2 norm of eigenproblem residual, and ARPACK iter, nconv, numop,
+      numopb and numreo
+  - Bug fix, moved setting output unit before calling fatal in phaml_store
+  - Added eigenvalues and eigen residual to information saved by phaml_store
+  - Merged eigenvalue codes for smallest and interior eigenvalues
+  - Removed scaling of linear system in eigen.f90
+  - Scaled eigensolutions to have M-norm 1.0 where M is the mass matrix
+  - Eigenproblem residual is scaled by the norm of the right hand side
+  - Sort eigenvalues in increasing order
+
+Version 0.9.9 6/27/2003
+
+  - Fixed a couple bugs in the Zoltan interface that show up with HASHSIZE 2
+  - Replaced symbolic constant ALL_CHILDREN with a variable when used as an
+    actual argument, to get around a compiler bug
+  - Changed default graphics to NO_ONE in examples/simple/spmd.f90
+  - Added error message if dummy graphics is called
+  - Fixed minor bug in messpass.dummy.f90
+
+Version 0.9.8 6/17/2003
+
+  - Added interface to SuperLU
+  - Added the ability to solve the normal equations
+  - Added ability to print L2 norm of residual after each iteration of PETSc
+  - Added an estimate of the max norm of the error to the errors printed
+  - Added a way to say that true is not known, to print only error estimates
+  - Added GS iteration at the end of the coarse grid preconditioner so it works
+  - Added parameters to control coarse grid preconditioner
+  - Changed petsc_eisenstat_nodiagonalscaling to petsc_eisenstat_nodiagscaling
+  - Fixed a mistake in mkmkfile.sh in the examples
+  - Added an interface to HYPRE_BoomerAMGSetNumGridSweeps in hypre_fix.c
+  - Use selected_int_kind to set hypre_pointer
+  - Made gridtype.f90 and linsystype.f90 private by default
+  - Removed sequence numbers and computed goto's in calgo582.f
+  - Added phaml_global_sum_realv to messpass*
+  - Added a routine to test new preconditioners
+  - Initialize grid%eigenvalue to 0.0 whenever it is allocated
+  - Use "(L1)" instead of * when writing a logical to a save file
+
+Version 0.9.7 5/5/2003
+
+  - Added interface to hypre
+  - Added parameters for more control of ARPACK; removed parameter krylov_dim
+  - Added parameters for more control of PETSc; removed parameter iterations
+  - Added parameter dd_iterations
+  - Fixes to the mkmkfile.sh's
+  - Set debugger command in an argument to phaml_create
+  - Removed printing of irrelevant parameters in the header
+  - Added SPMD versions of examples that don't call phaml_create more than once
+  - Added iown to linear system data structure
+  - Force rounding up when determining when to stop refining
+  - Added LICENSE file
+
+Version 0.9.6 4/21/2003
+
+  - Split module linear_system into several modules: linsystype_mod, linsys_io,
+    linsys_util, make_linsys, linear_system, eigen, hbmg, lapack_solve, 
+    mumps_interf, and petsc_interf.
+  - Allow either FORMATTED or UNFORMATTED for phaml_store
+  - Added support for matrix free solvers in PETSc
+  - Changed default max_lev from the largest allowed by the hash key size to
+    infinite; allows refinement to continue when the hash key limit is reached.
+  - Replaced mkmkfile.sh parameters LOADBAL, EIGEN and SOLVER with package
+    names to allow compilation with multiple packages (e.g. PETSc and MUMPS).
+  - Added ability to specify other unrestricted libraries in mkmkfile.sh
+  - Removed experimental spectral transformations for interior eigenvalues
+  - Added missing argument in messpass.dummy.f90
+  - Corrected order of initial elements in examples
+
+Version 0.9.5 3/10/2003
+
+  - Added interface to MUMPS parallel sparse direct solver
+  - Added raising u to a power in phaml_integrate
+  - Added phaml_scale, to multiply u by a constant
+  - Added phaml_query, to get values of interest
+  - Formalized domain decomposition preconditioner
+  - Fixed bug in finding which triangle contains a given point in
+    phaml_evaluate.  Only showed up with skinny triangles.
+  - Changed value of symbolic constants for PETSC_* and DIRICHLET
+
+Version 0.9.4 2/14/2003
+
+  - Changed form of file for "save" to unformatted
+  - Changed argument list for popen and pclose to be like Fortran open and close
+  - Changed the compilation approach from one where the user application
+    code includes the PHAML code, to one where PHAML is built as a library
+    to be linked with the application
+  - Prefix all public routines with phaml_
+  - Made my_pde_id, DIRICHLET, NATURAL and MIXED available from module phaml
+  - Added public allocatable array pde(:) to module phaml (to replace user_mod)
+  - Renamed exchange_user_param to master_to_slaves and put it in module phaml
+  - Changed all examples to use the new compilation approach
+  - Added routine for computing integrals of the computed solution
+  - Properly terminate MPI 2 processes when destroy is called
+  - Use V cycle (instead of F cycle) for MG solver in ARPACK solver when
+    nproc > 1 (temporary workaround)
+  - Added code for domain decomposition preconditioner; still experimental
+
+Version 0.9.3 1/17/2003
+  - Added user77.f for user's legacy fixed format code
+  - Added symmetric positive definite LAPACK band matrix solver
+  - Added use of CALGO 582, Gibbs-Poole-Stockmeyer algorithm for ordering
+    the rows of a matrix to reduce the bandwidth, to go with LAPACK solvers
+  - Changed the handling of band matrices in linsys.f90
+  - Added a matrix free interface to PETSc solvers; not fully supported and
+    may be removed
+  - Added new experimental methods for finding interior eigenvalues; may
+    be removed
+  - Bug fix in determining neighbors of an initial element
+  - Fixed rectangle example to use a general rectangle
+
+Version 0.9.2 10/07/2002
+  - Updated Zoltan interface with new "Zoltan" names instead of "LB" names
+  - Created version of Zoltan interface that uses "partition" instead of
+    "balance" (allows multiple partitions per processor), but postponed
+    making this change until the new version of Zoltan is released
+  - Added interface for Zoltan HSFC (Hilbert Space Filling Curve)
+  - Added the use of "in" and "out" vertices for determining the child order
+  - Added marking of "in" and "out" vertices to graphics
+  - Replaced "reverse" with "order(:)" for child order in element_type
+  - Version 2 of save file format replaces reverse with in, out and order
+  - Added the ability to have Zoltan determine the order of coarse grid elements
+  - Allow get_grid_info to exclude the master
+  - Added an example with an nx X ny grid for the coarse grid on a rectangle
+
+Version 0.9.1 6/27/2002
+  - Added coarse grid preconditioner
+  - Added send_int to arguments to phaml_sendinfo
+  - Changed the way specific systems are handled in mkmkfile.sh
+  - Added support for PETSc as the solver
+  - Removed CG_SOLVER, BCGSTAB_SOLVER and DIAG_PRECONDITION and associated
+    code (now provided by PETSc)
+  - Moved constants for eq_type, solver and preconditioner from
+    linsys.f90 to global.f90
+  - Added F-cycle preconditioner and use F-cycle for MG in ARPACK solver
+  - Messpass.dummy.f90 nullify returned pointers
+  - mkmkfile.sh add parpack.o to case when PARLIB is none
+  - messpass.dummy.f90 corrected assignment of integer to logical
+
+Version 0.9.0 4/18/2002
+  - first public release

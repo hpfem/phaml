@@ -1,0 +1,10 @@
+This is a simple example to illustrate the use of all the subroutines
+in the PHAML interface, except subroutine connect.  For connect see
+the example "system".
+
+Running this example will create three files: example_save0.dat,
+example_save1.dat and example_save2.dat.  You probably want to delete
+those after running the example.  The directory in which they are
+placed is compiler dependent, but the most likely places are the
+PHAML working directory and your home directory.  If it places them
+in this directory, then "make clean" will delete them.

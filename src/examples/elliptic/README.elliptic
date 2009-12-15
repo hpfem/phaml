@@ -1,0 +1,4 @@
+This is a simple example that solves one of several elliptic equation on
+the unit square.  Which equation is solved is determined by the value
+of the parameter "choice" in usermod.f90.  See usermod.f90 for a
+list of the PDEs to choose from.

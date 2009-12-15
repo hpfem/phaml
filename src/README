@@ -1,0 +1,58 @@
+This is PHAML version 1.6.2, September 28, 2009
+Please report all bugs, problems, questions, suggestions or even complements
+to phaml@nist.gov.
+
+If you would like to be added to the PHAML announcement email list, send
+a request to phaml@nist.gov.  This is a very low volume list used only for
+announcements concerning PHAML.
+
+PHAML stands for Parallel Hierarchical Adaptive MultiLevel.  It solves
+linear elliptic partial differential equations of the form
+(PUx)x + (QUy)y + RU = F on 2D polygonal domains with Dirichlet,
+Natural (often Neumann), mixed or periodic boundary conditions, and eigenvalue
+problems where F is lambda*U and the boundary conditions are homogeneous.
+It uses linear or high order finite elements over triangles, adaptive
+refinement, multigrid and message passing parallelism.
+
+To start using PHAML immediately, see the Quick Start section of the User's
+Guide.
+
+To see what has changed since the last release, see the Release Notes section
+of the User's Guide, and look for red text in the User's Guide.
+
+PHAML is public domain software.  It was produced as part of work done by
+the U.S. Government, and is not subject to copyright in the United States.
+
+William F. Mitchell
+Mathematical and Computational Sciences Division
+National Institute of Standards and Technology
+william.mitchell@nist.gov
+http://math.nist.gov/phaml
+
+The following files in subdirectory doc provide information:
+
+AUXILLARY -- information on compiling the optional auxillary software
+             packages.  This is mainly so I don't have to keep reinventing
+             the wheel everytime I update these packages, but you might
+             find it useful, too.  It also indicates what version is the
+             newest one I have used.
+
+HINTS -- information on using the auxillary software packages.  Again it
+         is mainly a reminder to myself, for things like how to start
+         an MPICH job, how to use LAM with ssh, how to specify an alternate
+         debugger with PVM, etc.
+
+HISTORY -- the history of when each version was released and what changes
+           were made.  No longer maintained; see User's Guide instead.
+
+KNOWN_PROBLEMS -- a list of things that aren't quite right.
+
+LICENSE -- PHAML is public domain software.  Here are the details.
+
+QUICKSTART -- instructions for quickly getting PHAML running.
+
+UPGRADING -- spells out any changes from one version to the next which
+             might require changes in the user's code.  No longer maintained;
+             see User's Guide instead.
+
+user_guide.pdf -- a comprehensive user's guide and reference manual

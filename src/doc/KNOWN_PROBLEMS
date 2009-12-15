@@ -1,0 +1,36 @@
+*) If update_usermod is used to set a parameter that is used in the definition
+of the true solution, the graphics process does not get the new parameter, so
+its display of the true solution and true error is wrong.
+
+*) The quadrature in unowned elements is not exactly the same as the quadrature
+in the processor that owns the element, which causes an inconsistency in
+the parallel hierarchical basis multigrid method so that it does not reduce
+the residual to 0.  It does, however, seem to reduce the error below the
+discretization error, so the method does provide an adequate solution.  But
+in some cases the test for termination of multigrid iterations based on the
+size of the residual is never satisfied, so you should (for now) put a limit
+on the number of iterations via the mg_cycles parameter to phaml_solve_pde,
+e.g. mg_cycles=5, if running in parallel.
+
+*) For systems of equations, the L1 sum and L2 sum of the components in the
+graphics is wrong if using high order elements and subelement resolution.
+
+*) The PETSc preconditioners Eisenstat, ICC and ILU generate the PETSc error
+code 56.
+
+*) "make test" with openmpi fails for the interactive tests because mpirun
+is not used (because stdin doesn't get through it) and openmpi requires it.
+
+*) the test suite is not available for SPMD model
+
+*) the test suite does not support PVM
+
+*) BLOPEX can have problems with agressively optimized versions of LAPACK,
+because the optimization can break an invariance property that BLOPEX assumes.
+If you find that "make test what=blopexp" gives results that are significantly
+different from the comparison files, try using "BLAS source LAPACK source"
+when you run mkmkfile.sh.
+
+*) the explicit and equilibrated residual error estimators do not get
+the optimal convergence rate when the cross derivative term cxy is nonzero.
+Use one of the other error estimators.

@@ -1,0 +1,190 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert                 1000
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   PHASES
+  print_error_who    SLAVES
+  print_error_what   ENERGY_LINF_ERR
+  print_errest_what  ENERGY_LINF_ERREST
+  print_time_when    NEVER
+  print_eval_when    PHASES
+  print_eval_who     SLAVES
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           250
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles                  10
+  mg_tol             MG_NO_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+  eigensolver        ARPACK_SOLVER
+  num_eval                    1
+  lambda0            -infinity
+  scale_evec         SCALE_L2
+  arpack_ncv                 20
+  arpack_maxit              100
+  arpack_tol          1.0000000000E-10
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =         145
+   number of vertices I own =         145
+   number of elements       =         256
+   number of leaf elements  =         256
+   leaf elements I own      =         256
+   number of levels         =           1
+   degrees of freedom       =         145
+   degrees of freedom I own =         145
+   min and max degree       =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       9.2418223348E-01
+   energy error estimate      2.8332650253E-01
+      effectivity             3.0656995154E-01
+   Linf norm of error         2.3597607583E-01
+   Linf error estimate        8.3800666136E-02
+      effectivity             3.5512356853E-01
+
+My Grid:
+   number of vertices       =         283
+   number of vertices I own =         283
+   number of elements       =         808
+   number of leaf elements  =         532
+   leaf elements I own      =         532
+   number of levels         =           7
+   degrees of freedom       =         283
+   degrees of freedom I own =         283
+   min and max degree       =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       2.1427446986E+00
+      reduced by              2.3185305029E+00
+   energy error estimate      1.4988999341E-02
+      reduced by              5.2903626054E-02
+      effectivity             6.9952334270E-03
+   Linf norm of error         8.3821444117E-01
+      reduced by              3.5521161974E+00
+   Linf error estimate        6.8548059319E-04
+      reduced by              8.1798943230E-03
+      effectivity             8.1778666595E-04
+
+Eigenvalues and error estimates:
+     9.8569429510E+00  1.0123421766E-02
+
+My Grid:
+   number of vertices       =         615
+   number of vertices I own =         615
+   number of elements       =        2136
+   number of leaf elements  =        1196
+   leaf elements I own      =        1196
+   number of levels         =           8
+   degrees of freedom       =         615
+   degrees of freedom I own =         615
+   min and max degree       =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       2.3173018243E+00
+      reduced by              1.0814642668E+00
+   energy error estimate      4.5620448633E-03
+      reduced by              3.0435953458E-01
+      effectivity             1.9686882457E-03
+   Linf norm of error         9.0718418461E-01
+      reduced by              1.0822817409E+00
+   Linf error estimate        1.0589250474E-04
+      reduced by              1.5447921618E-01
+      effectivity             1.1672657718E-04
+
+Eigenvalues and error estimates:
+     9.7138816524E+00  1.8819966364E-03
+
+My Grid:
+   number of vertices       =        1205
+   number of vertices I own =        1205
+   number of elements       =        4496
+   number of leaf elements  =        2376
+   leaf elements I own      =        2376
+   number of levels         =          10
+   degrees of freedom       =        1205
+   degrees of freedom I own =        1205
+   min and max degree       =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       2.3918878324E+00
+      reduced by              1.0321865746E+00
+   energy error estimate      2.0927574504E-03
+      reduced by              4.5873232577E-01
+      effectivity             8.7493962804E-04
+   Linf norm of error         9.3652700136E-01
+      reduced by              1.0323449386E+00
+   Linf error estimate        3.4888992135E-05
+      reduced by              3.2947555845E-01
+      effectivity             3.7253589148E-05
+
+Eigenvalues and error estimates:
+     9.6849561486E+00  5.6010548158E-04
+
+My Grid:
+   number of vertices       =        1205
+   number of vertices I own =        1205
+   number of elements       =        4496
+   number of leaf elements  =        2376
+   leaf elements I own      =        2376
+   number of levels         =          10
+   degrees of freedom       =        1205
+   degrees of freedom I own =        1205
+   min and max degree       =           1          1
+
+Norms of error:
+ Eigenvector           1
+   energy norm of error       2.3918878324E+00
+   energy error estimate      2.0927574504E-03
+      effectivity             8.7493962804E-04
+   Linf norm of error         9.3652700136E-01
+   Linf error estimate        3.4888992135E-05
+      effectivity             3.7253589148E-05
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           3
+termination condition:
+  maximum vertices achieved
+---------------------------------------------------------

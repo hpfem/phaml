@@ -1,0 +1,6 @@
+test01 popen, pclose, compress, store and restore
+test02 scale and integrate
+test03 query
+test04 evaluate
+test05 update_usermod
+test06 store_matrix

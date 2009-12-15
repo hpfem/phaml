@@ -1,0 +1,236 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq                    500
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles                   2
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =           9
+   number of vertices I own =           9
+   number of elements       =           8
+   number of leaf elements  =           8
+   leaf elements I own      =           8
+   number of levels         =           1
+   degrees of freedom       =           9
+   degrees of freedom I own =           9
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =          27
+   number of vertices I own =          27
+   number of elements       =          68
+   number of leaf elements  =          38
+   leaf elements I own      =          38
+   number of levels         =           4
+   degrees of freedom       =          27
+   degrees of freedom I own =          27
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =          36
+   number of vertices I own =          36
+   number of elements       =          88
+   number of leaf elements  =          48
+   leaf elements I own      =          48
+   number of levels         =           6
+   degrees of freedom       =          36
+   degrees of freedom I own =          36
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =          75
+   degrees of freedom I own =          75
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =         171
+   number of vertices I own =         171
+   number of elements       =         580
+   number of leaf elements  =         294
+   leaf elements I own      =         294
+   number of levels         =           9
+   degrees of freedom       =         171
+   degrees of freedom I own =         171
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =         290
+   number of vertices I own =         290
+   number of elements       =         996
+   number of leaf elements  =         502
+   leaf elements I own      =         502
+   number of levels         =          10
+   degrees of freedom       =         290
+   degrees of freedom I own =         290
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =         730
+   number of vertices I own =         730
+   number of elements       =        2620
+   number of leaf elements  =        1314
+   leaf elements I own      =        1314
+   number of levels         =          12
+   degrees of freedom       =         730
+   degrees of freedom I own =         730
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =         730
+   number of vertices I own =         730
+   number of elements       =        2620
+   number of leaf elements  =        1314
+   leaf elements I own      =        1314
+   number of levels         =          12
+   degrees of freedom       =         730
+   degrees of freedom I own =         730
+   min and max degree       =           1          1
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           6
+termination condition:
+  maximum equations achieved
+---------------------------------------------------------
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop            1
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            ONE_REF
+  reftol               1.0000000000E-04
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles                   2
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =         730
+   number of vertices I own =         730
+   number of elements       =        2620
+   number of leaf elements  =        1314
+   leaf elements I own      =        1314
+   number of levels         =          12
+   degrees of freedom       =         730
+   degrees of freedom I own =         730
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =        1554
+   number of vertices I own =        1554
+   number of elements       =        5884
+   number of leaf elements  =        2946
+   leaf elements I own      =        2946
+   number of levels         =          13
+   degrees of freedom       =        1554
+   degrees of freedom I own =        1554
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =        1554
+   number of vertices I own =        1554
+   number of elements       =        5884
+   number of leaf elements  =        2946
+   leaf elements I own      =        2946
+   number of levels         =          13
+   degrees of freedom       =        1554
+   degrees of freedom I own =        1554
+   min and max degree       =           1          1
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           1
+termination condition:
+  maximum loops through phases achieved
+---------------------------------------------------------

@@ -1,0 +1,10 @@
+test01 mg_cycles with MG_NO_TOL
+test02 mg_tol
+test03 mg_prerelax, mg_postrelax
+test04 degree=4, CG_SOLVER
+test05 degree=4, mg_[pre|post]relax_ho, CG_SOLVER
+test06 CG_SOLVER, MG_PRECONDITIONER
+test07 GMRES_SOLVER, MG_PRECONDITIONER
+test08 degree=4, hbmg solver
+test09 conventional communication
+test10 conventional communication, degree=4

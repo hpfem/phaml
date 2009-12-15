@@ -1,0 +1,32 @@
+Thise example illustrates the solution of an eigenvalue problem.
+It solves the Schroedinger Equation for a simple harmonic oscillator where
+the cross section of the well is an ellipse with axes determined by prob_param.
+
+ -uxx -uyy + prob_param*(x^2+3*y^2)/2 * u = lambda * u
+
+prob_param must be positive.
+
+For num_eval=1 and lambda0=-huge(0.), the eigenvalue is
+ sqrt(prob_param*(2+sqrt(3)))
+and the solution (wave function) is
+ exp(-sqrt(prob_param/8)*(x^2+sqrt(3)*y^2).
+
+For prob_param = 25, the following eigenvalues are computed using
+1 processor, linear elements and an adaptively refined grid with 5000 vertices.
+(The number of digits shown are more than are correct.  For example, the
+first eigenvalue is 9.6592583...)  Five eigenvalues are computed at
+a time (num_eval=5) and lambda0 is given in parentheses.
+
+(-inf)  9.668 16.751 21.937 23.843 29.035
+(  35) 29.039 30.943 34.239 36.151 38.057
+(  43) 38.055 41.362 43.275 45.180 46.573
+(  50) 46.579 48.502 50.422 52.327 53.733
+(  56) 53.729 55.660 57.587 58.960 59.500
+
+NOTE: If lambda0 is bigger than the smallest eigenvalue then the linear
+system is indefinite and multigrid is likely to fail, so you need to use an
+indefininte solver like GMRES from PetSC or hypre, or a directly solver like
+MUMPS or SUPERLU.
+
+NOTE: ARPACK may fail for very coarse grids, so it may take a few refinements
+before any eigenfunction is computed.

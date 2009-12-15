@@ -1,0 +1,508 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from the master process
+  PDE id is     0
+  Number of slave processors is     4
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert                  100
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               SET_INITIAL
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     MASTER_ALL
+  print_linsys_when  NEVER
+  print_error_when   PHASES
+  print_error_who    MASTER
+  print_error_what   ENERGY_LINF_L2_ERR
+  print_errest_what  NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert          1000
+  inc_factor          2.0000000000E+00
+  error_estimator    INITIAL_CONDITION
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles          infinity
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+Individual Grids:
+   number of vertices       =           9          9          9          9
+   number of vertices I own =           9          9          9          9
+   number of elements       =           8          8          8          8
+   number of leaf elements  =           8          8          8          8
+   leaf elements I own      =           8          8          8          8
+   number of levels         =           1          1          1          1
+   degrees of freedom       =           9          9          9          9
+   degrees of freedom I own =           9          9          9          9
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =           9
+   number of leaf elements =           8
+   number of levels        =           1
+   degrees of freedom      =           9
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.0198914508E+00
+   Linf norm of error         4.1058187983E-01
+   L2 norm of error           1.9634210751E-01
+
+Individual Grids:
+   number of vertices       =          19         19         19         19
+   number of vertices I own =          19         19         19         19
+   number of elements       =          40         40         40         40
+   number of leaf elements  =          24         24         24         24
+   leaf elements I own      =          24         24         24         24
+   number of levels         =           4          4          4          4
+   degrees of freedom       =          19         19         19         19
+   degrees of freedom I own =          19         19         19         19
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =          19
+   number of leaf elements =          24
+   number of levels        =           4
+   degrees of freedom      =          19
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       5.0576518424E-01
+      reduced by              4.9590099401E-01
+   Linf norm of error         1.0147639074E-01
+      reduced by              2.4715262832E-01
+   L2 norm of error           5.2320425921E-02
+      reduced by              2.6647582928E-01
+
+Individual Grids:
+   number of vertices       =          41         41         41         41
+   number of vertices I own =          41         41         41         41
+   number of elements       =         120        120        120        120
+   number of leaf elements  =          64         64         64         64
+   leaf elements I own      =          64         64         64         64
+   number of levels         =           5          5          5          5
+   degrees of freedom       =          41         41         41         41
+   degrees of freedom I own =          41         41         41         41
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =          41
+   number of leaf elements =          64
+   number of levels        =           5
+   degrees of freedom      =          41
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       3.6506021776E-01
+      reduced by              7.2179784045E-01
+   Linf norm of error         6.2959606468E-02
+      reduced by              6.2043600495E-01
+   L2 norm of error           2.2390414867E-02
+      reduced by              4.2794787070E-01
+
+Individual Grids:
+   number of vertices       =          84         84         84         84
+   number of vertices I own =          84         84         84         84
+   number of elements       =         276        276        276        276
+   number of leaf elements  =         142        142        142        142
+   leaf elements I own      =         142        142        142        142
+   number of levels         =           6          6          6          6
+   degrees of freedom       =          84         84         84         84
+   degrees of freedom I own =          84         84         84         84
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =          84
+   number of leaf elements =         142
+   number of levels        =           6
+   degrees of freedom      =          84
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       2.4230177508E-01
+      reduced by              6.6373097724E-01
+   Linf norm of error         3.2443839180E-02
+      reduced by              5.1531197541E-01
+   L2 norm of error           1.1597109086E-02
+      reduced by              5.1794971890E-01
+
+Individual Grids:
+   number of vertices       =         165        165        165        165
+   number of vertices I own =         165        165        165        165
+   number of elements       =         568        568        568        568
+   number of leaf elements  =         288        288        288        288
+   leaf elements I own      =         288        288        288        288
+   number of levels         =           8          8          8          8
+   degrees of freedom       =         165        165        165        165
+   degrees of freedom I own =         165        165        165        165
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =         165
+   number of leaf elements =         288
+   number of levels        =           8
+   degrees of freedom      =         165
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.6491252071E-01
+      reduced by              6.8060797596E-01
+   Linf norm of error         1.3337263994E-02
+      reduced by              4.1108772362E-01
+   L2 norm of error           5.1676967719E-03
+      reduced by              4.4560215252E-01
+
+Individual Grids:
+   number of vertices       =         165        165        165        165
+   number of vertices I own =         165        165        165        165
+   number of elements       =         568        568        568        568
+   number of leaf elements  =         288        288        288        288
+   leaf elements I own      =         288        288        288        288
+   number of levels         =           8          8          8          8
+   degrees of freedom       =         165        165        165        165
+   degrees of freedom I own =         165        165        165        165
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =         165
+   number of leaf elements =         288
+   number of levels        =           8
+   degrees of freedom      =         165
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.6491252071E-01
+   Linf norm of error         1.3337263994E-02
+   L2 norm of error           5.1676967719E-03
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           4
+termination condition:
+  maximum vertices achieved
+---------------------------------------------------------
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from the master process
+  PDE id is     0
+  Number of slave processors is     4
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_ONLY
+  solve_init         true
+  system_size                 1
+  print_grid_when    FINAL
+  print_grid_who     MASTER_ALL
+  print_linsys_when  NEVER
+  print_error_when   NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert            10
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles          infinity
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+Individual Grids:
+   number of vertices       =          79         98         98         79
+   number of vertices I own =          46         34         45         40
+   number of elements       =         262        336        336        262
+   number of leaf elements  =         135        172        172        135
+   leaf elements I own      =          73         71         70         74
+   number of levels         =           8          8          8          8
+   degrees of freedom       =          79         98         98         79
+   degrees of freedom I own =          46         34         45         40
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =         165
+   number of leaf elements =         288
+   number of levels        =           8
+   degrees of freedom      =         165
+   min and max degree      =           1          1
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           1
+termination condition:
+  one trip load balance
+---------------------------------------------------------
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from the master process
+  PDE id is     0
+  Number of slave processors is     4
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               REFINE_ONLY
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     MASTER_ALL
+  print_linsys_when  NEVER
+  print_error_when   PHASES
+  print_error_who    MASTER
+  print_error_what   ENERGY_LINF_L2_ERR
+  print_errest_what  NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles          infinity
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+Individual Grids:
+   number of vertices       =          79         98         98         79
+   number of vertices I own =          46         34         45         40
+   number of elements       =         262        336        336        262
+   number of leaf elements  =         135        172        172        135
+   leaf elements I own      =          73         71         70         74
+   number of levels         =           8          8          8          8
+   degrees of freedom       =          79         98         98         79
+   degrees of freedom I own =          46         34         45         40
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =         165
+   number of leaf elements =         288
+   number of levels        =           8
+   degrees of freedom      =         165
+   min and max degree      =           1          1
+
+Individual Grids:
+   number of vertices       =         146        190        174        149
+   number of vertices I own =          91         94         88         92
+   number of elements       =         520        698        638        532
+   number of leaf elements  =         264        353        323        270
+   leaf elements I own      =         153        197        150        175
+   number of levels         =           9          9          9          8
+   degrees of freedom       =         146        190        174        149
+   degrees of freedom I own =          91         94         88         92
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =         365
+   number of leaf elements =         675
+   number of levels        =           9
+   degrees of freedom      =         365
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.0933128867E-01
+      reduced by              3.3148268003E-01
+   Linf norm of error         9.5215152862E-03
+      reduced by              7.1390318813E-01
+   L2 norm of error           3.2862664368E-03
+      reduced by              3.1796239038E-01
+
+Individual Grids:
+   number of vertices       =         146        190        174        149
+   number of vertices I own =          91         94         88         92
+   number of elements       =         520        698        638        532
+   number of leaf elements  =         264        353        323        270
+   leaf elements I own      =         153        197        150        175
+   number of levels         =           9          9          9          8
+   degrees of freedom       =         146        190        174        149
+   degrees of freedom I own =          91         94         88         92
+   min degree               =           1          1          1          1
+   max degree               =           1          1          1          1
+
+Total Grid:
+   number of vertices      =         365
+   number of leaf elements =         675
+   number of levels        =           9
+   degrees of freedom      =         365
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.0933128867E-01
+   Linf norm of error         9.5215152862E-03
+   L2 norm of error           3.2862664368E-03
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           1
+termination condition:
+  one trip refinement
+---------------------------------------------------------
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from the master process
+  PDE id is     0
+  Number of slave processors is     4
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               SOLVE_ONLY
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     MASTER
+  print_linsys_when  NEVER
+  print_error_when   FINAL
+  print_error_who    MASTER
+  print_error_what   ENERGY_LINF_L2_ERR
+  print_errest_what  NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles                   5
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+Total Grid:
+   number of vertices      =         365
+   number of leaf elements =         675
+   number of levels        =           9
+   degrees of freedom      =         365
+   min and max degree      =           1          1
+
+Total Grid:
+   number of vertices      =         365
+   number of leaf elements =         675
+   number of levels        =           9
+   degrees of freedom      =         365
+   min and max degree      =           1          1
+
+Total Grid:
+   number of vertices      =         365
+   number of leaf elements =         675
+   number of levels        =           9
+   degrees of freedom      =         365
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.0470854889E-01
+   Linf norm of error         9.6857544762E-03
+   L2 norm of error           3.1729420879E-03
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           1
+termination condition:
+  one trip solver
+---------------------------------------------------------

@@ -1,0 +1,17 @@
+This example illustrates how to set the user provided routines dynamically at
+run time.  It uses a module (in pde.f90) that maintains pointers to default or
+user provided routines, and routines to change the pointers.
+
+The module also provides a second interface to PHAML's public routines which
+accepts an integer instead of the type(phaml_solution_type) argument.
+The integer is an index into an array of type(phaml_solution_type) that
+is maintained in that module.
+
+This example requires that the compiler support the Fortran 2003 feature of
+procedure pointers.
+
+This example can only be run with a sequential compilation of PHAML, i.e.,
+use "PARALLEL sequential PARLIB none" when running mkmkfile.sh.
+
+This example requires that the kind of real be double precision, i.e.,
+global.f90 must set my_real to kind(1.0d0).

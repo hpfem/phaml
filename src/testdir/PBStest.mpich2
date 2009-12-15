@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# This script can be used to run the PHAML tests on a batch system with
+# PBS or Torque/Maui when MPICH2 is the MPI library.
+# Submit it with "qsub PBStest.mpich2"
+
+# specify number of processors
+
+#PBS -l nodes=5
+
+# queue size, join stdout and stderr, and pass environment variables to PBS
+
+#PBS -q small
+#PBS -j oe
+#PBS -V
+
+# By default, the noninteractive tests are run.  For a quick test, use
+# WHAT=first.  Or you can specify individual tests, for example WHAT=arpack.
+# Do not omit "what=" and do not request WHAT=interactive.
+
+WHAT=noninteractive
+
+# make sure this script is run by qsub
+
+if [ "x$PBS_NODEFILE" = "x" ] ; then
+  echo "This script must be submitted to qsub."
+  exit 1
+fi
+
+# count the nodes
+
+nNodes=0
+for node in `cat $PBS_NODEFILE`; do
+  nNodes=`expr $nNodes + 1`
+done
+
+# start mpich2 demon
+
+mpdboot --totalnum=$nNodes --file=$PBS_NODEFILE
+
+# run the tests.
+
+cd $PBS_O_WORKDIR
+make test what=$WHAT
+
+# kill mpich2 demon
+
+mpdallexit
+exit 0

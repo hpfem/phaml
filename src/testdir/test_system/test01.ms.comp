@@ -1,0 +1,231 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from the master process
+  PDE id is     0
+  Number of slave processors is     4
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert                  300
+  max_eq             infinity
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 2
+  print_grid_when    PHASES
+  print_grid_who     MASTER
+  print_linsys_when  NEVER
+  print_error_when   PHASES
+  print_error_who    MASTER
+  print_error_what   ENERGY_LINF_ERR
+  print_errest_what  ENERGY_LINF_ERREST
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles                   2
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+Total Grid:
+   number of vertices      =           9
+   number of leaf elements =           8
+   number of levels        =           1
+   degrees of freedom      =           9
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       9.2477315868E-01
+   energy error estimate      1.8308801788E-01
+      effectivity             1.9798154408E-01
+  Component           1
+   Linf norm of error         1.7164943122E-01
+   Linf error estimate        2.7974880474E-02
+      effectivity             1.6297683176E-01
+  Component           2
+   Linf norm of error         3.6384112011E-01
+   Linf error estimate        5.2080688181E-02
+      effectivity             1.4314129246E-01
+
+Total Grid:
+   number of vertices      =          18
+   number of leaf elements =          23
+   number of levels        =           3
+   degrees of freedom      =          18
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       4.4554051572E-01
+      reduced by              4.8178357205E-01
+   energy error estimate      9.8387114017E-02
+      reduced by              5.3737603999E-01
+      effectivity             2.2082641319E-01
+  Component           1
+   Linf norm of error         6.9340776769E-02
+      reduced by              4.0396741357E-01
+   Linf error estimate        1.2428319557E-02
+      reduced by              4.4426711916E-01
+      effectivity             1.7923536678E-01
+  Component           2
+   Linf norm of error         1.1646256877E-01
+      reduced by              3.2009182671E-01
+   Linf error estimate        1.4892375027E-02
+      reduced by              2.8594812293E-01
+      effectivity             1.2787263053E-01
+
+Total Grid:
+   number of vertices      =          37
+   number of leaf elements =          55
+   number of levels        =           5
+   degrees of freedom      =          37
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       2.5183822934E-01
+      reduced by              5.6524203849E-01
+   energy error estimate      6.3106196295E-02
+      reduced by              6.4140712863E-01
+      effectivity             2.5058227443E-01
+  Component           1
+   Linf norm of error         3.4997169736E-02
+      reduced by              5.0471268662E-01
+   Linf error estimate        4.7795022835E-03
+      reduced by              3.8456544842E-01
+      effectivity             1.3656825165E-01
+  Component           2
+   Linf norm of error         3.3982387702E-02
+      reduced by              2.9178806599E-01
+   Linf error estimate        5.4482616114E-03
+      reduced by              3.6584235904E-01
+      effectivity             1.6032603886E-01
+
+Total Grid:
+   number of vertices      =          78
+   number of leaf elements =         128
+   number of levels        =           6
+   degrees of freedom      =          78
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.7331815792E-01
+      reduced by              6.8821226377E-01
+   energy error estimate      4.1205094006E-02
+      reduced by              6.5294846504E-01
+      effectivity             2.3774251066E-01
+  Component           1
+   Linf norm of error         1.4628014458E-02
+      reduced by              4.1797706982E-01
+   Linf error estimate        2.0171537479E-03
+      reduced by              4.2204263714E-01
+      effectivity             1.3789661978E-01
+  Component           2
+   Linf norm of error         1.8900755129E-02
+      reduced by              5.5619267532E-01
+   Linf error estimate        2.0142895578E-03
+      reduced by              3.6971234156E-01
+      effectivity             1.0657190911E-01
+
+Total Grid:
+   number of vertices      =         147
+   number of leaf elements =         252
+   number of levels        =           7
+   degrees of freedom      =         147
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       1.1965138204E-01
+      reduced by              6.9035687594E-01
+   energy error estimate      2.9148745483E-02
+      reduced by              7.0740635803E-01
+      effectivity             2.4361394733E-01
+  Component           1
+   Linf norm of error         7.6340654897E-03
+      reduced by              5.2187981571E-01
+   Linf error estimate        9.5739851908E-04
+      reduced by              4.7462843130E-01
+      effectivity             1.2541135786E-01
+  Component           2
+   Linf norm of error         8.5251089446E-03
+      reduced by              4.5104594426E-01
+   Linf error estimate        1.1388946140E-03
+      reduced by              5.6540759478E-01
+      effectivity             1.3359296889E-01
+
+Total Grid:
+   number of vertices      =         318
+   number of leaf elements =         580
+   number of levels        =           9
+   degrees of freedom      =         318
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       7.8342405073E-02
+      reduced by              3.2737776922E-01
+   energy error estimate      1.9329879288E-02
+      reduced by              3.3157309119E-01
+      effectivity             2.4673584211E-01
+  Component           1
+   Linf norm of error         3.2128097604E-03
+      reduced by              4.2085174208E-01
+   Linf error estimate        4.4441171966E-04
+      reduced by              4.6418676320E-01
+      effectivity             1.3832494072E-01
+  Component           2
+   Linf norm of error         4.9050338854E-03
+      reduced by              5.7536319094E-01
+   Linf error estimate        5.6940751141E-04
+      reduced by              4.9996505769E-01
+      effectivity             1.1608635632E-01
+
+Total Grid:
+   number of vertices      =         318
+   number of leaf elements =         580
+   number of levels        =           9
+   degrees of freedom      =         318
+   min and max degree      =           1          1
+
+Norms of error:
+   energy norm of error       7.8342405073E-02
+   energy error estimate      1.9329879288E-02
+      effectivity             2.4673584211E-01
+  Component           1
+   Linf norm of error         3.2128097604E-03
+   Linf error estimate        4.4441171966E-04
+      effectivity             1.3832494072E-01
+  Component           2
+   Linf norm of error         4.9050338854E-03
+   Linf error estimate        5.6940751141E-04
+      effectivity             1.1608635632E-01
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           5
+termination condition:
+  maximum vertices achieved
+---------------------------------------------------------
+Linf errors from query  3.212809760449E-03 4.905033885411E-03

@@ -1,0 +1,124 @@
+PVM
+---
+
+The spawned processes (phaml_slave and phaml_graphics) must be in
+$HOME/pvm3/bin/$PVM_ARCH for PVM to find them.  I use a symbolic link from
+there to the actual executables.  When running the examples, the link does
+have to be changed with each example.
+
+The Triangle data files with initial grid information (in most examples,
+domain.*) cannot be found by PVM.  You have to give the full path name in
+the argument triangle_files.
+
+Alternate debuggers with PVM
+----------------------------
+
+To use a different debugger with PVM:
+ 1) create a script that runs it in an xterm (or something)
+    for example
+      #!/bin/csh -f
+      exec xterm -e dbx90 $argv[1]
+ 2) set PVM_DEBUGGER to that script
+ 3) add PVM_DEBUGGER to PVM_EXPORT
+
+NAGWare dbx90 with PVM
+----------------------
+
+If a process is spawned without the full path in the name of the
+process to spawn, dbx90 will look for the *.g90 files in the home directory.
+But I never have gotten this to work successfully.
+Giving the full path name in the spawn call, the xterm with the debugger
+never showed up and the master crashed when doing the first mcast.
+Copying the *.g90 files to $HOME worked once (but dbx90 wouldn't print
+local or module variables, only dummy parameters), and failed another time.
+
+PVM, SSH and display on home computer
+-------------------------------------
+
+make sure sshd is running on home computer
+find the temporary hostname assigned by the IPS using "who"
+add that hostname to PVM and use it for graphics_host
+set DISPLAY to :0.0 and include DISPLAY in PVM_EXPORT
+may also need eval `ssh-agent` and ssh-add
+
+LAM
+---
+
+to run a LAM program,
+mpirun -w [-x DISPLAY] -np <number of procs> [xterm -e gdb] phaml
+For debugging SPMD, include the parts in square brackets and "xhost + remote".
+For debugging with debug spawning and ssh, include -x DISPLAY where DISPLAY is
+the one set by ssh.  It seems I also have to be ssh'd to the remote hosts
+in any xterm _after_ lamboot.
+
+LAM processes can loose track of standard input, for example when using
+pause_after_phases=.true. in phaml_solve_pde.  To remedy this, the processes
+can be run in an xterm (with or without a debugger) as described above (just
+leave off gdb to avoid the debugger if you want).  But you may only want
+the master process to have an xterm, because only it prompts when pause is
+called.  See examples/simple/spmd-xterm.csh for a script that runs the
+master (or selected processes) in an xterm (with or without debugger) and
+the other processes without an xterm.
+
+When just running with number of procs == 1 (as is always the case
+with spawning), can just type "phaml".
+
+set LAMBHOST to the host file
+
+Other useful commands:
+lamboot, lamclean, lamhalt
+
+LAM and SSH
+-----------
+
+The problem is with the remote machines displaying on the local host, as
+with phaml_graphics running on a remote machine or spawning with debug so
+the remote machine pops up an xterm.  Using -x DISPLAY doesn't quite cut it.
+The following seems to work: 1) lamboot 2) start an xterm with a ssh login
+for each one of the remote hosts.  2 must be done after 1.  If you need to
+wipe and lamboot again, terminate all the xterms before lamboot.
+
+MPICH2
+------
+
+If using PARALLEL=messpass_nospawn and MPICH2 was built with gforker, you do not
+need to run the mpd demon.
+
+If using PARALLEL=messpass_spawn, you do not need mpiexec; just run as "phaml".
+
+To start a single mpd demon on the local host, mpd &
+To start multiple demons, put list of host names in mpd.hosts and then
+   mpdboot -n <number to start> 
+Alternately, on local host, mpd &
+                            mpdtrace -l (this gives <host>_<port>
+             on each remote host, mpd -h <host> -p <port> &
+
+To end all the mpd demons, mpdallexit
+
+To run an MPICH2 program, mpiexec -n <nproc> phaml
+
+To get the jobid of running jobs, mpdlistjobs
+To terminate all the processes of a job, mpdkilljob jobid
+
+MPICH
+-----
+
+To run an MPICH program, mpirun -machinefile <hosts> -np <nproc> [-gdb] phaml
+
+^C appears to kill all the processes, at least on the local host
+
+MPICH and SSH without network
+-----------------------------
+
+When trying to run mpich on a machine that is disconnected from the network,
+ssh displays the IP address of the machine and says the network is unreachable.
+Use a machinefile that lists just localhost.localdomain.  Also make sure that
+ssh is configured to allow that host, for example via 127.0.0.1 in hosts.allow.
+
+OpenMPI Oversubscribed
+----------------------
+
+If running more processes than processors, performance is terrible because of
+a busy recieve in the master.  (See oversubscribing in the OpenMPI FAQ.)  To
+avoid this, add "--mca mpi_yield_when_idle 1" to the mpirun command, or
+set the environment variable OMPI_MCA_mpi_yield_when_idle to 1.

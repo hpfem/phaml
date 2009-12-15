@@ -1,0 +1,7 @@
+This is very simple example that solves Poisson's equation on
+the unit square with periodic boundary conditions on the top and
+bottom and Dirichlet boundary conditions on the right side, and natural
+boundary conditions on the left side.  It uses 2 processors (unless compiled
+as a sequential program where nproc is ignored, or with messpass_nospawn where
+number of processors is determined by the launching command) and prints the
+grid information and norms of the error after each refine/solve loop.

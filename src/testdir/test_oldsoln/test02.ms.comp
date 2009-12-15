@@ -1,0 +1,60 @@
+
+Total Grid:
+   number of vertices      =         206
+   number of leaf elements =         374
+   number of levels        =          13
+   degrees of freedom      =        3065
+   min and max degree      =           4          4
+
+Norms of error:
+   energy error estimate      1.1401307347E-03
+   Linf error estimate        4.2918148945E-04
+time =  1.000000000000E-02
+
+Total Grid:
+   number of vertices      =         346
+   number of leaf elements =         643
+   number of levels        =          19
+   degrees of freedom      =        5239
+   min and max degree      =           4          4
+
+Norms of error:
+   energy error estimate      2.8287398871E-04
+   Linf error estimate        1.4813244588E-04
+time =  2.000000000000E-02
+
+Total Grid:
+   number of vertices      =         434
+   number of leaf elements =         813
+   number of levels        =          19
+   degrees of freedom      =        6611
+   min and max degree      =           4          4
+
+Norms of error:
+   energy error estimate      2.6950582783E-04
+   Linf error estimate        1.0526748534E-04
+time =  3.000000000000E-02
+
+Total Grid:
+   number of vertices      =         559
+   number of leaf elements =        1060
+   number of levels        =          20
+   degrees of freedom      =        8593
+   min and max degree      =           4          4
+
+Norms of error:
+   energy error estimate      1.1662549743E-04
+   Linf error estimate        2.9212950429E-05
+time =  4.000000000000E-02
+
+Total Grid:
+   number of vertices      =         709
+   number of leaf elements =        1347
+   number of levels        =          21
+   degrees of freedom      =       10915
+   min and max degree      =           4          4
+
+Norms of error:
+   energy error estimate      3.4081906163E-05
+   Linf error estimate        1.2219966553E-05
+time =  5.000000000000E-02

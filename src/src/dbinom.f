@@ -1,0 +1,376 @@
+C This is DBINOM from CMLIB via gams.nist.gov with slight changes made
+C by WFM on 3/24/2005.
+C 1) The error handling was replaced with calls to fatal.
+C 2) Put in a D1MACH based on Fortran 90 intrinsics
+
+      DOUBLE PRECISION FUNCTION DBINOM(N,M)
+C WFM for access to subroutine fatal
+      USE MESSAGE_PASSING
+C end WFM
+C***BEGIN PROLOGUE  DBINOM
+C***DATE WRITTEN   770601   (YYMMDD)
+C***REVISION DATE  820801   (YYMMDD)
+C***REVISION HISTORY (YYMMDD)
+C   000601 Changed DINT to generic AINT        (RFB)
+C***CATEGORY NO.  C1
+C***KEYWORDS  BINOMIAL COEFFICIENTS,DOUBLE PRECISION,SPECIAL FUNCTION
+C***AUTHOR  FULLERTON, W., (LANL)
+C***PURPOSE  Computes the d.p. binomial coefficients.
+C***DESCRIPTION
+C
+C DBINOM(N,M) calculates the double precision binomial coefficient
+C for integer arguments N and M.  The result is (N!)/((M!)(N-M)!).
+C***REFERENCES  (NONE)
+C***ROUTINES CALLED  D1MACH,D9LGMC,AINT,DLNREL,XERROR
+C***END PROLOGUE  DBINOM
+      DOUBLE PRECISION CORR, FINTMX, SQ2PIL, XK, XN, XNK, D9LGMC,
+     1  DLNREL, D1MACH
+      REAL BILNMX
+      DATA SQ2PIL / 0.9189385332 0467274178 0329736405 62 D0 /
+      DATA BILNMX, FINTMX / 0.0, 0.0D0 /
+C***FIRST EXECUTABLE STATEMENT  DBINOM
+      IF (BILNMX.NE.0.0) GO TO 10
+      BILNMX = DLOG(D1MACH(2)) - 0.0001D0
+      FINTMX = 0.9D0/D1MACH(3)
+C
+C WFM
+C 10   IF (N.LT.0 .OR. M.LT.0) CALL XERROR ( 'DBINOM  N OR M LT ZERO', 22
+C     1, 1, 2)
+C      IF (N.LT.M) CALL XERROR ( 'DBINOM  N LT M', 14, 2, 2)
+ 10   IF (N.LT.0 .OR. M.LT.0) CALL FATAL  ( 'DBINOM  N OR M LT ZERO')
+      IF (N.LT.M) CALL FATAL  ( 'DBINOM  N LT M')
+C end WFM
+C
+      K = MIN0 (M, N-M)
+      IF (K.GT.20) GO TO 30
+      IF (FLOAT(K)*ALOG(AMAX0(N,1)).GT.BILNMX) GO TO 30
+C
+      DBINOM = 1.0D0
+      IF (K.EQ.0) RETURN
+      DO 20 I=1,K
+        XN = N - I + 1
+        XK = I
+        DBINOM = DBINOM * (XN/XK)
+ 20   CONTINUE
+C
+      IF (DBINOM.LT.FINTMX) DBINOM = AINT (DBINOM+0.5D0)
+      RETURN
+C
+C IF K.LT.9, APPROX IS NOT VALID AND ANSWER IS CLOSE TO THE OVERFLOW LIM
+C WFM
+C 30   IF (K.LT.9) CALL XERROR( 'DBINOM  RESULT OVERFLOWS BECAUSE N AND/O
+C     1R M TOO BIG', 51, 3, 2)
+ 30   IF (K.LT.9) CALL FATAL ( 'DBINOM  RESULT OVERFLOWS BECAUSE N AND/O
+     1R M TOO BIG')
+C end WFM
+C
+      XN = N + 1
+      XK = K + 1
+      XNK = N - K + 1
+C
+      CORR = D9LGMC(XN) - D9LGMC(XK) - D9LGMC(XNK)
+      DBINOM = XK*DLOG(XNK/XK) - XN*DLNREL(-(XK-1.0D0)/XN)
+     1  -0.5D0*DLOG(XN*XNK/XK) + 1.0D0 - SQ2PIL + CORR
+C
+C WFM
+C      IF (DBINOM.GT.DBLE(BILNMX)) CALL XERROR ( 'DBINOM  RESULT OVERFLOW
+C     1S BECAUSE N AND/OR M TOO BIG', 51, 3,2)
+      IF (DBINOM.GT.DBLE(BILNMX)) CALL FATAL  ( 'DBINOM  RESULT OVERFLOW
+     1S BECAUSE N AND/OR M TOO BIG')
+C end WFM
+C
+      DBINOM = DEXP (DBINOM)
+      IF (DBINOM.LT.FINTMX) DBINOM = AINT (DBINOM+0.5D0)
+C
+      RETURN
+      END
+      DOUBLE PRECISION FUNCTION DLNREL(X)
+C WFM for access to subroutine fatal
+      USE MESSAGE_PASSING
+C***BEGIN PROLOGUE  DLNREL
+C***DATE WRITTEN   770601   (YYMMDD)
+C***REVISION DATE  820801   (YYMMDD)
+C***CATEGORY NO.  C4B
+C***KEYWORDS  DOUBLE PRECISION,ELEMENTARY FUNCTION,LOGARITHM,
+C             RELATIVE ERROR
+C***AUTHOR  FULLERTON, W., (LANL)
+C***PURPOSE  Evaluates d.p. LN(1+X) accurate in the relative error sense
+C***DESCRIPTION
+C
+C DLNREL(X) calculates the double precision natural logarithm of
+C (1.0+X) for double precision argument X.  This routine should
+C be used when X is small and accurate to calculate the logarithm
+C accurately (in the relative error sense) in the neighborhood
+C of 1.0.
+C
+C Series for ALNR       on the interval -3.75000E-01 to  3.75000E-01
+C                                        with weighted error   6.35E-32
+C                                         log weighted error  31.20
+C                               significant figures required  30.93
+C                                    decimal places required  32.01
+C***REFERENCES  (NONE)
+C***ROUTINES CALLED  D1MACH,DCSEVL,INITDS,XERROR
+C***END PROLOGUE  DLNREL
+      DOUBLE PRECISION ALNRCS(43), X, XMIN,  DCSEVL, D1MACH
+      DATA ALNRCS(  1) / +.1037869356 2743769800 6862677190 98 D+1     /
+      DATA ALNRCS(  2) / -.1336430150 4908918098 7660415531 33 D+0     /
+      DATA ALNRCS(  3) / +.1940824913 5520563357 9261993747 50 D-1     /
+      DATA ALNRCS(  4) / -.3010755112 7535777690 3765377765 92 D-2     /
+      DATA ALNRCS(  5) / +.4869461479 7154850090 4563665091 37 D-3     /
+      DATA ALNRCS(  6) / -.8105488189 3175356066 8099430086 22 D-4     /
+      DATA ALNRCS(  7) / +.1377884779 9559524782 9382514960 59 D-4     /
+      DATA ALNRCS(  8) / -.2380221089 4358970251 3699929149 35 D-5     /
+      DATA ALNRCS(  9) / +.4164041621 3865183476 3918599019 89 D-6     /
+      DATA ALNRCS( 10) / -.7359582837 8075994984 2668370319 98 D-7     /
+      DATA ALNRCS( 11) / +.1311761187 6241674949 1522943450 11 D-7     /
+      DATA ALNRCS( 12) / -.2354670931 7742425136 6960923301 75 D-8     /
+      DATA ALNRCS( 13) / +.4252277327 6034997775 6380529625 67 D-9     /
+      DATA ALNRCS( 14) / -.7719089413 4840796826 1081074933 00 D-10    /
+      DATA ALNRCS( 15) / +.1407574648 1359069909 2153564721 91 D-10    /
+      DATA ALNRCS( 16) / -.2576907205 8024680627 5370786275 84 D-11    /
+      DATA ALNRCS( 17) / +.4734240666 6294421849 1543950059 38 D-12    /
+      DATA ALNRCS( 18) / -.8724901267 4742641745 3012632926 75 D-13    /
+      DATA ALNRCS( 19) / +.1612461490 2740551465 7398331191 15 D-13    /
+      DATA ALNRCS( 20) / -.2987565201 5665773006 7107924168 15 D-14    /
+      DATA ALNRCS( 21) / +.5548070120 9082887983 0413216972 79 D-15    /
+      DATA ALNRCS( 22) / -.1032461915 8271569595 1413339619 32 D-15    /
+      DATA ALNRCS( 23) / +.1925023920 3049851177 8785032448 68 D-16    /
+      DATA ALNRCS( 24) / -.3595507346 5265150011 1897078442 66 D-17    /
+      DATA ALNRCS( 25) / +.6726454253 7876857892 1945742267 73 D-18    /
+      DATA ALNRCS( 26) / -.1260262416 8735219252 0824256375 46 D-18    /
+      DATA ALNRCS( 27) / +.2364488440 8606210044 9161589555 19 D-19    /
+      DATA ALNRCS( 28) / -.4441937705 0807936898 8783891797 33 D-20    /
+      DATA ALNRCS( 29) / +.8354659446 4034259016 2412939946 66 D-21    /
+      DATA ALNRCS( 30) / -.1573155941 6479562574 8992535210 66 D-21    /
+      DATA ALNRCS( 31) / +.2965312874 0247422686 1543697066 66 D-22    /
+      DATA ALNRCS( 32) / -.5594958348 1815947292 1560132266 66 D-23    /
+      DATA ALNRCS( 33) / +.1056635426 8835681048 1872841386 66 D-23    /
+      DATA ALNRCS( 34) / -.1997248368 0670204548 3149994666 66 D-24    /
+      DATA ALNRCS( 35) / +.3778297781 8839361421 0498559999 99 D-25    /
+      DATA ALNRCS( 36) / -.7153158688 9081740345 0381653333 33 D-26    /
+      DATA ALNRCS( 37) / +.1355248846 3674213646 5020245333 33 D-26    /
+      DATA ALNRCS( 38) / -.2569467304 8487567430 0798293333 33 D-27    /
+      DATA ALNRCS( 39) / +.4874775606 6216949076 4595199999 99 D-28    /
+      DATA ALNRCS( 40) / -.9254211253 0849715321 1323733333 33 D-29    /
+      DATA ALNRCS( 41) / +.1757859784 1760239233 2697600000 00 D-29    /
+      DATA ALNRCS( 42) / -.3341002667 7731010351 3770666666 66 D-30    /
+      DATA ALNRCS( 43) / +.6353393618 0236187354 1802666666 66 D-31    /
+      DATA NLNREL, XMIN / 0, 0.D0 /
+C***FIRST EXECUTABLE STATEMENT  DLNREL
+      IF (NLNREL.NE.0) GO TO 10
+      NLNREL = INITDS (ALNRCS, 43, 0.1*SNGL(D1MACH(3)))
+      XMIN = -1.0D0 + DSQRT(D1MACH(4))
+C
+C WFM
+C 10   IF (X.LE.(-1.D0)) CALL XERROR ( 'DLNREL  X IS LE -1', 18, 2, 2)
+C      IF (X.LT.XMIN) CALL XERROR ( 'DLNREL  ANSWER LT HALF PRECISION BEC
+C     1AUSE X TOO NEAR -1', 54,    1, 1)
+ 10   IF (X.LE.(-1.D0)) CALL FATAL  ( 'DLNREL  X IS LE -1')
+      IF (X.LT.XMIN) CALL FATAL  ( 'DLNREL  ANSWER LT HALF PRECISION BEC
+     1AUSE X TOO NEAR -1')
+C end WFM
+C
+      IF (DABS(X).LE.0.375D0) DLNREL = X*(1.D0 -
+     1  X*DCSEVL (X/.375D0, ALNRCS, NLNREL))
+C
+      IF (DABS(X).GT.0.375D0) DLNREL = DLOG (1.0D0+X)
+C
+      RETURN
+      END
+      FUNCTION INITDS(DOS,NOS,ETA)
+C WFM for access to subroutine fatal
+      USE MESSAGE_PASSING
+C***BEGIN PROLOGUE  INITDS
+C***DATE WRITTEN   770601   (YYMMDD)
+C***REVISION DATE  820801   (YYMMDD)
+C***CATEGORY NO.  C3A2
+C***KEYWORDS  CHEBYSHEV,DOUBLE PRECISION,INITIALIZE,
+C             ORTHOGONAL POLYNOMIAL,SERIES,SPECIAL FUNCTION
+C***AUTHOR  FULLERTON, W., (LANL)
+C***PURPOSE  Initializes the d.p. properly normalized orthogonal
+C            polynomial series to determine the number of terms needed
+C            for specific accuracy.
+C***DESCRIPTION
+C
+C Initialize the double precision orthogonal series DOS so that INITDS
+C is the number of terms needed to insure the error is no larger than
+C ETA.  Ordinarily ETA will be chosen to be one-tenth machine precision
+C
+C             Input Arguments --
+C DOS    dble prec array of NOS coefficients in an orthogonal series.
+C NOS    number of coefficients in DOS.
+C ETA    requested accuracy of series.
+C***REFERENCES  (NONE)
+C***ROUTINES CALLED  XERROR
+C***END PROLOGUE  INITDS
+C
+      DOUBLE PRECISION DOS(NOS)
+C***FIRST EXECUTABLE STATEMENT  INITDS
+C WFM
+C      IF (NOS.LT.1) CALL XERROR ( 'INITDS  NUMBER OF COEFFICIENTS LT 1',
+C     1 35, 2, 2)
+      IF (NOS.LT.1) CALL FATAL  ( 'INITDS  NUMBER OF COEFFICIENTS LT 1')
+C end WFM
+C
+      ERR = 0.
+      DO 10 II=1,NOS
+        I = NOS + 1 - II
+        ERR = ERR + ABS(SNGL(DOS(I)))
+        IF (ERR.GT.ETA) GO TO 20
+ 10   CONTINUE
+C
+C WFM
+C 20   IF (I.EQ.NOS) CALL XERROR ( 'INITDS  ETA MAY BE TOO SMALL', 28,
+C     1  1, 2)
+ 20   IF (I.EQ.NOS) CALL FATAL  ( 'INITDS  ETA MAY BE TOO SMALL')
+C end WFM
+      INITDS = I
+C
+      RETURN
+      END
+      DOUBLE PRECISION FUNCTION D1MACH(I)
+      INTEGER :: I
+      DOUBLE PRECISION :: B, X = 1.D0
+
+      B = RADIX(X)
+
+      SELECT CASE (I)
+        CASE (1)
+          D1MACH = TINY(X)            ! smallest positive magnitude.
+        CASE (2)
+          D1MACH = HUGE(X)            ! largest magnitude.
+        CASE (3)
+          D1MACH = B**(-DIGITS(X))    ! smallest relative spacing.
+        CASE (4)
+          D1MACH = B**(1-DIGITS(X))   ! largest relative spacing.
+        CASE (5)
+          D1MACH = LOG10(B)
+        CASE DEFAULT
+          STOP 'D1MACH -- input arg out of bounds'
+      END SELECT
+      RETURN
+C
+      END
+      DOUBLE PRECISION FUNCTION D9LGMC(X)
+C WFM for access to subroutine fatal
+      USE MESSAGE_PASSING
+C***BEGIN PROLOGUE  D9LGMC
+C***DATE WRITTEN   770601   (YYMMDD)
+C***REVISION DATE  820801   (YYMMDD)
+C***CATEGORY NO.  C7E
+C***KEYWORDS  COMPLETE GAMMA FUNCTION,CORRECTION FACTOR,
+C             DOUBLE PRECISION,GAMMA FUNCTION,LOGARITHM,
+C             SPECIAL FUNCTION
+C***AUTHOR  FULLERTON, W., (LANL)
+C***PURPOSE  Computes the  d.p. log Gamma correction factor for
+C            X .GE. 10. so that DLOG(DGAMMA(X)) = DLOG(DSQRT(2*PI)) +
+C            (X-5.)*DLOG(X) - X + D9LGMC(X)
+C***DESCRIPTION
+C
+C Compute the log gamma correction factor for X .GE. 10. so that
+C DLOG (DGAMMA(X)) = DLOG(DSQRT(2*PI)) + (X-.5)*DLOG(X) - X + D9lGMC(X)
+C
+C Series for ALGM       on the interval  0.          to  1.00000E-02
+C                                        with weighted error   1.28E-31
+C                                         log weighted error  30.89
+C                               significant figures required  29.81
+C                                    decimal places required  31.48
+C***REFERENCES  (NONE)
+C***ROUTINES CALLED  D1MACH,DCSEVL,INITDS,XERROR
+C***END PROLOGUE  D9LGMC
+      DOUBLE PRECISION X, ALGMCS(15), XBIG, XMAX, DCSEVL, D1MACH
+      DATA ALGMCS(  1) / +.1666389480 4518632472 0572965082 2 D+0      /
+      DATA ALGMCS(  2) / -.1384948176 0675638407 3298605913 5 D-4      /
+      DATA ALGMCS(  3) / +.9810825646 9247294261 5717154748 7 D-8      /
+      DATA ALGMCS(  4) / -.1809129475 5724941942 6330626671 9 D-10     /
+      DATA ALGMCS(  5) / +.6221098041 8926052271 2601554341 6 D-13     /
+      DATA ALGMCS(  6) / -.3399615005 4177219443 0333059966 6 D-15     /
+      DATA ALGMCS(  7) / +.2683181998 4826987489 5753884666 6 D-17     /
+      DATA ALGMCS(  8) / -.2868042435 3346432841 4462239999 9 D-19     /
+      DATA ALGMCS(  9) / +.3962837061 0464348036 7930666666 6 D-21     /
+      DATA ALGMCS( 10) / -.6831888753 9857668701 1199999999 9 D-23     /
+      DATA ALGMCS( 11) / +.1429227355 9424981475 7333333333 3 D-24     /
+      DATA ALGMCS( 12) / -.3547598158 1010705471 9999999999 9 D-26     /
+      DATA ALGMCS( 13) / +.1025680058 0104709120 0000000000 0 D-27     /
+      DATA ALGMCS( 14) / -.3401102254 3167487999 9999999999 9 D-29     /
+      DATA ALGMCS( 15) / +.1276642195 6300629333 3333333333 3 D-30     /
+      DATA NALGM, XBIG, XMAX / 0, 2*0.D0 /
+C***FIRST EXECUTABLE STATEMENT  D9LGMC
+      IF (NALGM.NE.0) GO TO 10
+      NALGM = INITDS (ALGMCS, 15, SNGL(D1MACH(3)) )
+      XBIG = 1.0D0/DSQRT(D1MACH(3))
+      XMAX = DEXP (DMIN1(DLOG(D1MACH(2)/12.D0), -DLOG(12.D0*D1MACH(1))))
+C
+C WFM
+C 10   IF (X.LT.10.D0) CALL XERROR ( 'D9LGMC  X MUST BE GE 10', 23, 1, 2)
+ 10   IF (X.LT.10.D0) CALL FATAL  ( 'D9LGMC  X MUST BE GE 10')
+C end WFM
+      IF (X.GE.XMAX) GO TO 20
+C
+      D9LGMC = 1.D0/(12.D0*X)
+      IF (X.LT.XBIG) D9LGMC = DCSEVL (2.0D0*(10.D0/X)**2-1.D0, ALGMCS,
+     1  NALGM) / X
+      RETURN
+C
+ 20   D9LGMC = 0.D0
+C WFM
+C      CALL XERROR ( 'D9LGMC  X SO BIG D9LGMC UNDERFLOWS', 34, 2, 1)
+      CALL FATAL  ( 'D9LGMC  X SO BIG D9LGMC UNDERFLOWS')
+C end WFM
+      RETURN
+C
+      END
+      DOUBLE PRECISION FUNCTION DCSEVL(X,A,N)
+C WFM for access to subroutine fatal
+      USE MESSAGE_PASSING
+C***BEGIN PROLOGUE  DCSEVL
+C***DATE WRITTEN   770401   (YYMMDD)
+C***REVISION DATE  820801   (YYMMDD)
+C***CATEGORY NO.  C3A2
+C***KEYWORDS  CHEBYSHEV,FNLIB,SPECIAL FUNCTION
+C***AUTHOR  FULLERTON, W., (LANL)
+C***PURPOSE  Evaluate the double precision N-term Chebyshev series A
+C            at X.
+C***DESCRIPTION
+C
+C Evaluate the N-term Chebyshev series A at X.  Adapted from
+C R. Broucke, Algorithm 446, C.A.C.M., 16, 254 (1973).
+C W. Fullerton, C-3, Los Alamos Scientific Laboratory.
+C
+C       Input Arguments --
+C X    double precision value at which the series is to be evaluated.
+C A    double precision array of N terms of a Chebyshev series.  In
+C      evaluating A, only half of the first coefficient is summed.
+C N    number of terms in array A.
+C***REFERENCES  (NONE)
+C***ROUTINES CALLED  XERROR
+C***END PROLOGUE  DCSEVL
+C
+       DOUBLE PRECISION A(N),X,TWOX,B0,B1,B2
+C***FIRST EXECUTABLE STATEMENT  DCSEVL
+C WFM
+C       IF(N.LT.1)CALL XERROR( 'DCSEVL  NUMBER OF TERMS LE 0', 28, 2,2)
+C       IF(N.GT.1000) CALL XERROR ( 'DCSEVL  NUMBER OF TERMS GT 1000',
+C     1   31, 3, 2)
+C       IF ((X.LT.-1.D0) .OR. (X.GT.1.D0)) CALL XERROR ( 'DCSEVL  X OUTSI
+C     1DE (-1,+1)', 25, 1, 1)
+       IF(N.LT.1)CALL FATAL ( 'DCSEVL  NUMBER OF TERMS LE 0')
+       IF(N.GT.1000) CALL FATAL  ( 'DCSEVL  NUMBER OF TERMS GT 1000')
+       IF ((X.LT.-1.D0) .OR. (X.GT.1.D0)) CALL FATAL  ( 'DCSEVL  X OUTSI
+     1DE (-1,+1)')
+C end WFM
+C
+       TWOX = 2.0D0*X
+       B1 = 0.D0
+       B0=0.D0
+       DO 10 I=1,N
+         B2=B1
+         B1=B0
+         NI = N - I + 1
+         B0 = TWOX*B1 - B2 + A(NI)
+ 10    CONTINUE
+C
+       DCSEVL = 0.5D0 * (B0-B2)
+C
+       RETURN
+      END

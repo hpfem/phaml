@@ -1,0 +1,49 @@
+This is a set of instructions for quickly setting up and running PHAML.
+If you run into problems, see USER_GUIDE for more detailed instructions.
+
+These instructions will build and run the "simple" example, which is
+contained in examples/simple.  To solve your own problems, you can take a
+similar example and modify it.
+
+You may need to obtain other software before compiling PHAML.  In particular,
+you need a Fortran 90 compiler, a PVM or MPI library (unless you are
+going to run on just one processor) and an OpenGL library, GLUT and f90gl
+(if you are going to use graphics).  See section III in USER_GUIDE if you
+need any of these.
+
+The first step is to modify mkmkfile.sh for your system(s).  You will
+need to edit this to set paths, command names, library names, etc.
+Instructions for editing it are contained in the file.  You only need
+to modify the mkmkfile.sh in the root PHAML directory.
+
+Once modified, you run mkmkfile.sh to create a Makefile.  First run
+"mkmkfile.sh help" to see a list of the configuration parameters,
+legitimate values, and default values.  Then run mkmkfile.sh with
+a space-separated list of parameters and values if you want to override
+defaults, for example
+./mkmkfile.sh PARLIB pvm GRAPHICS none
+
+Now just type "make".  If there are errors in the src/Makefile, you can fix them
+in src/Makefile (temporary solution) or in mkmkfile.sh and/or src/mkmkfile.sh
+(permanent solution).  This creates the PHAML library lib/libphaml.a and
+copies the module files (if your compiler uses them, for example *.mod) to
+the directory "module".
+
+Change to the directory examples/simple and type "make".  (Again, if there
+are errors in the Makefile you can fix them in Makefile or mkmkfile.sh.)
+This creates up to three executables: phaml, phaml_slave and phaml_graphics.
+phaml_slave is not created if PARALLEL is not messpass_spawn, and
+phaml_graphics is not created if GRAPHICS is none.
+
+If you are using PVM, then copy the executables to $HOME/pvm3/bin/$PVM_ARCH
+(or, what I do is create a symbolic link in that directory to the executables).
+
+Now start up any demons you need for the message passing library, and
+run phaml as you would any program under that message passing library,
+whether it is just typing "phaml" at the command line, or using some
+launching program like mpirun.
+
+If you are using graphics, the arrow keys pan, left mouse button rotates,
+middle mouse button zooms, and right mouse button brings up a menu which
+contains a large number of ways to change the graphics.  You are encouraged
+to play with it.

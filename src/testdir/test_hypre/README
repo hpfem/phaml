@@ -1,0 +1,9 @@
+test01 BoomerAMG
+test02 PCG, no precondition
+test03 PCG, diagonal scaling
+test04 PCG, BoomerAMG
+test05 GMRES, diagonal scaling
+test06 GMRES, Parasails
+test07 degree 4, PCG, diagonal scaling
+
+TEMP no testing of hypre parameters

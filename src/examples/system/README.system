@@ -1,0 +1,3 @@
+This example shows how to use PHAML to solve a system of equations
+simultaneously.  This example has a system of 2 equations; the same
+principle can be used for larger systems.

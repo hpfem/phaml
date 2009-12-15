@@ -1,0 +1,179 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq                   3000
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    19
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            HP_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  hp_strategy        HP_NEXT3P
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles          infinity
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =           9
+   number of vertices I own =           9
+   number of elements       =           8
+   number of leaf elements  =           8
+   leaf elements I own      =           8
+   number of levels         =           1
+   degrees of freedom       =           9
+   degrees of freedom I own =           9
+   min and max degree       =           1          1
+
+My Grid:
+   number of vertices       =          11
+   number of vertices I own =          11
+   number of elements       =          16
+   number of leaf elements  =          12
+   leaf elements I own      =          12
+   number of levels         =           2
+   degrees of freedom       =          22
+   degrees of freedom I own =          22
+   min and max degree       =           1          2
+
+My Grid:
+   number of vertices       =          12
+   number of vertices I own =          12
+   number of elements       =          20
+   number of leaf elements  =          14
+   leaf elements I own      =          14
+   number of levels         =           2
+   degrees of freedom       =          37
+   degrees of freedom I own =          37
+   min and max degree       =           1          3
+
+My Grid:
+   number of vertices       =          15
+   number of vertices I own =          15
+   number of elements       =          28
+   number of leaf elements  =          18
+   leaf elements I own      =          18
+   number of levels         =           3
+   degrees of freedom       =          73
+   degrees of freedom I own =          73
+   min and max degree       =           1          4
+
+My Grid:
+   number of vertices       =          18
+   number of vertices I own =          18
+   number of elements       =          34
+   number of leaf elements  =          21
+   leaf elements I own      =          21
+   number of levels         =           3
+   degrees of freedom       =         152
+   degrees of freedom I own =         152
+   min and max degree       =           1          5
+
+My Grid:
+   number of vertices       =          24
+   number of vertices I own =          24
+   number of elements       =          56
+   number of leaf elements  =          32
+   leaf elements I own      =          32
+   number of levels         =           4
+   degrees of freedom       =         332
+   degrees of freedom I own =         332
+   min and max degree       =           1          5
+
+My Grid:
+   number of vertices       =          37
+   number of vertices I own =          37
+   number of elements       =         102
+   number of leaf elements  =          55
+   leaf elements I own      =          55
+   number of levels         =           5
+   degrees of freedom       =         600
+   degrees of freedom I own =         600
+   min and max degree       =           1          6
+
+My Grid:
+   number of vertices       =          58
+   number of vertices I own =          58
+   number of elements       =         174
+   number of leaf elements  =          91
+   leaf elements I own      =          91
+   number of levels         =           6
+   degrees of freedom       =        1213
+   degrees of freedom I own =        1213
+   min and max degree       =           1          7
+
+My Grid:
+   number of vertices       =          92
+   number of vertices I own =          92
+   number of elements       =         298
+   number of leaf elements  =         153
+   leaf elements I own      =         153
+   number of levels         =           7
+   degrees of freedom       =        2367
+   degrees of freedom I own =        2367
+   min and max degree       =           1          7
+
+My Grid:
+   number of vertices       =         111
+   number of vertices I own =         111
+   number of elements       =         368
+   number of leaf elements  =         188
+   leaf elements I own      =         188
+   number of levels         =           8
+   degrees of freedom       =        3025
+   degrees of freedom I own =        3025
+   min and max degree       =           2          7
+
+My Grid:
+   number of vertices       =         111
+   number of vertices I own =         111
+   number of elements       =         368
+   number of leaf elements  =         188
+   leaf elements I own      =         188
+   number of levels         =           8
+   degrees of freedom       =        3025
+   degrees of freedom I own =        3025
+   min and max degree       =           2          7
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           9
+termination condition:
+  maximum equations achieved
+---------------------------------------------------------

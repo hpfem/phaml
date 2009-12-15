@@ -1,0 +1,3 @@
+This example is Laplace's equation on an L shaped domain with a singularity
+at the reentrant corner.  It is frequently used as an example problem for
+adaptive refinement.

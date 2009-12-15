@@ -1,0 +1,685 @@
+This file contains information about how I install the optional auxillary
+packages.  It is intended to be notes to myself, to remind me how I
+previously built the application when I upgrade to a new version, or install
+on a new machine.  But you might find some of this information useful.
+
+General approach
+----------------
+
+I use an environment variable <app name>_HOME (e.g. ARPACK_HOME) to give
+the root directory of the installation of an application.  I install
+applications under /local/apps.  In general, the home directory contains lib
+and include subdirectories with the libraries and include files (after
+installation), but the details depend on the philosophy of the application.
+
+When the application requires a different compilation for different Fortran 90
+compilers, I put a separate subdirectory of the home directory for each
+compiler, and put library and module files in lib and include subdirectories
+under each of them, e.g. $LAM_HOME/lahey/lib and $LAM_HOME/lahey/include.  The
+name of the subdirectory is the same as the value for $PHAML_F90 in mkmkfile.sh.
+
+When the application requires a different compilation for different MPI
+libraries, I put a separate directory for each MPI library under the compiler
+directory (or under the home directory if the compiler directory isn't used),
+e.g. $MUMPS_HOME/lahey/mpich/lib.  The name of the subdirectory is the same
+as the value for $PHAML_PARLIB in mkmkfile.sh.
+
+Absoft f90
+----------
+
+The flags to have Absoft f90 use the single underscore for external names are
+-YEXT_NAMES=LCS -YEXT_SFX=_ -YCFRL=1
+
+ARPACK
+------
+
+The version I have tested is:
+arpack96.tar.gz  Sep 24 1996
+patch.tar.gz     Aug  2 2001
+parpack96.tar.gz Oct  7 1997
+ppatch.tar.gz    Aug  2 2001
+
+On Linux, built for LAM using ARmake.MPI-SUN4 as the template with these
+changes:
+home = /local/apps/ARPACK
+PLAT    = LINUX
+If LAPACK and/or BLAS libraries are available, change DIRS as instructed.
+ARPACKLIB  = $(home)/libarpack.a
+PARPACKLIB = $(home)/libparapack.a
+FC      = lf95
+FFLAGS  = -O -fno-second-underscore (g77, g95, gfortran, pathscale) -ff90 (g77)
+LAMHF77 = lf95
+PFC     = hf77
+PFFLAGS = -O -fno-second-underscore (g77, g95, gfortran, pathscale) -ff90 (g77)
+MAKE = /usr/bin/make
+
+Copy $LAM_HOME/lahey/include/mpif.h to
+    ARPACK/PARPACK/SRC/MPI/mpif.h
+    ARPACK/PARPACK/UTIL/MPI/mpif.h
+    ARPACK/PARPACK/EXAMPLES/MPI/mpif.h
+
+NOTE: for Open MPI there are additional mpif*.h files.
+
+make lib
+make plib
+
+The -ff90 flag is because of the use of "real(double precision complex)"
+which g77 says is ambiguous as to whether it should return a single or
+double precision result.  -ff90 forces a double precision result.
+
+For the NAG compiler include flags -dusty -w=all -dcfuns
+
+NOTE: ARPACK appears to be very picky about the LAPACK library that it uses.
+If you are using a LAPACK library and get errors from ARPACK, then use the
+source code provided with PHAML (PHAML_LAPACK=source in mkmkfile.sh) which
+contains that distributed with ARPACK.  You can still link in an optimized
+BLAS library which should help keep performance up.
+
+ATLAS
+-----
+
+On Linux, I build the ATLAS libraries, and merge their LAPACK into the
+standard LAPACK library.
+
+make
+
+This will ask several questions; the answers seem pretty obvious.  One of
+them will assign an architecture name (e.g. Linux_P4SSE2) which I refer
+to as <arch> below.
+
+Then edit Make.<arch>
+  On F2CDEFS, remove second underscore from -DAdd__
+  Set F77 to the compiler
+  On F77FLAGS, add -fno-second-underscore (for g77 et al.)
+
+make install arch=<arch>
+
+Merge the ATLAS partial lapack library into a copy of the system lapack library:
+  cd lib/<arch>
+  mkdir tmp
+  cd tmp
+  ar x ../liblapack.a
+  cp /usr/lib/liblapack.a ../liblapack.a
+  ar r ../liblapack.a *.o
+  cd ..
+  rm -rf tmp
+
+then move lib/<arch>/lib* to where I want them located.
+
+Because the existing LAPACK library being merged with this was compiled with
+g77 (/usr/lib/liblapack.a on Linux), this will require linking in g2c, so
+might as well just make one version of ATLAS with g77.
+
+BLACS
+-----
+
+BLACS Version 1.1, patch level 3
+
+On Linux for LAM and PVM:
+
+Get mpiblacs.tgz, pvmblacs.tgz, mpiblacs-patch03.tgz from netlib.
+Might also want blacstester.tgz, blacs_install.ps and errata.blacs
+Untar mpiblacs and mpiblacs-patch03 in /local/apps.
+Also blacstest and pvmblacs if desired.
+Be sure the patch is done last.
+
+For LAM and lf95, copy Bmake.MPI-LINUX to Bmake.inc; make the following changes:
+BTOPdir = /local/apps/BLACS
+add lib to the library names in BLACSFINIT, BLACSCINIT, BLACSLIB.  I also
+ remove the library designations from the names, since I use directories for that
+MPIdir = /local/apps/lam/lahey
+MPILIB = $(MPILIBdir)/liblamf77mpi.a $(MPILIBdir)/libmpi.a $(MPILIBdir)/liblam.a
+INTFACE = -DAdd_
+TRANSCOMM = -DUseMpi2 (see MPI error #12 in errata.blacs)
+F77 = lf95
+F77NO_OPTFLAGS = -fno-second-underscore (for g77, g95, gfortran, pathscale)
+                 -I$(OPENMPI_HOME)/compiler/include (for Open MPI)
+
+Then "make mpi"
+To clean up space, "make mpi what=clean"
+
+For MPICH and MPICH2, as above except obvious changes, and
+MPILIB = $(MPILIBdir)/libmpich.a 
+TRANSCOMM = -DUseMpich   (not for MPICH2)
+
+For PVM, start with Bmake.PVM-LINUX; make the following changes:
+BTOPdir = /local/apps/BLACS
+INTFACE = -DAdd_
+CATCHOUT = -DBLACSNoCatchout
+F77NO_OPTFLAGS = -fno-second-underscore
+CCFLAGS        = -O4 -D__NO_STRING_INLINES
+
+(The -D__NO_STRING_INLINES is because with /usr/include/bits/string2.h from
+glibc-devel-2.2.93-5 I get compilation errors of the form
+gcc -c -O4 -DSYSINC -I/local/apps/pvm3/include -DAdd_   -DBlacsDebugLvl=0 -DBLACSNoCatchout  blacs_setup_.c
+In file included from /usr/include/string.h:375,
+                 from blacs_setup_.c:19:
+/usr/include/bits/string2.h: In function `blacs_setup_':
+/usr/include/bits/string2.h:922: nested function `__strcspn_c1' declared `extern'
+Defining that variable is supposed to supress inclusion of strings2.h which
+just has some optimization.)
+
+Then "make pvm", test and clean up.  Must make the tests as a regular user
+because it writes them to $HOME/pvm3/....
+
+DRUM
+----
+
+DRUM 20070511
+
+Unpack both Zoltan and DRUM in the apps directory, and set up the config
+files for both of them.  Zoltan's config should have DRUM variables at the
+end.  DRUM config is in drum/config.  Also check the xml file in
+drum/example/xmls.  Set up DRUM with "gmake setup" and then build it
+with "gmake".  Build Zoltan after DRUM.
+
+GLUT
+----
+
+GLUT 3.7.1
+
+From the distribution that is available on the f90gl web page.  On Linux.
+
+mkmkfiles.imake
+make
+
+The only files that are needed are <gluthome>/lib/glut/libglut.a,
+<gluthome>/include/GL/glut.h and <gluthome>/include/GL/glutf90.h.
+I copy these to the Mesa lib and include directories.
+
+The MesaGLUT distribution also works starting with Mesa version 7.0.3.
+See Mesa instructions for this version.
+
+HYPRE
+-----
+
+hypre version 1.6.0
+              -----
+
+To use a single underscore in name mangling, edit src/utilities/fortran.h
+and change the definitions of hypre_NAME_FORT_CALLING_C and friends.
+
+in src:
+configure --prefix=$HYPRE_HOME/lahey/lam --with-F77=lf95 --with-mpi-include=$LAM_HOME/lahey/include
+
+also include --with-F77FLAGS=-fno-second-underscore for Gnu related compilers
+
+make
+setenv HYPRE_INSTALL_DIR $HYPRE_HOME/lahey/lam
+make install
+
+hypre version 1.9.0b
+              ------
+
+Example for Lahey f95 and LAM
+
+To use a single underscore in name mangling, edit src/utilities/fortran.h
+and change the definitions of hypre_NAME_FORT_CALLING_C and friends.
+
+in src:
+./configure --prefix=$HYPRE_HOME/lahey/lam --with-F77=lf95 --with-MPI-include=$LAM_HOME/lahey/include
+
+also include --with-F77FLAGS=-fno-second-underscore for Gnu related compilers
+Actually, control of name mangling did not work.  Awaiting reply.
+
+On raritan with openmpi I had to use
+--with-MPI-include="$PREFERRED_LIBDIR $PREFERRED_LIBDIR/openmpi"
+because mpi.h has #include "ompi/mpi/cxx/mpicxx.h" but ompi is a
+subdirectory of openmpi.  Why this never was a problem with other programs
+is a mystery to me.
+
+On looney there was some confusion between OpenMPI and LAM.  Avoid it with
+./configure --prefix=/local/apps/hypre/nag/openmpi --with-MPI-include="/local/apps/openmpi/nag/include" --with-MPI-libs="mpi orte opal dl" --with-MPI-lib-dirs=/local/apps/openmpi/nag/lib --with-MPI-flags=-pthread CC=gcc F77=g77 F90=nagf95 FFLAGS=-fno-second-underscore
+
+make
+make install
+chmod o+r $HYPRE_HOME/lahey/lam/include/*
+
+hypre version 2.0.0
+              -----
+
+On looneyjr (Fedora Core 6) I have to spell everything out for config to keep
+it from using some things from OpenMPI and some from LAM.
+
+For Intel Fortran 90 and OpenMPI:
+
+./configure --prefix=/local/apps/hypre/intel/openmpi --with-MPI-include="/usr/include/openmpi /usr/include/openmpi/32" --with-MPI-libs="mpi orte opal dl" --with-MPI-lib-dirs=/usr/lib/openmpi --with-MPI-flags=-pthread --with-babel CC=gcc F77=ifort JNI_INCLUDES=/usr/lib/gcc/i386-redhat-linux/4.1.1/include
+
+For LAM:
+
+./configure --prefix=/local/apps/hypre/intel/lam --with-MPI-include="/usr/include/lam /usr/include/lam/32" --with-MPI-libs="lammpio lamf77mpi mpi lam aio aio util dl" --with-MPI-lib-dirs=/usr/lib/lam --with-MPI-flags=-pthread --with-babel CC=gcc F77=ifort JNI_INCLUDES=/usr/lib/gcc/i386-redhat-linux/4.1.1/include
+
+On speedy (CentOS 5) for lam, this worked:
+./configure --prefix=/local/apps/hypre/intel/lam CC=lamcc-32 F77=lamf77-32
+
+On speedy (CentOS 5) for my own lam, this worked:
+./configure --prefix=/local/apps/hypre/intel/lam CC=mpicc F77=/local/apps/lam/intel/bin/mpif77
+
+On looney (CentOS 4) for mpich2:
+
+./configure --prefix=/local/apps/hypre/nag/mpich2 --with-MPI-include=/local/apps/mpich2/nag/include --with-MPI-lib-dirs=/local/apps/mpich2/nag/lib F77=nagf95 F90=nagf95 --without-fei
+
+make
+make install
+
+Sometimes it doesn't seem to matter which Fortran compiler compiles it, so
+compile it with one of them (e.g. Intel) and then make directory links for
+the others, e.g. ln -s /local/apps/hypre/intel /local/apps/hypre/lahey
+Then if the tests fail, compile it with other compilers.
+
+LAM
+---
+
+On Fedora Core 6, prebuilt LAM is in:
+libraries: /usr/lib/lam
+include: /usr/include/lam
+executables: /usr/bin, some have nonstandard names starting with lam
+
+LAM Version 7.1.1
+
+unpack tar ball in a different place than the install directory
+
+setenv FC <fortran compiler>
+setenv FFLAGS -fno-second-underscore (if using g77, g95 or gfortran)
+configure <see flags below>
+make
+make install
+
+switches for configure for a compiler specific subdirectory (e.g. lahey f95):
+--prefix=/local/apps/lam/lahey '--with-rsh=ssh -f' --without-mpi2cpp --without-romio
+
+For Intel ifort 11.1.046 (and later?) also need --with-memory-manager=none
+
+Also build it without Fortran to make the non-fortran related commands
+(e.g. lamboot) available from $LAM_HOME (which is /local/apps/lam in this case):
+--prefix=/local/apps/lam --without-fc '--with-rsh=ssh -f' --without-mpi2cpp --without-romio
+
+mv or cp the doc directory to $LAM_HOME
+
+MESA
+----
+
+Mesa Version 6.3.2
+
+You might want to edit <mesa home>/src/mesa/main/config.h to change
+DEFAULT_SOFTWARE_DEPTH_BITS to 31 to fix a transparency problem where a
+hidden side of a surface comes through the front.
+
+Edit configs/linux-x86; under linux-x86 ASM_FLAGS remove -DUSE_SSE_ASM
+make linux-x86
+
+I disabled sse because I was getting an arithmetic exception in
+_mesa_test_os_sse_exception_support.
+
+Mesa Version 7.0.1
+
+If you are also doing MesaGLUT, unpack it on top of Mesa before compiling
+Mesa.
+
+You might want to edit <mesa home>/src/mesa/main/config.h to change
+DEFAULT_SOFTWARE_DEPTH_BITS to 31 to fix a transparency problem where a
+hidden side of a surface comes through the front.
+
+Edit configs/default and change INSTALL_DIR to the installation directory,
+e.g. /local/apps/mesa
+
+Apply the 701patch in src/mesa/vbo, to fix a color problem.
+
+Edit configs/linux to remove -DHAVE_POSIX_MEMALIGN, because LAM's free() and
+posix_memalign() don't play together nicely.
+
+make linux-x86
+make install
+
+Mesa Version 7.0.3
+
+If you are also doing MesaGLUT, unpack it on top of Mesa before compiling
+Mesa.
+
+You might want to edit <mesa home>/src/mesa/main/config.h to change
+DEFAULT_SOFTWARE_DEPTH_BITS to 31 to fix a transparency problem where a
+hidden side of a surface comes through the front.
+
+Edit configs/default and change INSTALL_DIR to the installation directory,
+e.g. /local/apps/mesa
+
+Edit configs/linux to remove -DHAVE_POSIX_MEMALIGN, because LAM's free() and
+posix_memalign() don't play together nicely.
+
+make linux-x86  (on 64 bit arch, use make linux-x86-64)
+make install
+
+MPICH
+-----
+
+I have never had much success with MPICH.  Use MPICH2 unless your system
+already has MPICH installed, in which case you don't need hints for
+building it.
+
+MPICH2
+------
+
+MPICH2 Version 1.0.2p1
+
+setenv F77 lf95
+setenv FFLAGS -fno-second-underscore (for g77, g95, gfortran, pathscale)
+setenv F90 lf95
+setenv F90FLAGS -fno-second-underscore (for g77, g95, gfortran, pathscale)
+./configure --prefix=/local/apps/mpich2/lahey |& tee configure.log
+For a stand alone machine (for debugging/development) also --with-pm=gforker
+  or gforker:mpd
+make |& tee make.log
+make install |& tee install.log
+
+MUMPS
+-----
+
+MUMPS 4.5.1, 4.7.3
+
+For Linux, LAM, Lahey lf95:
+
+cp Make.inc/Makefile.PC.PAR Makefile.inc
+
+Changes to Makefile.inc
+FC = lf95
+FL = lf95
+SCALAP = -L/local/apps/SCALAPACK/lahey/lam/lib -lscalapack -L/local/apps/BLACS/lahey/lam/lib -lblacs -lblacsF77init -lblacs -llapack
+INCPAR = -I/local/apps/lam/lahey/include
+LIBPAR = $(SCALAP) -L/local/apps/lam/lahey/lib -llamf77mpi -lmpi -llam
+LIBBLAS = -lblas
+
+For g77 related compilers, add -fno-second-underscore to OPTF
+
+For the NAG compiler, also need to add flags (OPTF is a good place for this)
+-mismatch_all -w=all
+because there are a lot of old FORTRAN 77 style argument mismatches that
+NAG diagnoses as errors.
+Also, at least in MUMPS 4.5.1, need -maxcontin=30 because they used more
+continuation lines than the standard allows for fixed form.
+
+Also need to change permissions on directories if it is created by root and
+users need to use it.
+
+For g95, need to add "intent(in)" to line 60 of dmumps_part1.F because this
+interface block does not match the subroutine later in the file.  This is
+with version 4.5.1; I don't know about other versions.
+
+For g95, -Wno=155 is useful to supress warnings about inconsistent types.
+
+MUMPS 4.9
+
+For Linux, LAM on a machine where mpif77 works right, the Linux distribution
+LAM is installed in a directory with lib and include subdirectories, and
+that directory is linked to /local/apps/lam
+
+cp Make.inc/Makefile.PC.PAR Makefile.inc
+
+Changes to Makefile.inc
+LAMHF77 = nagfor  (added this line before FC; set to which ever compiler)
+FC = mpif77
+FL = mpif77
+SCALAP = -L/local/apps/scalapack/nag/lam/lib -lscalapack -L/local/apps/blacs/nag/lam/lib -lblacs -lblacsF77init -lblacs -llapack
+INCPAR = -I/local/apps/lam/include
+LIBPAR = $(SCALAP)
+LIBBLAS = -lblas
+
+For the NAG compiler, need additional flags (add to OPTF)
+-kind=byte because they use KIND=8 explicitly
+-w=all because they have a lot of unused variables, extensions and obsolescent
+-mismatch_all because calls to MPI routines have different types
+
+With the NAG compiler I had to move the declaration of IW in subroutine
+DMUMPS_227 because it didn't like using LIW as the dimension before it was
+declared.
+
+With Absoft compiler, need -YNO_CDEC
+
+For g95, need -fno-second-underscore.  Also -Wno=155 is useful to supress
+warnings about inconsistent types.
+
+make
+move lib/* and copy include/ to the desired locations
+
+In nag/*/include/dmumps_struc.h, use
+integer, parameter :: I8B = selected_int_kind(18)
+to replace the 8-byte integer declarations.
+
+Open MPI
+--------
+
+On Fedora Core 6, prebuilt Open MPI is in:
+libraries: /usr/lib/openmpi
+includes: /usr/include/openmpi
+executables: /usr/share/openmpi/bin32
+The openmpi compilers, like /usr/bin/mpif90, all point to the same name in
+/etc/alternatives, which then all point to /usr/bin/opal_wrapper-32.  I have
+no idea what that's all about.
+
+Open MPI Version 1.1.2
+
+First build a version without Fortran to get the commands in $OPENMPI_HOME/bin
+
+./configure --prefix=/local/apps/openmpi --disable-mpi-f77 --disable-mpi-f90
+make
+make install
+make clean
+
+Then build it for each Fortran compiler, e.g for Lahey compiler on Linux:
+
+./configure --prefix=/local/apps/openmpi/lahey F77=lf95 FFLAGS=-O FC=lf95 FCFLAGS=-O
+make
+make install
+make clean
+
+Note: The NAGWare f95 compiler needs -mismatch, and -w is also useful.
+
+ompi_info gives information about the installation
+
+run program with:
+mpiexec -hostfile <filename> -np <num procs> <executable>
+hostfile is not needed for batch systems like PBS.  Otherwise, if hostfile is
+omitted all processes run on the local host.
+For a master/slave program, use -np 1
+
+ParMETIS
+--------
+
+ParMetis Version 3.1.0
+
+On Linux, for use with LAM, in Makefile.in change mpicc to hcc in two places,
+and make.
+
+I have also had good luck with setting CC and LD to gcc and INCDIR to the
+directory containing mpi.h (for building libraries, but not tests).
+
+Then mkdir lam/lib and move the two libraries to that directory.
+
+May need to add read and execute permission for others on ParMETIS directory.
+
+PETSc
+-----
+
+PETSc Version 2.3.3 (Earlier versions may require changes in mkmkfile.sh,
+                     petsc_init.F90, and petsc_interf.F90.  Search them for
+                     "before" for the changes.)
+
+setenv PETSC_DIR `pwd`
+setenv PETSC_ARCH linux
+
+For LAM, setenv LAMHF77 full-path-to-fortran-compiler
+--with-mpi-dir will point to the MPI compiler wrappers
+
+might also have to add the MPI library directory to LD_LIBRARY_PATH (if
+configure complains about mpicc not working)
+
+With NAG compiler 5.1(310), I also needed --LIBS=/local/apps/nag/lib/libf98.a
+because libf98.so, linked under the C compiler, had many unresolved references
+that are in libf98.a.
+
+On raritan, I also need
+--with-lapack-lib=/usr/lib/liblapack.a --with-blas-lib=/usr/lib/libblas.a
+
+./config/configure.py --FFLAGS=<fortran flags> --prefix=$PETSC_HOME/lahey/lam --with-mpi-dir=$LAM_HOME/lahey --with-debugging=0 --with-x=0
+
+On speedy (CentOS 5) I did
+./config/configure.py --prefix=/local/apps/petsc/intel/lam CC=lamcc-32 F77=lamf77-32 F90=lamf77-32 --with-mpi-include=/usr/include/lam --with-mpi-lib=/usr/lib/lam/libmpi.a --with-debugging=0 --with-x=0
+
+On another occasion on speedy I did
+./config/configure.py --prefix=/local/apps/petsc/gfortran/lam with-cc=mpicc with-f77=/local/apps/lam/gfortran/bin/mpif77 with-f90=/local/apps/lam/gfortran/bin/mpif77 --with-debugging=0 --with-x=0
+
+On octopus that didn't work because with the 64 bit OS I need to specify two
+mpi include directories.  I think the CC=, etc, doesn't work. Instead use
+./config/configure.py --prefix=/home/mitchell/apps/octopus/petsc/gfortran/lam --with-cc=lamcc-64 --with-fc=lamf77-64 --with-debugging=0 --with-x=0
+
+make
+make install
+
+At version 2.3.0 I also had to
+cd lahey/lam
+mv petsc-2.3.0/* .
+rmdir petsc-2.3.0
+
+clean up with:
+make allclean
+
+The NAG compiler version 5.1(310) reports #error as an unknown fpp directive
+in PETSC__HOME/include/finclude/petscdef.h.  This line will never be reached
+(as long as an int is either 4 or 8 bytes), so just comment it out.
+
+PETSc with BLOPEX
+-----------------
+
+It may be redundant, but I spelled out the full path to the Fortran and C
+compilers with every possible configuration variable and environment variables
+CC, F77 and F90 because I was getting some ifort/gfortran confusion.  Also set
+LAMHF77 in .chsrc to the correct compiler.  Also need to make sure PETSC_DIR
+is the top directory of the distribution.
+
+./config/configure.py --prefix=/local/apps/petsc/gfortran/lam with-cc=mpicc with-f77=/local/apps/lam/gfortran/bin/mpif77 with-f90=/local/apps/lam/gfortran/bin/mpif77 --with-debugging=0 --with-x=0 --download-blopex=1 --LD_SHARED=/local/apps/lam/gfortran/bin/mpif77 with-fpp=/local/apps/lam/gfortran/bin/mpif77 with-fc=/local/apps/lam/gfortran/bin/mpif77 --FC=/local/apps/lam/gfortran/bin/mpif77 --with-shared=0 
+
+On a later occasion where mpicc and mpif90 are properly set,
+
+./configure --prefix=/local/apps/petsc/intel/openmpi --FC=mpif90 --CC=mpicc --with-debugging=0 --with-x=0 --download-blopex=1 --with-shared=0
+
+make
+make install
+
+Then copy the BLOPEX include files lobpcg.h, interpreter.h, multivector.h,
+and petsc-interface.h from
+$PETSC_DIR/externalpackages/blopex_abstract/[krylov,multivector]
+and $PETSC_DIR/src/contrib/blopex/petsc-interface to
+/local/apps/petsc/blopex/include and the BLOPEX library
+(also under blopex_abstract somewhere) to .../blopex/lib.
+Since BLOPEX depends on neither the Fortran compiler or the MPI library, you
+only have to do this for one compiler.
+
+In a later installation, I decided to leave the blopex stuff under each
+compiler/mpi.  Just need to copy petsc-interface.h to the include directory
+from src/contrib/blopex/petsc-interface/
+
+PVM
+---
+
+PVM Version 3.4.3
+
+Build as directed.
+
+ScaLAPACK
+---------
+
+ScaLAPACK Version 1.8
+
+Compiling for LAM with Lahey
+
+cp INSTALL/SLmake.LINUX SLmake.inc
+
+changes in SLmake.inc:
+home          = /local/apps/SCALAPACK
+BLACSdir      = /local/apps/BLACS/lahey/lam/lib
+LAMLIB        = /local/apps/lam/lahey/lib  (added this one to shorten next line)
+SMPLIB = $(LAMLIB)/liblamf77mpi.a $(LAMLIB)/libmpi.a $(LAMLIB)/liblam.a
+remove library designations from BLACSFINIT, BLACSCINIT, BLACSLIB (if you did
+ that when making BLACS)
+F77           = lf95
+CC            = gcc
+NOOPT         = -fno-second-underscore (for g77, g95, gfortran, pathscale)
+F77FLAGS      = -O $(NOOPT)
+CDEFS         = -DAdd_ -DNO_IEEE $(USEMPI)
+
+make
+
+With the NAG f95 compiler, need the flag -dcfuns to get the nonstandard
+double precision complex intrinsic functions, and -dusty to allow different
+types passed to the same argument.  -w=all wouldn't hurt either to
+get rid of all those warnings about obsolecent features and extensions.
+
+With NAGWare f95 5.1(215) I get a "illegal arguments to binary *" error
+on TOOLS/LAPACK/slasq3.f and dlasq3.f.  Compile them with "nagf95 -c slasq3.f"
+and run make again to continue.
+Also SRC/pclahqr.f pzlahqr.f zlanv2.f (last 2 needs -dcfuns).
+This was fixed in version 5.1(310).
+
+For mpich, don't need to add LAMLIB and set
+SMPLIB        = $(MPICH_HOME)/libmpich.a
+
+SuperLU
+-------
+
+SuperLU_DIST Version 2.0 of 9/27/05
+
+Compiling for Linux, Lahey, LAM
+
+In make.inc, use the following definitions:
+DSuperLUroot    = /local/apps/superlu
+DSUPERLULIB     = $(DSuperLUroot)/libsuperlu.a
+BLASDEF         = -DUSE_VENDOR_BLAS
+BLASLIB         = -lblas
+IMPI            = -I/local/apps/lam/lahey/include   (added this one)
+MPILIB          = -L/local/apps/lam/lahey/lib -lmpi -llam -lpthread -ldl
+LIBS            = $(DSUPERLULIB) $(BLASLIB) $(MPILIB)
+CC              = gcc
+CFLAGS          = -O3 $(IMPI)
+NOOPTS          = -O0 $(IMPI)
+FORTRAN         = lf95
+FFLAGS          = -O  [-fno-second-underscore for g77 type compilers]
+LOADER          = gcc
+LOADOPTS        =
+CDEFS           = -DAdd_
+
+With LAM, testtimer will fail to run the test if you are root, because LAM will
+not let you run lamboot as root.  But just type make again and it will continue
+to compile without running testtimer.
+
+Or use "make lib" to avoid making testtimer and the examples.
+
+In some cases testtimer may fail to link because it is compiled with gcc and
+does not have the runtime libraries of the Fortran compiler that built the
+MPI libraries.  In this case, add those libs to the MPILIB line.  Examples:
+PGI: -L$(PGI_HOME)/lib -lpgc
+
+The test may fail to link, but the library has been built.  It is placed in the
+SuperLU root directory.
+
+TRIANGLE
+--------
+
+Triangle Version 1.6
+
+On Linux, no changes -- just "make".
+
+On other systems will probably need to change CSWITCHES in makefile (at
+least to remove -DLINUX).
+
+ZOLTAN
+------
+
+Zoltan Version 1.52
+
+edit Utilities/Config/Config.nistlinux (or appropriate file) to set
+the compiler, MPI library, and ParMETIS location (and other variables
+as appropriate).
+
+make YES_FORTRAN=1 ZOLTAN_ARCH=nistlinux zoltan
+
+mv Obj_nistlinux/*.mod <compiler>/<mpi>/include
+mv Obj_nistlinux/lib* <compiler>/<mpi>/lib

@@ -1,0 +1,96 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq                    500
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    22
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    FINAL
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   NEVER
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    EXPLICIT_ERRIND
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles          infinity
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =         545
+   number of vertices I own =         545
+   number of elements       =        2040
+   number of leaf elements  =        1024
+   leaf elements I own      =        1024
+   number of levels         =           8
+   degrees of freedom       =         545
+   degrees of freedom I own =         545
+   min and max degree       =           1          1
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           6
+termination condition:
+  maximum equations achieved
+---------------------------------------------------------
+nvert         545
+nvert_proc         545          0          0          0
+nvert_own         545          0          0          0
+nelem        1024
+nelem_proc        1024          0          0          0
+nelem_own        1024          0          0          0
+neq         545
+neq_proc         545          0          0          0
+neq_own         545          0          0          0
+nlev           8
+min_degree           1
+max_degree           1
+linf_error  1.057474286433E-03
+energy_error  2.946278254967E-02
+l2_error  8.894759084686E-04
+max_error_indicator  4.117549268304E-04
+linf_error_estimate  1.822916813160E-04
+energy_error_estimate  1.313491603428E-02
+l2_error_estimate  1.641864504285E-04
+linf_solution  2.000000000000E+00
+l2_solution  1.881153141087E+01
+energy_solution  1.632727394573E+00
+linf_u  2.000000000000E+00
+l2_u  7.895443536984E-01
+energy_u  1.632727394573E+00
+linf_true  2.000000000000E+00
+l2_true  7.888106377466E-01
+energy_true  1.632993161855E+00

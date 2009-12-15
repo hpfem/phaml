@@ -1,0 +1,10 @@
+This example shows how to use PHAML to solve a system of equations by
+successive substitution, i.e. by iterating through the equations (for problems
+where that iteration converges).  This example has a system of 2 equations;
+the same principle can be used for larger systems.  Two strategies are
+implemented for the relationship between amount of refinement and iteration
+among the equations -- see comments in user.f90.
+
+NOTE: Since the approach requires two phaml_solution objects with separate
+calls to phaml_create, this example cannot be run in SPMD mode which does
+not allow more than one call to phaml_create.

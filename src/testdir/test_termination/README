@@ -1,0 +1,7 @@
+test1  max_elem
+test2  max_vert
+test3  max_eq
+test4  max_refsolveloop
+test5  term_energy_err
+test6  term_Linf_err
+test7  term_L2_err

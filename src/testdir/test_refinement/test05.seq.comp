@@ -1,0 +1,272 @@
+---------------------------------------------------------
+           PHAML   Version 1.6.2
+
+Output from slave number     1
+  PDE id is     0
+  Number of slave processors is     1
+
+Subroutine phaml_solve_pde parameters:
+  max_elem           infinity
+  max_vert           infinity
+  max_eq                    500
+  max_lev            infinity
+  stop_on_maxlev     false
+  max_deg                    21
+  stop_on_maxdeg     false
+  max_refsolveloop   infinity
+  task               BALANCE_REFINE_SOLVE
+  solve_init         true
+  system_size                 1
+  print_grid_when    PHASES
+  print_grid_who     SLAVES
+  print_linsys_when  NEVER
+  print_error_when   PHASES
+  print_error_who    SLAVES
+  print_error_what   ENERGY_LINF_L2_ERR
+  print_errest_what  ENERGY_LINF_L2_ERREST
+  print_time_when    NEVER
+  pause_after_draw   false
+  pause_after_phases false
+  pause_at_start     false
+  pause_at_end       false
+  degree             existing
+  sequential_vert           100
+  inc_factor          2.0000000000E+00
+  error_estimator    LOCAL_PROBLEM_P
+  errtype            ABSOLUTE_ERROR
+  reftype            H_ADAPTIVE
+  edge_rule          MINIMUM_RULE
+  refterm            DOUBLE_NEQ_SMOOTH
+  derefine           true
+  partition_method   RTK
+  prebalance         BALANCE_ELEMENTS
+  ignore_quad_err    false
+  solver             MG_SOLVER
+  mg_cycles                   2
+  mg_tol             MG_ERREST_TOL
+  mg_prerelax                 1
+  mg_postrelax                2
+  mg_prerelax_ho              1
+  mg_postrelax_ho             1
+  mg_comm            MGCOMM_FUDOP
+---------------------------------------------------------
+
+My Grid:
+   number of vertices       =           9
+   number of vertices I own =           9
+   number of elements       =           8
+   number of leaf elements  =           8
+   leaf elements I own      =           8
+   number of levels         =           1
+   degrees of freedom       =           9
+   degrees of freedom I own =           9
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       3.8589726446E+00
+   energy error estimate      5.3069652709E+00
+      effectivity             1.3752274918E+00
+   Linf norm of error         1.0536246503E+00
+   Linf error estimate        1.4604995752E+00
+      effectivity             1.3861668620E+00
+   L2 norm of error           4.5345860840E-01
+   L2 error estimate          1.0196667538E+00
+      effectivity             2.2486435033E+00
+
+My Grid:
+   number of vertices       =          27
+   number of vertices I own =          27
+   number of elements       =          64
+   number of leaf elements  =          36
+   leaf elements I own      =          36
+   number of levels         =           5
+   degrees of freedom       =          27
+   degrees of freedom I own =          27
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       3.1276250369E+00
+      reduced by              8.1048126662E-01
+   energy error estimate      3.8617689268E+00
+      reduced by              7.2767932890E-01
+      effectivity             1.2347288698E+00
+   Linf norm of error         5.2603635394E-01
+      reduced by              4.9926352216E-01
+   Linf error estimate        6.4256899897E-01
+      reduced by              4.3996520771E-01
+      effectivity             1.2215296417E+00
+   L2 norm of error           1.7937776274E-01
+      reduced by              3.9557692679E-01
+   L2 error estimate          3.1846909201E-01
+      reduced by              3.1232664085E-01
+      effectivity             1.7754101018E+00
+
+My Grid:
+   number of vertices       =          40
+   number of vertices I own =          40
+   number of elements       =         104
+   number of leaf elements  =          56
+   leaf elements I own      =          56
+   number of levels         =           6
+   degrees of freedom       =          40
+   degrees of freedom I own =          40
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       2.7567092086E+00
+      reduced by              8.8140655486E-01
+   energy error estimate      3.5536136454E+00
+      reduced by              9.2020359394E-01
+      effectivity             1.2890781640E+00
+   Linf norm of error         4.7526983627E-01
+      reduced by              9.0349237786E-01
+   Linf error estimate        5.8677776369E-01
+      reduced by              9.1317471685E-01
+      effectivity             1.2346202492E+00
+   L2 norm of error           1.4349455674E-01
+      reduced by              7.9995733336E-01
+   L2 error estimate          2.2732707548E-01
+      reduced by              7.1381205017E-01
+      effectivity             1.5842208976E+00
+
+My Grid:
+   number of vertices       =         121
+   number of vertices I own =         121
+   number of elements       =         392
+   number of leaf elements  =         200
+   leaf elements I own      =         200
+   number of levels         =           9
+   degrees of freedom       =         121
+   degrees of freedom I own =         121
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       1.4284883160E+00
+      reduced by              5.1818607181E-01
+   energy error estimate      2.7405100836E+00
+      reduced by              7.7118965566E-01
+      effectivity             1.9184686728E+00
+   Linf norm of error         2.5178260370E-01
+      reduced by              5.2976769087E-01
+   Linf error estimate        2.8767566343E-01
+      reduced by              4.9026340333E-01
+      effectivity             1.1425557572E+00
+   L2 norm of error           3.2320097126E-02
+      reduced by              2.2523570133E-01
+   L2 error estimate          9.8092262744E-02
+      reduced by              4.3150276990E-01
+      effectivity             3.0350237613E+00
+
+My Grid:
+   number of vertices       =         147
+   number of vertices I own =         147
+   number of elements       =         492
+   number of leaf elements  =         250
+   leaf elements I own      =         250
+   number of levels         =           9
+   degrees of freedom       =         147
+   degrees of freedom I own =         147
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       1.2094079318E+00
+      reduced by              8.4663480851E-01
+   energy error estimate      2.4268264548E+00
+      reduced by              8.8553823222E-01
+      effectivity             2.0066235642E+00
+   Linf norm of error         1.1762332203E-01
+      reduced by              4.6716222765E-01
+   Linf error estimate        2.1942826591E-01
+      reduced by              7.6276270053E-01
+      effectivity             1.8655166520E+00
+   L2 norm of error           2.1930973838E-02
+      reduced by              6.7855531970E-01
+   L2 error estimate          8.1322308240E-02
+      reduced by              8.2903896765E-01
+      effectivity             3.7081029251E+00
+
+My Grid:
+   number of vertices       =         411
+   number of vertices I own =         411
+   number of elements       =        1480
+   number of leaf elements  =         744
+   leaf elements I own      =         744
+   number of levels         =          11
+   degrees of freedom       =         411
+   degrees of freedom I own =         411
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       6.9604527844E-01
+      reduced by              5.7552564368E-01
+   energy error estimate      1.5340703344E+00
+      reduced by              6.3213021736E-01
+      effectivity             2.2039806632E+00
+   Linf norm of error         3.6590045011E-02
+      reduced by              3.1107814658E-01
+   Linf error estimate        9.1440926698E-02
+      reduced by              4.1672355345E-01
+      effectivity             2.4990657068E+00
+   L2 norm of error           8.7366229040E-03
+      reduced by              3.9836912709E-01
+   L2 error estimate          2.7884249427E-02
+      reduced by              3.4288561196E-01
+      effectivity             3.1916507938E+00
+
+My Grid:
+   number of vertices       =         610
+   number of vertices I own =         610
+   number of elements       =        2264
+   number of leaf elements  =        1136
+   leaf elements I own      =        1136
+   number of levels         =          12
+   degrees of freedom       =         610
+   degrees of freedom I own =         610
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       6.2327831395E-01
+      reduced by              8.9545656475E-01
+   energy error estimate      1.2370972246E+00
+      reduced by              8.0641493213E-01
+      effectivity             1.9848231471E+00
+   Linf norm of error         3.1279879957E-02
+      reduced by              8.5487404968E-01
+   Linf error estimate        5.2340782465E-02
+      reduced by              5.7239995651E-01
+      effectivity             1.6733050938E+00
+   L2 norm of error           6.0162166420E-03
+      reduced by              6.8862038663E-01
+   L2 error estimate          1.6972256242E-02
+      reduced by              6.0866821202E-01
+      effectivity             2.8210846204E+00
+
+My Grid:
+   number of vertices       =         610
+   number of vertices I own =         610
+   number of elements       =        2264
+   number of leaf elements  =        1136
+   leaf elements I own      =        1136
+   number of levels         =          12
+   degrees of freedom       =         610
+   degrees of freedom I own =         610
+   min and max degree       =           1          1
+
+Norms of error:
+   energy norm of error       6.2327831395E-01
+   energy error estimate      1.2370972246E+00
+      effectivity             1.9848231471E+00
+   Linf norm of error         3.1279879957E-02
+   Linf error estimate        5.2340782465E-02
+      effectivity             1.6733050938E+00
+   L2 norm of error           6.0162166420E-03
+   L2 error estimate          1.6972256242E-02
+      effectivity             2.8210846204E+00
+
+---------------------------------------------------------
+phaml_solve_pde complete
+
+number of loops through phases =           6
+termination condition:
+  maximum equations achieved
+---------------------------------------------------------

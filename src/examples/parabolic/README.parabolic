@@ -1,0 +1,29 @@
+This is a simple example to illustrate the solution of a parabolic equation.
+
+We consider the heat flow in a thin metal plate.  The bottom side is has
+temperature 0.0, and the right and top sides are insulated.  The left side has
+a moving heat source given by a Gaussian exp(-100*(y-(2+sin(10*t+.5))/4)**2).
+
+The equation to solve for u(x,y,t) is
+
+   du/dt = Lu  in the unit square, L is the Laplacian
+   u(x,y,0)     = exp(-100(y-(2+sin(.5))/4)**2)*exp(-100*x**2) 0 <= x,y <= 1
+   u(0,y,t)     = exp(-100(y-(2+sin(10*t+.5))/4)**2)  0 <= y <= 1, t>0
+   u(x,0,t)     = 0.0  0 <  x <= 1, t>0
+   du/dx(1,y,t) = 0.0  0 <  y <= 1, t>0
+   du/dy(x,1,t) = 0.0  0 <  x <  1, t>0
+
+We use a simple implicit finite difference scheme in t, with time step k
+
+   (U(t+k) - U(t))/k = LU(t+k)
+
+or, rearranging
+
+   -LU(t+k) + (1/k)U(t+k) = (1/k)U(t)
+
+thus for subroutine pdecoef, we have
+
+   p = 1
+   q = 1
+   r = 1/k
+   f = (1/k)*previous solution
