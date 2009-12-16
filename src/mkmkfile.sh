@@ -40,6 +40,8 @@
 # Architecture: origin rs6k sgi sun tflop x86
 DEFAULT_PHAML_ARCH=x86
 
+MESA_HOME=/home/ondrej/usr
+
 # OS: aix cougar irixn32 irix64 linux solaris
 DEFAULT_PHAML_OS=linux
 
@@ -610,7 +612,7 @@ case "$PHAML_F90" in
 
    gfortran)
       F90=gfortran
-      FFLAGS="-O -fno-second-underscore"
+      FFLAGS="-O -fno-second-underscore -fPIC"
       LINKER=$F90
       LINKFLAGS=
       MODFLAG=-I
@@ -860,7 +862,7 @@ case "$PHAML_GRAPHICS" in
 # Mesa 7.0.3, Glut MesaGLUT 7.0.3, f90gl 1.2.13
 
    mesa)
-      OGLMODS="$MODFLAG"'$(MESA_HOME)/'"$PHAML_F90/include/GL"
+      OGLMODS="$MODFLAG"'$(MESA_HOME)/'"include/GL"
       OGLLIBS='-L$(MESA_HOME)/lib -L$(MESA_HOME)/'"$PHAML_F90/lib -lf90glut -lf90GLU -lf90GL -lglut -lGLU -lGL" ;;
 
 # No graphics library
