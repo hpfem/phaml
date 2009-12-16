@@ -1,0 +1,2 @@
+import simple
+simple.run()

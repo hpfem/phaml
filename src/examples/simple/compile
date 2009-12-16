@@ -1,0 +1,5 @@
+#gfortran -I../../modules -c -o simple.o simple.f90 -lphaml
+#gfortran -fPIC -I../../modules -c -o simple.o simple.f90
+gfortran -fPIC -I../../modules -c -o pde.o pde.f90
+#gfortran -fPIC -I../../modules -shared -o simple.so simple.o ../../lib/libphaml.a
+f2py --f90flags="-fPIC" -I../../modules -c -m simple simple.f90 pde.o ../../lib/libphaml.a
