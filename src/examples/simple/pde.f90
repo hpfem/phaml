@@ -420,3 +420,48 @@ real(my_real) :: regularity
 regularity = huge(0.0_my_real)
 
 end function regularity
+
+subroutine get_grid_params(soln,xvert,yvert,element_vertices,element_order,nelem)
+use global
+use gridtype_mod
+use phaml_type_mod
+type(phaml_solution_type), intent(in), target :: soln
+real(my_real), pointer :: xvert(:), yvert(:)
+integer, pointer :: element_vertices(:,:), element_order(:)
+integer, intent(out) :: nelem
+
+type(grid_type), pointer :: grid
+integer :: ind, lev, elem
+real(my_real), pointer :: this(:)
+
+grid => soln%grid
+
+
+nelem = grid%nelem
+
+!print *,size(grid%vertex), nelem
+!allocate(this(25000))
+allocate(xvert(size(grid%vertex)),yvert(size(grid%vertex)), &
+         element_vertices(nelem,3),element_order(nelem))
+!allocate(xvert(25000))
+!allocate(yvert(size(grid%vertex)))
+!allocate(element_vertices(nelem,3))
+!allocate(element_order(nelem))
+
+xvert = grid%vertex%coord%x
+yvert = grid%vertex%coord%y
+
+ind = 0
+do lev = 1,grid%nlev
+   elem = grid%head_level_elem(lev)
+   do while (elem /= END_OF_LIST)
+      if (grid%element(elem)%isleaf) then
+	 ind = ind + 1
+	 element_vertices(ind,:) = grid%element(elem)%vertex
+	 element_order(ind) = grid%element(elem)%degree
+      endif
+      elem = grid%element(elem)%next
+   end do
+end do
+
+end subroutine get_grid_params

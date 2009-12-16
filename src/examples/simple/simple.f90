@@ -5,10 +5,23 @@ print*, "a=",a
 end
 
 subroutine run(n, x, y, sol)
+
 use phaml
+implicit none
+
+interface
+   subroutine get_grid_params(soln,xvert,yvert,element_vertices,element_order,nelem)
+   use global
+   use gridtype_mod
+   use phaml_type_mod
+   type(phaml_solution_type), intent(in), target :: soln
+   real(my_real), pointer :: xvert(:), yvert(:)
+   integer, pointer :: element_vertices(:,:), element_order(:)
+   integer, intent(out) :: nelem
+   end subroutine get_grid_params
+end interface
 !----------------------------------------------------
 
-implicit none
 
 integer n
 double precision x(n), y(n), sol(n)
@@ -20,6 +33,9 @@ double precision x(n), y(n), sol(n)
 
 type(phaml_solution_type) :: soln
 !real(my_real), allocatable :: x(:), y(:), u(:)
+real(my_real), pointer :: xvert(:), yvert(:)
+integer, pointer :: element_vertices(:,:), element_order(:)
+integer :: nelem
 
 !----------------------------------------------------
 ! Begin executable code
@@ -51,6 +67,12 @@ call phaml_evaluate(soln, x, y, sol)
 print*, "x=", x
 print*, "y=", y
 print*, "u=", sol
+
+call get_grid_params(soln,xvert,yvert,element_vertices,element_order,nelem)
+print *,"xvert ",xvert(1:5)
+print *,"yvert ",yvert(1:5)
+print *,"elem verts ",element_vertices(1:5,:)
+print *,"elem deg ", element_order(1:5)
 
 call phaml_destroy(soln)
 end
