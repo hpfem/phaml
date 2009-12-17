@@ -1,8 +1,25 @@
+module python_gets
+
+double precision, allocatable :: xvert(:), yvert(:)
+integer, allocatable :: element_vertices(:,:), element_order(:)
+integer :: nvert, nelem
+
+contains
+
+subroutine p
+allocate(xvert(3))
+xvert(1) = 5
+xvert(2) = 5.5
+xvert(3) = 6.5
+print *, xvert
+end subroutine p
+
+
 subroutine foo (a)
 integer a
 print*, "Hello from Fortran!"
 print*, "a=",a
-end
+end subroutine foo
 
 subroutine run(n, x, y, sol)
 
@@ -10,14 +27,12 @@ use phaml
 implicit none
 
 interface
-   subroutine get_grid_params(soln,xvert,yvert,element_vertices,element_order,nelem)
+   subroutine get_grid_params(soln)
    use global
    use gridtype_mod
    use phaml_type_mod
+   !use python_defs
    type(phaml_solution_type), intent(in), target :: soln
-   real(my_real), pointer :: xvert(:), yvert(:)
-   integer, pointer :: element_vertices(:,:), element_order(:)
-   integer, intent(out) :: nelem
    end subroutine get_grid_params
 end interface
 !----------------------------------------------------
@@ -68,11 +83,13 @@ print*, "x=", x
 print*, "y=", y
 print*, "u=", sol
 
-call get_grid_params(soln,xvert,yvert,element_vertices,element_order,nelem)
+call get_grid_params(soln)
 print *,"xvert ",xvert(1:5)
 print *,"yvert ",yvert(1:5)
 print *,"elem verts ",element_vertices(1:5,:)
 print *,"elem deg ", element_order(1:5)
 
 call phaml_destroy(soln)
-end
+end subroutine run
+
+end module python_gets

@@ -421,32 +421,23 @@ regularity = huge(0.0_my_real)
 
 end function regularity
 
-subroutine get_grid_params(soln,xvert,yvert,element_vertices,element_order,nelem)
+subroutine get_grid_params(soln)
 use global
 use gridtype_mod
 use phaml_type_mod
+use python_gets
 type(phaml_solution_type), intent(in), target :: soln
-real(my_real), pointer :: xvert(:), yvert(:)
-integer, pointer :: element_vertices(:,:), element_order(:)
-integer, intent(out) :: nelem
 
 type(grid_type), pointer :: grid
 integer :: ind, lev, elem
-real(my_real), pointer :: this(:)
 
 grid => soln%grid
 
-
+nvert = grid%nvert
 nelem = grid%nelem
 
-!print *,size(grid%vertex), nelem
-!allocate(this(25000))
 allocate(xvert(size(grid%vertex)),yvert(size(grid%vertex)), &
          element_vertices(nelem,3),element_order(nelem))
-!allocate(xvert(25000))
-!allocate(yvert(size(grid%vertex)))
-!allocate(element_vertices(nelem,3))
-!allocate(element_order(nelem))
 
 xvert = grid%vertex%coord%x
 yvert = grid%vertex%coord%y
