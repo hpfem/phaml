@@ -39,8 +39,8 @@ subroutine pdecoefs(x,y,cxx,cxy,cyy,cx,cy,c,rs)
 !
 ! The PDE is
 !
-!    -( cxx(x,y) * u  )  -( cyy(x,y) * u  ) + c(x,y) * u = rs(x,y)
-!                   x  x                y  y
+!    -( cxx(x,y) * u  )  -( cyy(x,y) * u  ) + cx(x,y)*u  + cy(x,y)*u  + c(x,y) * u = rs(x,y)
+!                   x  x                y  y           x            y
 !
 ! For eigenvalue problems, the right hand side is lambda * u * rs(x,y)
 !
