@@ -47,10 +47,8 @@ double precision x(n), y(n), sol(n)
 ! Local variables
 
 type(phaml_solution_type) :: soln
+integer :: i
 !real(my_real), allocatable :: x(:), y(:), u(:)
-real(my_real), pointer :: xvert(:), yvert(:)
-integer, pointer :: element_vertices(:,:), element_order(:)
-integer :: nelem
 
 !----------------------------------------------------
 ! Begin executable code
@@ -86,8 +84,14 @@ print*, "u=", sol
 call get_grid_params(soln)
 print *,"xvert ",xvert(1:5)
 print *,"yvert ",yvert(1:5)
-print *,"elem verts ",element_vertices(1:5,:)
+do i=1,5
+   print *,"elem verts ",element_vertices(i,:)
+end do
 print *,"elem deg ", element_order(1:5)
+do i=nelem-5,size(element_vertices,dim=1)
+   print *,"elem verts last ",element_vertices(i,:)
+end do
+print *,"elem deg last ", element_order(nelem-5:)
 
 call phaml_destroy(soln)
 end subroutine run
