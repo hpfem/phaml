@@ -434,7 +434,7 @@ integer :: ind, lev, elem
 grid => soln%grid
 
 nvert = grid%nvert
-nelem = grid%nelem
+nelem = grid%nelem_leaf
 
 allocate(xvert(size(grid%vertex)),yvert(size(grid%vertex)), &
          element_vertices(nelem,3),element_order(nelem))
@@ -450,6 +450,7 @@ do lev = 1,grid%nlev
 	 ind = ind + 1
 	 element_vertices(ind,:) = grid%element(elem)%vertex
 	 element_order(ind) = grid%element(elem)%degree
+	 print *,"elem ind vertices ",elem,ind,element_vertices(ind,:)
       endif
       elem = grid%element(elem)%next
    end do

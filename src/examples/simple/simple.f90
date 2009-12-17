@@ -6,21 +6,6 @@ integer :: nvert, nelem
 
 contains
 
-subroutine p
-allocate(xvert(3))
-xvert(1) = 5
-xvert(2) = 5.5
-xvert(3) = 6.5
-print *, xvert
-end subroutine p
-
-
-subroutine foo (a)
-integer a
-print*, "Hello from Fortran!"
-print*, "a=",a
-end subroutine foo
-
 subroutine run(n, x, y, sol)
 
 use phaml
@@ -58,7 +43,7 @@ print*, "Start"
 call phaml_create(soln,nproc=2)
 
 call phaml_solve_pde(soln,                   &
-                     max_vert=1000,          &
+                     max_vert=100,          &
                      print_grid_when=PHASES, &
                      print_grid_who=MASTER,  &
                      print_error_when=PHASES,&

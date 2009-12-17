@@ -10,7 +10,7 @@ print type(u)
 print u.dtype
 print simple.python_gets.xvert
 print simple.python_gets.yvert
-print simple.python_gets.element_vertices[:5, :]
+print simple.python_gets.element_vertices
 print simple.python_gets.element_order
 print simple.python_gets.nvert
 print simple.python_gets.nelem
