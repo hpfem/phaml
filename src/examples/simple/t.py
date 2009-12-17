@@ -8,7 +8,7 @@ u = simple.python_gets.run(x, y)
 print u
 print type(u)
 print u.dtype
-print simple.python_gets.xvert
+print simple.python_gets.xvert[:100]
 print simple.python_gets.yvert
 print simple.python_gets.element_vertices
 print simple.python_gets.element_order

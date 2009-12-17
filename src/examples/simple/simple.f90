@@ -47,6 +47,8 @@ call phaml_solve_pde(soln,                   &
                      print_grid_when=PHASES, &
                      print_grid_who=MASTER,  &
                      print_error_when=PHASES,&
+		     reftype=HP_ADAPTIVE, &
+		     refterm=DOUBLE_NELEM, &
                      print_time_when=FINAL, print_time_who=MASTER, &
                      print_error_what=ENERGY_LINF_ERR, &
                      print_errest_what=ENERGY_LINF_ERREST, &
