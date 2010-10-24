@@ -44,7 +44,7 @@ DEFAULT_PHAML_ARCH=x86
 DEFAULT_PHAML_OS=linux
 
 # Fortran 90 compiler: absoft g95 gfortran intel lahey nag pathscale pgi sgi sun xlf
-DEFAULT_PHAML_F90=lahey
+DEFAULT_PHAML_F90=gfortran
 
 # C compiler: cc gcc
 DEFAULT_PHAML_C=cc
@@ -54,14 +54,14 @@ DEFAULT_PHAML_C=cc
 DEFAULT_PHAML_HASHSIZE=1
 
 # Parallelism: messpass_spawn messpass_nospawn openmp hybrid_spawn hybrid_nospawn sequential
-DEFAULT_PHAML_PARALLEL=messpass_spawn
+DEFAULT_PHAML_PARALLEL=sequential
 
 # Parallel library: lam mpi mpich mpich2 myrinet openmpi pvm none
 # (mpi is used for native MPI libraries, as opposed to lam or mpich)
-DEFAULT_PHAML_PARLIB=lam
+DEFAULT_PHAML_PARLIB=none
 
 # Graphics: metro mesa none opengl
-DEFAULT_PHAML_GRAPHICS=mesa
+DEFAULT_PHAML_GRAPHICS=none
 
 # BLAS: atlas compiler goto source standard vendor
 DEFAULT_PHAML_BLAS=source
@@ -628,7 +628,7 @@ case "$PHAML_F90" in
 
    gfortran)
       F90=gfortran
-      FFLAGS="-O -fno-second-underscore"
+      FFLAGS="-O -fno-second-underscore -fPIC"
       LINKER=$F90
       LINKFLAGS=
       case "$PHAML_PARALLEL" in
@@ -932,7 +932,7 @@ case "$PHAML_GRAPHICS" in
 # Mesa 7.4.4, Glut MesaGLUT 7.4.4, f90gl 1.2.15
 
    mesa)
-      OGLMODS="$MODFLAG"'$(MESA_HOME)/'"$PHAML_F90/include/GL"
+      OGLMODS="$MODFLAG"'$(MESA_HOME)/'"include/GL"
       OGLLIBS='-L$(MESA_HOME)/lib -L$(MESA_HOME)/'"$PHAML_F90/lib -lf90glut -lf90GLU -lf90GL -lglut -lGLU -lGL" ;;
 
 # No graphics library
