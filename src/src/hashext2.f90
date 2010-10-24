@@ -563,7 +563,6 @@ if (int == 1) then
 endif
 
 ! lazy way of multiplying by 4
-! TEMP need to multiply by arbitrary integer for coupled systems
 
 if (int == 4) then
    res = 2*(2*key)

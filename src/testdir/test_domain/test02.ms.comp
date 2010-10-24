@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     2
@@ -66,21 +66,21 @@ Total Grid:
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =        2011
-   number of leaf elements =        3888
+   number of vertices      =        1966
+   number of leaf elements =        3798
    number of levels        =           4
-   degrees of freedom      =        2011
+   degrees of freedom      =        1966
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =        2011
-   number of leaf elements =        3888
+   number of vertices      =        1966
+   number of leaf elements =        3798
    number of levels        =           4
-   degrees of freedom      =        2011
+   degrees of freedom      =        1966
    min and max degree      =           1          1
 
 Norms of error:
-   Linf norm of error         3.7704791664E-03
+   Linf norm of error         3.7701847459E-03
 
 ---------------------------------------------------------
 phaml_solve_pde complete

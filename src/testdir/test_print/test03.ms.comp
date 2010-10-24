@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -406,23 +406,23 @@ L2 norm of linear system residual
 
       iteration    absolute residual    relative residual      reduction
 
-           0  5.4416345085E-01  3.5168574515E-01
-           1  3.3859043171E-02  2.1882658251E-02  6.2222192832E-02
-           2  1.2298331704E-03  7.9482514727E-04  3.6322147801E-02
+           0  5.4444811810E-01  3.5186972189E-01
+           1  3.3851858258E-02  2.1878014736E-02  6.2176462977E-02
+           2  1.2461360051E-03  8.0536145683E-04  3.6811450516E-02
 After solution, condensed matrix:
 
 L2 norm of linear system residual
 
       iteration    absolute residual    relative residual      reduction
 
-           0  1.2298331704E-03  7.9482514727E-04
+           0  1.2461360051E-03  8.0536145683E-04
 After solution, full matrix:
 
 L2 norm of linear system residual
 
       iteration    absolute residual    relative residual      reduction
 
-           0  1.2298331704E-03  7.9482514727E-04
+           0  1.2461360051E-03  8.0536145683E-04
 
 Total Linear System:
    number of equations =         730
@@ -433,16 +433,16 @@ Total Linear System:
    coarse (half) bandwidth =           0
 
 Norms of error:
-   Linf norm of error         3.0902415916E-02
-      reduced by              7.5991840826E-01
-   Linf error estimate        3.4629136092E-03
-      reduced by              3.7632913916E-01
-      effectivity             1.1205964021E-01
-   L2 norm of error           3.6380489464E-03
-      reduced by              3.8134929136E-01
-   L2 error estimate          1.0059106388E-03
-      reduced by              4.1562681889E-01
-      effectivity             2.7649728018E-01
+   Linf norm of error         3.0902420799E-02
+      reduced by              7.5991852832E-01
+   Linf error estimate        3.4631256050E-03
+      reduced by              3.7635217762E-01
+      effectivity             1.1206648267E-01
+   L2 norm of error           3.6450299452E-03
+      reduced by              3.8208105692E-01
+   L2 error estimate          1.0059043897E-03
+      reduced by              4.1562423684E-01
+      effectivity             2.7596601531E-01
 
 Total Grid:
    number of vertices      =         730
@@ -452,12 +452,12 @@ Total Grid:
    min and max degree      =           1          1
 
 Norms of error:
-   Linf norm of error         3.0902415916E-02
-   Linf error estimate        3.4629136092E-03
-      effectivity             1.1205964021E-01
-   L2 norm of error           3.6380489464E-03
-   L2 error estimate          1.0059106388E-03
-      effectivity             2.7649728018E-01
+   Linf norm of error         3.0902420799E-02
+   Linf error estimate        3.4631256050E-03
+      effectivity             1.1206648267E-01
+   L2 norm of error           3.6450299452E-03
+   L2 error estimate          1.0059043897E-03
+      effectivity             2.7596601531E-01
 
 ---------------------------------------------------------
 phaml_solve_pde complete

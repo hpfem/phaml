@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -49,10 +49,10 @@ Subroutine phaml_solve_pde parameters:
 ---------------------------------------------------------
 
 Total Grid:
-   number of vertices      =         817
-   number of leaf elements =        1536
+   number of vertices      =         761
+   number of leaf elements =        1434
    number of levels        =           9
-   degrees of freedom      =         817
+   degrees of freedom      =         761
    min and max degree      =           1          1
 
 ---------------------------------------------------------
@@ -62,7 +62,7 @@ number of loops through phases =           6
 termination condition:
   maximum vertices achieved
 ---------------------------------------------------------
-integral of solution 6.672392124306E-01
-integral of x*solution 4.168715593320E-01
-integral of solution squared 6.229862417416E-01
+integral of solution 6.673122951075E-01
+integral of x*solution 4.169028024002E-01
+integral of solution squared 6.230892789299E-01
 integral of normalized solution squared 1.000000000000E+00

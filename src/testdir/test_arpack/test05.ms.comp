@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -77,89 +77,89 @@ Norms of error:
       effectivity             3.5512356853E-01
 
 Total Grid:
-   number of vertices      =         283
-   number of leaf elements =         532
+   number of vertices      =         275
+   number of leaf elements =         516
    number of levels        =           7
-   degrees of freedom      =         283
+   degrees of freedom      =         275
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       2.1427446986E+00
-      reduced by              2.3185305029E+00
-   energy error estimate      1.4988999341E-02
-      reduced by              5.2903626054E-02
-      effectivity             6.9952334270E-03
-   Linf norm of error         8.3821444117E-01
-      reduced by              3.5521161974E+00
-   Linf error estimate        6.8548059319E-04
-      reduced by              8.1798943230E-03
-      effectivity             8.1778666595E-04
+   energy norm of error       2.1393817476E+00
+      reduced by              2.3148916632E+00
+   energy error estimate      1.5472754565E-02
+      reduced by              5.4611038598E-02
+      effectivity             7.2323485899E-03
+   Linf norm of error         8.3693340562E-01
+      reduced by              3.5466875304E+00
+   Linf error estimate        6.9587304938E-04
+      reduced by              8.3039083275E-03
+      effectivity             8.3145569852E-04
 
 Eigenvalues and error estimates:
-     9.8569429510E+00  1.0123421766E-02
+     9.8630549324E+00  1.0696614375E-02
 
 Total Grid:
-   number of vertices      =         591
-   number of leaf elements =        1148
-   number of levels        =           8
-   degrees of freedom      =         591
+   number of vertices      =         639
+   number of leaf elements =        1244
+   number of levels        =           9
+   degrees of freedom      =         639
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       2.3072284131E+00
-      reduced by              5.3838154742E-01
-   energy error estimate      4.8785167141E-03
-      reduced by              1.6273657110E-01
-      effectivity             2.1144489581E-03
-   Linf norm of error         9.0322799415E-01
-      reduced by              1.0775619577E+00
-   Linf error estimate        1.3056302977E-04
-      reduced by              1.9046933067E-01
-      effectivity             1.4455157570E-04
+   energy norm of error       2.3208237475E+00
+      reduced by              5.4240524162E-01
+   energy error estimate      4.4973602807E-03
+      reduced by              1.4533159760E-01
+      effectivity             1.9378293098E-03
+   Linf norm of error         9.0868455190E-01
+      reduced by              1.0857310101E+00
+   Linf error estimate        1.3379844711E-04
+      reduced by              1.9227421902E-01
+      effectivity             1.4724410889E-04
 
 Eigenvalues and error estimates:
-     9.7155816750E+00  2.0459260054E-03
+     9.7176761525E+00  1.7977462122E-03
 
 Total Grid:
-   number of vertices      =        1295
-   number of leaf elements =        2556
+   number of vertices      =        1209
+   number of leaf elements =        2384
    number of levels        =          10
-   degrees of freedom      =        1295
+   degrees of freedom      =        1209
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       2.3995748578E+00
-      reduced by              1.0400248385E+00
-   energy error estimate      1.9158815110E-03
-      reduced by              3.9271803772E-01
-      effectivity             7.9842539805E-04
-   Linf norm of error         9.3954730837E-01
-      reduced by              1.0402105719E+00
-   Linf error estimate        3.2824030866E-05
-      reduced by              2.5140371607E-01
-      effectivity             3.4936006493E-05
+   energy norm of error       2.3923142236E+00
+      reduced by              1.0308039231E+00
+   energy error estimate      2.1156127263E-03
+      reduced by              4.7041210716E-01
+      effectivity             8.8433731046E-04
+   Linf norm of error         9.3668282109E-01
+      reduced by              1.0308118688E+00
+   Linf error estimate        4.8207334192E-05
+      reduced by              3.6029815916E-01
+      effectivity             5.1466017211E-05
 
 Eigenvalues and error estimates:
-     9.6822301408E+00  5.0155028324E-04
+     9.6875164402E+00  5.8334492854E-04
 
 Total Grid:
-   number of vertices      =        1295
-   number of leaf elements =        2556
+   number of vertices      =        1209
+   number of leaf elements =        2384
    number of levels        =          10
-   degrees of freedom      =        1295
+   degrees of freedom      =        1209
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       2.3995748578E+00
-   energy error estimate      1.9158815110E-03
-      effectivity             7.9842539805E-04
-   Linf norm of error         9.3954730837E-01
-   Linf error estimate        3.2824030866E-05
-      effectivity             3.4936006493E-05
+   energy norm of error       2.3923142236E+00
+   energy error estimate      2.1156127263E-03
+      effectivity             8.8433731046E-04
+   Linf norm of error         9.3668282109E-01
+   Linf error estimate        4.8207334192E-05
+      effectivity             5.1466017211E-05
 
 ---------------------------------------------------------
 phaml_solve_pde complete

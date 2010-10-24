@@ -604,6 +604,7 @@ if (PARALLEL==SEQUENTIAL .or. my_proc(procs) == MASTER) then
    if (PARALLEL==SEQUENTIAL .and. save_convergence) then
       call get_grid_info(grid,procs,still_sequential,2929,total_dof=ints(1),&
                          mindeg=ints(2),maxdeg=ints(3),nlev=ints(4))
+      call read_watch(times,(/trefine,tassemble,tsolve,ttotal/),(/"wall"/))
    endif
    if (save_convergence .and. ints(1) /= last_dof) then
       if (first_conv) then

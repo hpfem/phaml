@@ -29,7 +29,23 @@ program phaml_master
 !----------------------------------------------------
 ! Modules used are:
 
-use phaml
+! Several compilers have a bug where my use of generic interfaces for the
+! phaml routines causes confusion.  Renaming is a workaround for that bug.
+
+use phaml, phaml_compress_orig=>phaml_compress, &
+           phaml_copy_soln_to_old_orig=>phaml_copy_soln_to_old, &
+           phaml_create_orig=>phaml_create, &
+           phaml_destroy_orig=>phaml_destroy, &
+           phaml_evaluate_orig=>phaml_evaluate, &
+           phaml_integrate_orig=>phaml_integrate, &
+           phaml_pclose_orig=>phaml_pclose, &
+           phaml_popen_orig=>phaml_popen, &
+           phaml_query_orig=>phaml_query, &
+           phaml_restore_orig=>phaml_restore, &
+           phaml_scale_orig=>phaml_scale, &
+           phaml_solve_pde_orig=>phaml_solve_pde, &
+           phaml_store_orig=>phaml_store, &
+           phaml_store_matrix_orig=>phaml_store_matrix
 use pde_intf
 use message_passing, only : PARALLEL
 use global, only : SEQUENTIAL

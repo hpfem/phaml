@@ -43,7 +43,7 @@ echo "PHAML TEST: Are you ready to run the tests (y)? "
 read ANS
 
 RUN1="$RUNMPI -np 1 "
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    RUN1=
 fi
@@ -56,7 +56,7 @@ fi
 
 echo "PHAML TEST: $THISDIR/test01 tests graphics from the master."
 echo "PHAML TEST: Run test $THISDIR/test01"
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    rm -f /tmp/phaml_message
    phaml_graphics &
@@ -74,7 +74,7 @@ fi
 sleep 2
 echo "PHAML TEST: $THISDIR/test02 tests graphics from the slaves."
 echo "PHAML TEST: Run test $THISDIR/test02"
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    rm -f /tmp/phaml_message
    phaml_graphics &
@@ -92,7 +92,7 @@ fi
 sleep 2
 echo "PHAML TEST: $THISDIR/test03 tests graphics from both the master and the slaves."
 echo "PHAML TEST: Run test $THISDIR/test03"
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    rm -f /tmp/phaml_message
    phaml_graphics &
@@ -117,7 +117,7 @@ echo "PHAML TEST:"
 echo "PHAML TEST: Are you ready to run the test (y)? "
 read ANS
 echo "PHAML TEST: Run test $THISDIR/test04"
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    rm -f /tmp/phaml_message
    phaml_graphics &
@@ -145,7 +145,7 @@ echo "PHAML TEST:"
 echo "PHAML TEST: Are you ready to run the test (y)? "
 read ANS
 echo "PHAML TEST: Run test $THISDIR/test05"
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    rm -f /tmp/phaml_message
    phaml_graphics &

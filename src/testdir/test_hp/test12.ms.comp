@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -71,60 +71,60 @@ Total Grid:
    min and max degree      =           1          3
 
 Total Grid:
-   number of vertices      =          15
-   number of leaf elements =          18
+   number of vertices      =          16
+   number of leaf elements =          20
    number of levels        =           3
-   degrees of freedom      =          73
+   degrees of freedom      =          82
    min and max degree      =           1          4
 
 Total Grid:
-   number of vertices      =          18
-   number of leaf elements =          21
+   number of vertices      =          20
+   number of leaf elements =          24
    number of levels        =           3
-   degrees of freedom      =         152
+   degrees of freedom      =         162
    min and max degree      =           1          5
 
 Total Grid:
-   number of vertices      =          24
-   number of leaf elements =          32
+   number of vertices      =          25
+   number of leaf elements =          34
    number of levels        =           4
-   degrees of freedom      =         332
+   degrees of freedom      =         301
    min and max degree      =           1          5
 
 Total Grid:
-   number of vertices      =          37
-   number of leaf elements =          55
+   number of vertices      =          38
+   number of leaf elements =          57
    number of levels        =           5
-   degrees of freedom      =         600
+   degrees of freedom      =         577
    min and max degree      =           1          6
 
 Total Grid:
-   number of vertices      =          58
-   number of leaf elements =          91
-   number of levels        =           6
-   degrees of freedom      =        1213
-   min and max degree      =           1          7
-
-Total Grid:
-   number of vertices      =          92
-   number of leaf elements =         153
+   number of vertices      =          65
+   number of leaf elements =         104
    number of levels        =           7
-   degrees of freedom      =        2367
-   min and max degree      =           1          7
+   degrees of freedom      =        1162
+   min and max degree      =           1          6
 
 Total Grid:
-   number of vertices      =         111
-   number of leaf elements =         188
-   number of levels        =           8
-   degrees of freedom      =        3025
-   min and max degree      =           2          7
+   number of vertices      =         108
+   number of leaf elements =         181
+   number of levels        =           7
+   degrees of freedom      =        2575
+   min and max degree      =           1          8
 
 Total Grid:
-   number of vertices      =         111
-   number of leaf elements =         188
-   number of levels        =           8
-   degrees of freedom      =        3025
-   min and max degree      =           2          7
+   number of vertices      =         143
+   number of leaf elements =         247
+   number of levels        =           9
+   degrees of freedom      =        3168
+   min and max degree      =           1          8
+
+Total Grid:
+   number of vertices      =         143
+   number of leaf elements =         247
+   number of levels        =           9
+   degrees of freedom      =        3168
+   min and max degree      =           1          8
 
 ---------------------------------------------------------
 phaml_solve_pde complete

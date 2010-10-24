@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -163,41 +163,41 @@ Total Grid:
    min and max degree      =           1          1
 
 Individual Grids:
-   number of vertices       =         361        251        366        358
-   number of vertices I own =         258        171        272        273
-   number of elements       =        1342        932       1360       1330
-   number of leaf elements  =         675        470        684        669
-   leaf elements I own      =         512        298        512        512
+   number of vertices       =         285        263        285        263
+   number of vertices I own =         203        173        213        170
+   number of elements       =        1046        976       1046        976
+   number of leaf elements  =         527        492        527        492
+   leaf elements I own      =         394        318        394        318
    number of levels         =           9          9          9          9
-   degrees of freedom       =         361        251        366        358
-   degrees of freedom I own =         258        171        272        273
+   degrees of freedom       =         285        263        285        263
+   degrees of freedom I own =         203        173        213        170
    min degree               =           1          1          1          1
    max degree               =           1          1          1          1
 
 Total Grid:
-   number of vertices      =         974
-   number of leaf elements =        1834
+   number of vertices      =         759
+   number of leaf elements =        1424
    number of levels        =           9
-   degrees of freedom      =         974
+   degrees of freedom      =         759
    min and max degree      =           1          1
 
 Individual Grids:
-   number of vertices       =         361        251        366        358
-   number of vertices I own =         258        171        272        273
-   number of elements       =        1342        932       1360       1330
-   number of leaf elements  =         675        470        684        669
-   leaf elements I own      =         512        298        512        512
+   number of vertices       =         285        263        285        263
+   number of vertices I own =         203        173        213        170
+   number of elements       =        1046        976       1046        976
+   number of leaf elements  =         527        492        527        492
+   leaf elements I own      =         394        318        394        318
    number of levels         =           9          9          9          9
-   degrees of freedom       =         361        251        366        358
-   degrees of freedom I own =         258        171        272        273
+   degrees of freedom       =         285        263        285        263
+   degrees of freedom I own =         203        173        213        170
    min degree               =           1          1          1          1
    max degree               =           1          1          1          1
 
 Total Grid:
-   number of vertices      =         974
-   number of leaf elements =        1834
+   number of vertices      =         759
+   number of leaf elements =        1424
    number of levels        =           9
-   degrees of freedom      =         974
+   degrees of freedom      =         759
    min and max degree      =           1          1
 
 ---------------------------------------------------------

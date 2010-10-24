@@ -68,6 +68,15 @@ real(my_real), intent(out) :: cxx(:,:),cxy(:,:),cyy(:,:),cx(:,:),cy(:,:), &
                               c(:,:),rs(:)
 !----------------------------------------------------
 
+interface
+   function truexs(x,y,comp,eigen)
+   use phaml
+   real(my_real), intent(in) :: x,y
+   integer, intent(in) :: comp,eigen
+   real (my_real) :: truexs
+   end function truexs
+end interface
+
 !----------------------------------------------------
 ! Local variables
 
@@ -82,6 +91,11 @@ c(1,1) = 0.0_my_real
 rs(1) = -90.0_my_real*(x**8+y**8)
 
 cx=0; cy=0; cxy=0
+
+if (my_pde_id == 1) then
+   cx(1,1) = 1.0_my_real
+   rs(1) = rs(1) + truexs(x,y,1,1)
+endif
 
 end subroutine pdecoefs
 

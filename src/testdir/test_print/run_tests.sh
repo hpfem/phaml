@@ -19,15 +19,15 @@ fi
 
 ERR=0
 RUN1="$RUNMPI -np 1 "
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    RUN1=
 fi
 
 case "$PHAML_PARALLEL" in
-   messpass_spawn) FORM="ms" ;;
-   messpass_nospawn) FORM="spmd" ;;
-   sequential) FORM="seq" ;;
+   messpass_spawn|hybrid_spawn) FORM="ms" ;;
+   messpass_nospawn|hybrid_nospawn) FORM="spmd" ;;
+   sequential|openmp) FORM="seq" ;;
 esac
 
 for PROG in `ls test*.f90`;
@@ -44,7 +44,7 @@ do
    else
       if [ $TESTN = "test06" -o $TESTN = "test07" ]
       then
-         if [ $PHAML_PARALLEL != "sequential" ]
+         if [ $PHAML_PARALLEL != "sequential" -a $PHAML_PARALLEL != "openmp" ]
          then
             diff $TESTN.0.out $TESTN.0.$FORM.comp > $TESTN.0.diff
             PASS=$?
@@ -54,7 +54,7 @@ do
          then
             PASS=$?
          fi
-         if [ $PHAML_PARALLEL != "sequential" ]
+         if [ $PHAML_PARALLEL != "sequential" -a $PHAML_PARALLEL != "openmp" ]
          then
             diff $TESTN.2.out $TESTN.2.$FORM.comp >> $TESTN.2.diff
             if [ $PASS != 2 ]
@@ -74,7 +74,7 @@ do
       else
          if [ $TESTN = "test06" -o $TESTN = "test07" ]
          then
-            if [ $PHAML_PARALLEL != "sequential" ]
+            if [ $PHAML_PARALLEL != "sequential" -a $PHAML_PARALLEL != "openmp" ]
             then
                DIFFSIZE=`cat $TESTN.0.diff | wc -l`
             fi
@@ -84,7 +84,7 @@ do
             fi
             if [ $DIFFSIZE = 0 ]
             then
-               if [ $PHAML_PARALLEL != "sequential" ]
+               if [ $PHAML_PARALLEL != "sequential" -a $PHAML_PARALLEL != "openmp" ]
                then
                   DIFFSIZE=`cat $TESTN.2.diff | wc -l`
                fi

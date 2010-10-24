@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from slave number     1
   PDE id is     0
@@ -122,30 +122,30 @@ My Grid:
    number of leaf elements  =         546
    leaf elements I own      =         546
    number of levels         =           9
-   degrees of freedom       =        3151
-   degrees of freedom I own =        3151
+   degrees of freedom       =        3137
+   degrees of freedom I own =        3137
    min and max degree       =           3          5
 
 My Grid:
-   number of vertices       =         358
-   number of vertices I own =         358
-   number of elements       =        1312
-   number of leaf elements  =         660
-   leaf elements I own      =         660
+   number of vertices       =         366
+   number of vertices I own =         366
+   number of elements       =        1344
+   number of leaf elements  =         676
+   leaf elements I own      =         676
    number of levels         =           9
-   degrees of freedom       =        4069
-   degrees of freedom I own =        4069
+   degrees of freedom       =        4184
+   degrees of freedom I own =        4184
    min and max degree       =           3          5
 
 My Grid:
-   number of vertices       =         358
-   number of vertices I own =         358
-   number of elements       =        1312
-   number of leaf elements  =         660
-   leaf elements I own      =         660
+   number of vertices       =         366
+   number of vertices I own =         366
+   number of elements       =        1344
+   number of leaf elements  =         676
+   leaf elements I own      =         676
    number of levels         =           9
-   degrees of freedom       =        4069
-   degrees of freedom I own =        4069
+   degrees of freedom       =        4184
+   degrees of freedom I own =        4184
    min and max degree       =           3          5
 
 ---------------------------------------------------------

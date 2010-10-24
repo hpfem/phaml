@@ -1094,9 +1094,9 @@ endif
 
 if (partmeth == ZOLTAN_METIS .or. partmeth == ZOLTAN_FILE) then
    if (first_time) then
-      ierr = Zoltan_Set_Param(lb,"PARMETIS_METHOD","PartKway")
+      ierr = Zoltan_Set_Param(lb,"LB_APPROACH","PARTITION")
    else
-      ierr = Zoltan_Set_Param(lb,"PARMETIS_METHOD","RepartLDiffusion")
+      ierr = Zoltan_Set_Param(lb,"LB_APPROACH","REPARTITION")
    endif
 endif
 

@@ -43,7 +43,23 @@
 !---------------------------------------------------------------------!
 module pde_intf
 
-use phaml
+! Several compilers have a bug where my use of generic interfaces for the
+! phaml routines causes confusion.  Renaming is a workaround for that bug.
+
+use phaml, phaml_compress_orig=>phaml_compress, &
+           phaml_copy_soln_to_old_orig=>phaml_copy_soln_to_old, &
+           phaml_create_orig=>phaml_create, &
+           phaml_destroy_orig=>phaml_destroy, &
+           phaml_evaluate_orig=>phaml_evaluate, &
+           phaml_integrate_orig=>phaml_integrate, &
+           phaml_pclose_orig=>phaml_pclose, &
+           phaml_popen_orig=>phaml_popen, &
+           phaml_query_orig=>phaml_query, &
+           phaml_restore_orig=>phaml_restore, &
+           phaml_scale_orig=>phaml_scale, &
+           phaml_solve_pde_orig=>phaml_solve_pde, &
+           phaml_store_orig=>phaml_store, &
+           phaml_store_matrix_orig=>phaml_store_matrix
 implicit none
 
 !---------------------------------------------------------------------!
@@ -156,63 +172,63 @@ type(phaml_solution_type), save, private :: phaml_soluts(MAX_PHAML_SOLUTIONS)
 ! argument.  The integer is an index into phaml_soluts.
 
 interface phaml_compress
-   module procedure phaml_compress, phaml_compress_int
+   module procedure phaml_compress_orig, phaml_compress_int
 end interface
 
 ! don't need phaml_connect because it already takes integers
 
 interface phaml_copy_soln_to_old
-   module procedure phaml_copy_soln_to_old, phaml_copy_soln_to_old_int
+   module procedure phaml_copy_soln_to_old_orig, phaml_copy_soln_to_old_int
 end interface
 
 interface phaml_create
-   module procedure phaml_create, phaml_create_int
+   module procedure phaml_create_orig, phaml_create_int
 end interface
 
 interface phaml_destroy
-   module procedure phaml_destroy, phaml_destroy_int
+   module procedure phaml_destroy_orig, phaml_destroy_int
 end interface
 
 interface phaml_evaluate
-   module procedure phaml_evaluate, phaml_evaluate_int
+   module procedure phaml_evaluate_orig, phaml_evaluate_int
 end interface
 
 ! don't need phaml_evaluate_old because it doesn't have phaml_solution_type
 
 interface phaml_integrate
-   module procedure phaml_integrate, phaml_integrate_int
+   module procedure phaml_integrate_orig, phaml_integrate_int
 end interface
 
 interface phaml_pclose
-   module procedure phaml_pclose, phaml_pclose_int
+   module procedure phaml_pclose_orig, phaml_pclose_int
 end interface
 
 interface phaml_popen
-   module procedure phaml_popen, phaml_popen_int
+   module procedure phaml_popen_orig, phaml_popen_int
 end interface
 
 interface phaml_query
-   module procedure phaml_query, phaml_query_int
+   module procedure phaml_query_orig, phaml_query_int
 end interface
 
 interface phaml_restore
-   module procedure phaml_restore, phaml_restore_int
+   module procedure phaml_restore_orig, phaml_restore_int
 end interface
 
 interface phaml_scale
-   module procedure phaml_scale, phaml_scale_int
+   module procedure phaml_scale_orig, phaml_scale_int
 end interface
 
 interface phaml_solve_pde
-   module procedure phaml_solve_pde, phaml_solve_pde_int
+   module procedure phaml_solve_pde_orig, phaml_solve_pde_int
 end interface
 
 interface phaml_store
-   module procedure phaml_store, phaml_store_int
+   module procedure phaml_store_orig, phaml_store_int
 end interface
 
 interface phaml_store_matrix
-   module procedure phaml_store_matrix, phaml_store_matrix_int
+   module procedure phaml_store_matrix_orig, phaml_store_matrix_int
 end interface
 
 contains

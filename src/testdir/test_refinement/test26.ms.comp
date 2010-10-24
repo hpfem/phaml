@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -71,14 +71,14 @@ Total Grid:
 
 Total Grid:
    number of vertices      =         580
-   number of leaf elements =        1060
+   number of leaf elements =        1058
    number of levels        =          11
    degrees of freedom      =         580
    min and max degree      =           1          1
 
 Total Grid:
    number of vertices      =         580
-   number of leaf elements =        1060
+   number of leaf elements =        1058
    number of levels        =          11
    degrees of freedom      =         580
    min and max degree      =           1          1

@@ -1,3 +1,4 @@
 test01 SPD solver
 test02 general solver
 test03 degree=4
+test04 nonsymmetric solver

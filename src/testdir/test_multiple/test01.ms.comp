@@ -74,31 +74,31 @@ solving pde 1, iteration           3
 
 Total Grid:
    number of vertices      =          73
-   number of leaf elements =         120
+   number of leaf elements =         119
    number of levels        =           6
    degrees of freedom      =          73
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       9.1421212876E-02
-   energy error estimate      2.3332350430E-02
-      effectivity             2.5521812385E-01
-   Linf norm of error         1.1006461650E-02
-   Linf error estimate        1.5781582403E-03
-      effectivity             1.4338470350E-01
+   energy norm of error       9.3923519180E-02
+   energy error estimate      2.3778944500E-02
+      effectivity             2.5317348315E-01
+   Linf norm of error         1.1072653600E-02
+   Linf error estimate        1.6044292697E-03
+      effectivity             1.4490015923E-01
 solving pde 2, iteration           3
 
 Total Grid:
-   number of vertices      =         107
-   number of leaf elements =         182
+   number of vertices      =         108
+   number of leaf elements =         183
    number of levels        =           7
-   degrees of freedom      =         107
+   degrees of freedom      =         108
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       8.9475754785E-01
-   energy error estimate      2.3417098458E-01
-      effectivity             2.6171445565E-01
-   Linf norm of error         9.9756123273E-02
-   Linf error estimate        1.3668036400E-02
-      effectivity             1.3701451051E-01
+   energy norm of error       9.0948406376E-01
+   energy error estimate      2.3586194330E-01
+      effectivity             2.5933598256E-01
+   Linf norm of error         1.0000290415E-01
+   Linf error estimate        1.3659513289E-02
+      effectivity             1.3659116607E-01

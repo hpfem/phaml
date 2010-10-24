@@ -1,13 +1,10 @@
 #!/bin/bash
 
+# NOTE: Do not run this mkmkfile.sh yourself.  It is executed by the mkmkfile.sh
+#       in the root PHAML directory.  If you ran that file, the you should find
+#       that Makefile already exists in this directory.
+
 # Make sure you are using bash instead of a Bourne shell.
-# The following are some places where I had to change the shell line above.
-
-# Sun at Sandia, cross compiling for tflop
-#!/Net/local/gnu/bin/bash
-
-# SGI at NIST
-#!/usr/freeware/bin/bash
 
 ##############################################################################
 
@@ -87,6 +84,13 @@ echo "OMPI_FC=$MPIF" 1>>$f
 echo "export OMPI_F77" 1>>$f
 echo "export OMPI_FC" 1>>$f
 fi
+if [ $PHAML_PARLIB = "mpich2" ]
+then
+echo "MPICH_F77=$MPIF" 1>>$f
+echo "MPICH_F90=$MPIF" 1>>$f
+echo "export MPICH_F77" 1>>$f
+echo "export MPICH_F90" 1>>$f
+fi
 echo "" 1>>$f
 echo "PHAML_HOME=$PHAML_HOME" 1>>$f
 echo 'PHAML_MODDIR=$(PHAML_HOME)/modules' 1>>$f
@@ -96,7 +100,7 @@ echo "" 1>>$f
 
 # choose whether this is master/slave or spmd
 
-if [ $PHAML_PARALLEL = "messpass_nospawn" ]
+if [ $PHAML_PARALLEL = "messpass_nospawn" -o $PHAML_PARALLEL = "hybrid_nospawn" ]
 then 
 MAIN=spmd
 else
@@ -105,10 +109,10 @@ fi
 
 # write the main targets
 
-if [ $PHAML_PARALLEL = "messpass_nospawn" ]
+if [ $PHAML_PARALLEL = "messpass_nospawn" -o $PHAML_PARALLEL = "hybrid_nospawn" ]
 then 
 echo "all: phaml" 1>>$f
-elif [ $PHAML_PARALLEL = "sequential" ]
+elif [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then 
    if [ $PHAML_GRAPHICS = "none" ]
    then
@@ -124,7 +128,7 @@ echo "all: phaml phaml_slave phaml_graphics" 1>>$f
 fi
 echo "" 1>>$f
 
-if [ ! $PHAML_PARALLEL = "messpass_nospawn" -a ! $PHAML_GRAPHICS = "none" ]
+if [ ! $PHAML_PARALLEL = "messpass_nospawn" -a ! $PHAML_PARALLEL = "hybrid_nospawn" -a ! $PHAML_GRAPHICS = "none" ]
 then
 echo "phaml_graphics: "'\' 1>>$f
 echo "	"'graphmain.o \' 1>>$f
@@ -175,7 +179,7 @@ echo "	$XLIBS" 1>>$f
 echo "" 1>>$f
 fi
 
-if [ ! $PHAML_PARALLEL = "sequential" -a ! $PHAML_PARALLEL = "messpass_nospawn" ]
+if [ ! $PHAML_PARALLEL = "sequential" -a ! $PHAML_PARALLEL = "openmp" -a ! $PHAML_PARALLEL = "messpass_nospawn" -a ! $PHAML_PARALLEL = "hybrid_nospawn" ]
 then
 echo "phaml_slave: "'\' 1>>$f
 echo "	"'slave.o \' 1>>$f
@@ -352,7 +356,7 @@ echo "" 1>>$f
 
 # write the rules for compiling files
 
-if [ $PHAML_PARALLEL = "messpass_spawn" ]
+if [ $PHAML_PARALLEL = "messpass_spawn" -o $PHAML_PARALLEL = "hybrid_spawn" ]
 then
 echo 'slave.o: $(PHAML_SRCDIR)/slave.f90' 1>>$f
 echo "	"'$(F90) $(FFLAGS) '"$MODFLAG"'$(PHAML_MODDIR)'" $ZOLTANMOD "'-o slave.o -c $(PHAML_SRCDIR)/slave.f90' 1>>$f
@@ -361,7 +365,7 @@ fi
 
 case "$PHAML_GRAPHICS" in
    metro|mesa|opengl)
-      if [ ! $PHAML_PARALLEL = "messpass_nospawn" ]
+      if [ ! $PHAML_PARALLEL = "messpass_nospawn" -a ! $PHAML_PARALLEL = "hybrid_nospawn" ]
       then
 echo 'graphmain.o: $(PHAML_SRCDIR)/graphmain.f90' 1>>$f
 echo "	"'$(F90) $(FFLAGS) '"$MODFLAG"'$(PHAML_MODDIR) -o graphmain.o -c $(PHAML_SRCDIR)/graphmain.f90' 1>>$f

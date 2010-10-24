@@ -208,10 +208,9 @@ type linsys_type
    real(my_real), pointer :: r_mine(:), r_others(:)
    logical(small_logical), pointer :: need_r_others(:)
 
-! Blocks corresponding to all the equations associated with an edge or
-! element are stored in PLU factored form
+! Blocks corresponding to all the equations associated with an
+! element interior are stored in PLU factored form
 
-   type(encased_matrix), pointer :: edge_block(:)
    type(encased_matrix), pointer :: elem_block(:)
 
 ! The number of equations, refinement levels and coupled PDEs, and maximum

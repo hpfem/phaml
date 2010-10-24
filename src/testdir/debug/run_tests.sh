@@ -6,9 +6,9 @@ THISDIR="debug"
 echo "PHAML TEST:"
 echo "PHAML TEST: $THISDIR: tests of spawning with a debugger."
 
-if [ $PHAML_PARALLEL != "messpass_spawn" ]
+if [ $PHAML_PARALLEL != "messpass_spawn" -a $PHAML_PARALLEL != "hybrid_spawn" ]
 then
-   echo "PHAML TEST: PHAML_PARALLEL is not messpass_spawn; spawning with debugger does not apply."
+   echo "PHAML TEST: PHAML_PARALLEL is not messpass_spawn or hybrid_spawn; spawning with debugger does not apply."
    echo "PHAML TEST: Skipping test."
    exit 0
 fi

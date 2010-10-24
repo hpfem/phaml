@@ -45,8 +45,9 @@ use evaluate
 
 implicit none
 private
-public create_linear_system, destroy_linear_system, edge_exact, elem_exact, &
-       elemental_matrix
+public create_linear_system, &
+       destroy_linear_system, &
+       elemental_matrix         ! thread safe if assigning to ierr is
 
 !----------------------------------------------------
 ! Non-module procedures used are:
@@ -107,7 +108,7 @@ logical, intent(in), optional :: notime
 
 logical :: timeit
 integer :: nelem_leaf, maxeq_per_elem, allocstat
-integer, allocatable :: eqlist(:), leaf_element(:)
+integer, allocatable :: leaf_element(:)
 real(my_real) :: lambda0
 real(my_real), allocatable :: tempvec(:)
 integer :: i, j
@@ -198,13 +199,7 @@ call equation_order(linear_system,grid,leaf_element,nelem_leaf)
 ! Create the column_index array.  This allocates column_index, and sets
 ! column_index, begin_row, end_row, end_row_linear, and end_row_edge
 
-allocate(eqlist(maxeq_per_elem),stat=allocstat)
-if (allocstat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in create_linear_system",procs=procs)
-   return
-endif
-call create_column_index(linear_system,grid,procs,eqlist,leaf_element, &
+call create_column_index(linear_system,grid,procs,maxeq_per_elem,leaf_element, &
                          nelem_leaf)
 
 ! Allocate the matrix value arrays, and initialize them and the right hand
@@ -215,12 +210,9 @@ call allocate_matrix(linear_system,solver_cntl,io_cntl,procs)
 ! Compute the matrix and right hand side.
 
 call compute_matrix_rhs(linear_system,grid,procs,solver_cntl,maxeq_per_elem, &
-                        leaf_element,nelem_leaf,eqlist,timeit,still_sequential)
+                        leaf_element,nelem_leaf,timeit,still_sequential)
 
-deallocate(eqlist, leaf_element, stat=allocstat)
-if (allocstat /= 0) then
-   call warning("deallocation failed in create_linear_system")
-endif
+deallocate(leaf_element)
 
 ! Determine the linear system communication map, i.e., which equation ids
 ! need to be communicated under various situations
@@ -771,7 +763,7 @@ linear_system%begin_level(linear_system%nlev+3) = eq
 end subroutine equation_order
 
 !          -------------------
-subroutine create_column_index(linear_system,grid,procs,eqlist, &
+subroutine create_column_index(linear_system,grid,procs,maxeq_per_elem, &
                                leaf_element,nelem_leaf)
 !          -------------------
 
@@ -785,20 +777,20 @@ subroutine create_column_index(linear_system,grid,procs,eqlist, &
 type(linsys_type), intent(inout) :: linear_system
 type(grid_type), intent(in) :: grid
 type(proc_info), intent(in) :: procs
-integer, intent(out) :: eqlist(:)
-integer, intent(in) :: leaf_element(:), nelem_leaf
+integer, intent(in) :: maxeq_per_elem, leaf_element(:), nelem_leaf
 !----------------------------------------------------
 ! Local variables:
 
 logical :: visited(size(grid%edge))
 integer :: i, j, k, l, m, lev, vert, edge, elem, eq, eq1, neq, nentry, degree, &
            indx, syssize, objtype, brank, srank, allocstat, max_entries_in_row
-integer, allocatable :: adjacencies(:,:)
+integer, allocatable :: eqlist(:), adjacencies(:,:)
 !----------------------------------------------------
 ! Begin executable code
 
 neq = linear_system%neq
 syssize = linear_system%system_size
+allocate(eqlist(maxeq_per_elem))
 
 ! Determine the maximum number of entries in any row of the matrix
 
@@ -996,10 +988,7 @@ endif
 
 ! free up the memory used by adjacencies
 
-deallocate(adjacencies,stat=allocstat)
-if (allocstat /= 0) then
-   call warning("deallocation of adjacencies failed in create_linear_system")
-endif
+deallocate(eqlist,adjacencies)
 
 end subroutine create_column_index
 
@@ -1994,7 +1983,7 @@ end subroutine allocate_matrix
 
 !          ------------------
 subroutine compute_matrix_rhs (linear_system,grid,procs,solver_cntl, &
-                               maxeq_per_elem,leaf_element,nelem_leaf,eqlist, &
+                               maxeq_per_elem,leaf_element,nelem_leaf, &
                                timeit,still_sequential)
 !          ------------------
 
@@ -2010,30 +1999,31 @@ type(grid_type), intent(in) :: grid
 type(proc_info), intent(in) :: procs
 type(solver_options), intent(in) :: solver_cntl
 integer, intent(in) :: maxeq_per_elem,leaf_element(:),nelem_leaf
-integer, intent(inout) :: eqlist(:)
 logical, intent(in) :: timeit, still_sequential
 !----------------------------------------------------
 ! Local variables:
 
-integer :: i, siz, elem, nleq, allocstat
+integer :: i, siz, elem, nleq
+integer, allocatable :: eqlist(:)
 real(my_real), allocatable :: local_stiffness(:,:), local_mass(:,:), &
                               local_rhs(:)
 !----------------------------------------------------
 ! Begin executable code
 
-! space for elemental matrices
-
 siz = maxeq_per_elem*linear_system%system_size
-allocate(local_stiffness(siz,siz),local_mass(siz,siz),local_rhs(siz), &
-         stat=allocstat)
-if (allocstat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation for elemental matrix failed",procs=procs)
-   return
-endif
+
+!$omp parallel &
+!$omp  default(shared) &
+!$omp  private(local_stiffness, local_mass, local_rhs, i, elem, eqlist, nleq)
+
+! space for equation list and elemental matrices
+
+allocate(eqlist(maxeq_per_elem), local_stiffness(siz,siz), local_mass(siz,siz),&
+         local_rhs(siz))
 
 ! pass through the elements
 
+!$omp do
 do i=1,nelem_leaf
    elem = leaf_element(i)
 
@@ -2059,11 +2049,11 @@ do i=1,nelem_leaf
                  local_mass)
 
 end do
+!$omp end do
 
-deallocate(local_stiffness, local_mass, local_rhs, stat=allocstat)
-if (allocstat /= 0) then
-   call warning("deallocation failed in create_linear_system")
-endif
+deallocate(eqlist, local_stiffness, local_mass, local_rhs)
+
+!$omp end parallel
 
 ! fix the quadrature errors
 
@@ -2756,6 +2746,7 @@ do eq1=1,nleq
 
 ! add contribution to right hand side
 
+!$omp atomic
       linear_system%rhs(eq) = linear_system%rhs(eq) + local_rhs(leq)
 
 ! for each column
@@ -2778,9 +2769,11 @@ do eq1=1,nleq
 
 ! add contribution to the matrix
 
+!$omp atomic
             linear_system%stiffness(i) = linear_system%stiffness(i) + &
                                          local_stiffness(leq,lcol)
             if (associated(linear_system%mass)) then
+!$omp atomic
                linear_system%mass(i)=linear_system%mass(i)+local_mass(leq,lcol)
             endif
 
@@ -3180,7 +3173,7 @@ type(proc_info), intent(in) :: procs
 ! Local variables:
 
 integer :: i, j, k, row, col, eq, objtype, brank, srank, lid, degree, loc_neq, &
-           syssize, rowlen, allocstat, info
+           syssize, rowlen, info, eq_list(linear_system%neq), iblock, nblock
 real(my_real) :: temp
 real(my_real), allocatable :: row_block(:,:), row_block_t(:,:)
 real(my_real), pointer :: block(:,:)
@@ -3188,35 +3181,35 @@ integer, pointer :: ipiv(:)
 !----------------------------------------------------
 ! Begin executable code
 
-syssize = linear_system%system_size
+! if there are no face equations, just set the pointers and return
 
-! factor the blocks of edge bases from one edge and face bases from one element
-
-nullify(linear_system%edge_block,linear_system%elem_block)
-
-! allocate the structures that contain the factored blocks
-
-allocate(linear_system%edge_block(size(grid%edge)), &
-         linear_system%elem_block(size(grid%element)),stat=allocstat)
-if (allocstat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation for element block failed",procs=procs)
+if (linear_system%begin_level(linear_system%nlev+2) == &
+    linear_system%begin_level(linear_system%nlev+3)) then
+   nullify(linear_system%elem_block)
+   linear_system%end_row => linear_system%end_row_edge
+   linear_system%neq = linear_system%neq_vert + linear_system%neq_edge
+   linear_system%matrix_val => linear_system%condensed
+   linear_system%rhs => linear_system%rhs_cond
    return
 endif
-do i=1,size(linear_system%edge_block)
-   nullify(linear_system%edge_block(i)%matrix, &
-           linear_system%edge_block(i)%ipiv)
-   linear_system%edge_block(i)%neq = 0
-end do
+
+syssize = linear_system%system_size
+
+! factor the blocks of face bases from one element
+
+! allocate the structure that contains the factored blocks
+
+allocate(linear_system%elem_block(size(grid%element)))
 do i=1,size(linear_system%elem_block)
    nullify(linear_system%elem_block(i)%matrix, &
            linear_system%elem_block(i)%ipiv)
    linear_system%elem_block(i)%neq = 0
 end do
       
-! go through the high order equations, identifying each block corresponding to
-! an edge or element
+! go through the high order equations, making a list of the first equation
+! of each block corresponding to an element
 
+nblock = 0
 eq = linear_system%begin_level(linear_system%nlev+1)
 do
    if (eq >= linear_system%begin_level(linear_system%nlev+3)) exit
@@ -3235,40 +3228,9 @@ do
       stop
    endif
 
-! get the edge/element degree, determine number of equations, and allocate mem
-
    select case(objtype)
 
-   case (EDGE_ID)
-      degree = grid%edge(lid)%degree
-      loc_neq = (degree-1)*syssize
-         
-      allocate(linear_system%edge_block(lid)%matrix(loc_neq,loc_neq), &
-               linear_system%edge_block(lid)%ipiv(loc_neq),stat=allocstat)
-      if (allocstat /= 0) then
-         ierr = ALLOC_FAILED
-         call fatal("memory allocation for edge block failed",procs=procs)
-         return
-      endif
-
-      linear_system%edge_block(lid)%neq = loc_neq
-      block => linear_system%edge_block(lid)%matrix
-      ipiv => linear_system%edge_block(lid)%ipiv
-
-   case (ELEMENT_ID)
-      degree = grid%element(lid)%degree
-      loc_neq = syssize*((degree-1)*(degree-2))/2
-         
-      allocate(linear_system%elem_block(lid)%matrix(loc_neq,loc_neq), &
-               linear_system%elem_block(lid)%ipiv(loc_neq),stat=allocstat)
-      if (allocstat /= 0) then
-         ierr = ALLOC_FAILED
-         call fatal("memory allocation for element block failed",procs=procs)
-         return
-      endif
-      linear_system%elem_block(lid)%neq = loc_neq
-      block => linear_system%elem_block(lid)%matrix
-      ipiv => linear_system%elem_block(lid)%ipiv
+! vertex equations and unknown values should not occur
 
    case (VERTEX_ID)
       ierr = PHAML_INTERNAL_ERROR
@@ -3282,19 +3244,61 @@ do
                  intlist=(/objtype/),procs=procs)
       stop
 
+! skip edge equations
+
+   case (EDGE_ID)
+      eq = eq + syssize*(grid%edge(lid)%degree-1)
+      cycle
+
+! beginning of an element block; add to list
+
+   case (ELEMENT_ID)
+      nblock = nblock + 1
+      eq_list(nblock) = eq
+      degree = grid%element(lid)%degree
+      loc_neq = syssize*((degree-1)*(degree-2))/2
+      eq = eq + loc_neq
+
    end select
 
-! copy the entries for this edge or face into block, and the rows and rhs
+end do
+
+! check the kind of real for LAPACK
+
+if (my_real /= kind(0.0) .and. my_real /= kind(0.0d0)) then
+   ierr = PHAML_INTERNAL_ERROR
+   call fatal("lapack requires my_real is either default single or double precision")
+   return
+endif
+
+! go through the element equation blocks; OpenMP parallel section
+
+!$omp parallel do &
+!$omp  default(shared) &
+!$omp  private(iblock,eq,objtype,brank,srank,lid,degree,loc_neq,block,ipiv, &
+!$omp          rowlen,row_block,row_block_t,i,j,col,info,row,temp,k)
+
+do iblock = 1,nblock
+   eq = eq_list(iblock)
+   call eq_to_grid(linear_system,linear_system%gid(eq),objtype,brank,srank, &
+                   lid,grid)
+
+! get the element degree, determine number of equations, and allocate memory
+
+   degree = grid%element(lid)%degree
+   loc_neq = syssize*((degree-1)*(degree-2))/2
+         
+   allocate(linear_system%elem_block(lid)%matrix(loc_neq,loc_neq), &
+            linear_system%elem_block(lid)%ipiv(loc_neq))
+   linear_system%elem_block(lid)%neq = loc_neq
+   block => linear_system%elem_block(lid)%matrix
+   ipiv => linear_system%elem_block(lid)%ipiv
+
+! copy the entries for this face into block, and the rows and rhs
 ! into row_block and row_block_t (transpose)
 
    rowlen = linear_system%end_row(eq)-linear_system%begin_row(eq)+1
-   allocate(row_block(loc_neq,rowlen+1),row_block_t(rowlen+1,loc_neq), &
-            stat=allocstat)
-   if (allocstat /= 0) then
-      ierr = ALLOC_FAILED
-      call fatal("memory allocation in make_linear_system failed",procs=procs)
-      return
-   endif
+   allocate(row_block(loc_neq,rowlen+1),row_block_t(rowlen+1,loc_neq))
    row_block = 0.0_my_real
    row_block_t = 0.0_my_real
 
@@ -3318,12 +3322,8 @@ do
 
    if (my_real == kind(0.0)) then
       call sgetrf(loc_neq,loc_neq,block,loc_neq,ipiv,info)
-   elseif (my_real == kind(0.0d0)) then
-      call dgetrf(loc_neq,loc_neq,block,loc_neq,ipiv,info)
    else
-      ierr = PHAML_INTERNAL_ERROR
-      call fatal("lapack requires my_real is either default single or double precision")
-      return
+      call dgetrf(loc_neq,loc_neq,block,loc_neq,ipiv,info)
    endif
    if (info /= 0) then
       ierr = PHAML_INTERNAL_ERROR
@@ -3335,59 +3335,57 @@ do
 ! form the Schur complement A1 - A21 A2^-1 A12 for the condensed equations
 ! (and also the rhs) where A1 is vertex and edge bases and A2 is face bases.
 
-   if (objtype == ELEMENT_ID) then
-
 ! multiply the rows and rhs by A2^-1
 
-      if (my_real == kind(0.0)) then
-         call sgetrs("N",loc_neq,rowlen+1,block,loc_neq,ipiv,row_block, &
-                     loc_neq,info)
-      else
-         call dgetrs("N",loc_neq,rowlen+1,block,loc_neq,ipiv,row_block, &
-                     loc_neq,info)
-      endif
-      if (info /= 0) then
-         ierr = PHAML_INTERNAL_ERROR
-         call fatal("lapack sgetrs solution failed for static condensation",&
-                    intlist=(/info/),procs=procs)
-         stop
-      endif
+   if (my_real == kind(0.0)) then
+      call sgetrs("N",loc_neq,rowlen+1,block,loc_neq,ipiv,row_block, &
+                  loc_neq,info)
+   else
+      call dgetrs("N",loc_neq,rowlen+1,block,loc_neq,ipiv,row_block, &
+                  loc_neq,info)
+   endif
+   if (info /= 0) then
+      ierr = PHAML_INTERNAL_ERROR
+      call fatal("lapack sgetrs solution failed for static condensation",&
+                 intlist=(/info/),procs=procs)
+      stop
+   endif
 
 ! form the Schur complement
 
-      do i=1,rowlen
-         row = linear_system%column_index(linear_system%begin_row(eq)+i-1)
-         if (row >= eq .and. row < eq+loc_neq) cycle
-         do j=1,rowlen
-            col = linear_system%column_index(linear_system%begin_row(eq)+j-1)
-            if (col >= eq .and. col < eq+loc_neq) cycle
+   do i=1,rowlen
+      row = linear_system%column_index(linear_system%begin_row(eq)+i-1)
+      if (row >= eq .and. row < eq+loc_neq) cycle
+      do j=1,rowlen
+         col = linear_system%column_index(linear_system%begin_row(eq)+j-1)
+         if (col >= eq .and. col < eq+loc_neq) cycle
 ! TEMP this should be done with level 3 blas
-            temp = 0.0_my_real
-            do k=1,loc_neq
-               temp = temp + row_block_t(i,k)*row_block(k,j)
-            end do
-            do k=linear_system%begin_row(row),linear_system%end_row(row)
-               if (linear_system%column_index(k) == col) exit
-            end do
-            if (k > linear_system%end_row(row)) then
-               ierr = PHAML_INTERNAL_ERROR
-               call fatal("couldn't find col in row during static condensation", &
-                          intlist=(/col,row/),procs=procs)
-               stop
-            endif
-            linear_system%condensed(k) = linear_system%condensed(k) - temp
-         end do
          temp = 0.0_my_real
          do k=1,loc_neq
-            temp = temp + row_block_t(i,k)*row_block(k,rowlen+1)
+            temp = temp + row_block_t(i,k)*row_block(k,j)
          end do
-         linear_system%rhs_cond(row) = linear_system%rhs_cond(row) - temp
+         do k=linear_system%begin_row(row),linear_system%end_row(row)
+            if (linear_system%column_index(k) == col) exit
+         end do
+         if (k > linear_system%end_row(row)) then
+            ierr = PHAML_INTERNAL_ERROR
+            call fatal("couldn't find col in row during static condensation", &
+                       intlist=(/col,row/),procs=procs)
+            stop
+         endif
+         linear_system%condensed(k) = linear_system%condensed(k) - temp
       end do
-   endif ! face basis
+      temp = 0.0_my_real
+      do k=1,loc_neq
+         temp = temp + row_block_t(i,k)*row_block(k,rowlen+1)
+      end do
+      linear_system%rhs_cond(row) = linear_system%rhs_cond(row) - temp
+   end do
 
-   deallocate(row_block,row_block_t,stat=allocstat)
-   eq = eq + loc_neq
-end do ! blocks of high order equations
+   deallocate(row_block,row_block_t)
+end do ! blocks of face equations
+
+!$omp end parallel do
 
 ! after static condensation, the matrix rows should not contain the face bases,
 ! the number of equations should not include face bases, and the matrix values
@@ -3515,21 +3513,6 @@ if (associated(linear_system%begin_row)) then
       endif
    endif
    call hash_table_destroy(linear_system%eq_hash)
-   if (associated(linear_system%edge_block)) then
-      do i=1,size(linear_system%edge_block)
-         if (associated(linear_system%edge_block(i)%matrix)) then
-            deallocate(linear_system%edge_block(i)%matrix, &
-                       linear_system%edge_block(i)%ipiv,stat=allocstat)
-            if (allocstat /= 0) then
-               call warning("deallocation failed in destroy_linear_system (edge_block component)")
-            endif
-         endif
-      end do
-      deallocate(linear_system%edge_block,stat=allocstat)
-      if (allocstat /= 0) then
-         call warning("deallocation failed in destroy_linear_system (edge_block)")
-      endif
-   endif
    if (associated(linear_system%elem_block)) then
       do i=1,size(linear_system%elem_block)
          if (associated(linear_system%elem_block(i)%matrix)) then
@@ -3581,471 +3564,6 @@ if (associated(linear_system%begin_row)) then
 endif
 
 end subroutine destroy_linear_system
-
-!          ----------
-subroutine edge_exact(grid,edge,sysrank,what)
-!          ----------
-
-!----------------------------------------------------
-! This routine sets "exact" solutions on an edge.  what indicates what is
-! being set, and can be "d" for Dirichlet boundary conditions, "i" for
-! initial conditions, or "t" for the true solution.
-! It assumes the coefficients for the linear elements at the endpoints of
-! edge are already set, and computes the coefficients of the high order
-! elements along that edge as a least squares fit to the function.
-! For multiple eigenvalue problems, all eigenfunctions are set.  It is
-! assumed that they all satisfy the same boundary conditions (bconds is
-! defined for component=1..system_size) but have different initial conditions
-! and true solutions (iconds and trues are defined for component=1..system_size
-! and eigen=1..num_eval)
-!----------------------------------------------------
-
-!----------------------------------------------------
-! Dummy arguments
-
-type(grid_type), intent(inout) :: grid
-integer, intent(in) :: edge, sysrank
-character(len=1), intent(in) :: what
-!----------------------------------------------------
-! Local variables:
-
-integer :: i, j, nqp, nev, jerr, deg(4), astat, n, ss
-real(my_real) :: xv(3),yv(3)
-real(my_real), pointer :: weight(:), xq(:), yq(:)
-real(my_real), allocatable :: basis(:,:), a(:), b(:,:), true(:,:)
-integer, allocatable :: ipiv(:)
-real(my_real) :: c(grid%system_size,grid%system_size),rs(grid%system_size)
-integer :: itype(grid%system_size)
-
-!----------------------------------------------------
-! Non-module procedures used are:
-
-interface
-
-   function trues(x,y,comp,eigen) ! real (my_real)
-   use global
-   real (my_real), intent(in) :: x,y
-   integer, intent(in) :: comp,eigen
-   real (my_real) :: trues
-   end function trues
-
-   subroutine bconds(x,y,bmark,itype,c,rs)
-   use global
-   real(my_real), intent(in) :: x,y
-   integer, intent(in) :: bmark
-   integer, intent(out) :: itype(:)
-   real(my_real), intent(out) :: c(:,:),rs(:)
-   end subroutine bconds
-
-   function iconds(x,y,comp,eigen)
-   use global
-   real(my_real), intent(in) :: x,y
-   integer, intent(in) :: comp, eigen
-   real(my_real) :: iconds
-   end function iconds
-
-end interface
-
-!----------------------------------------------------
-! Begin executable code
-
-! nothing to do if only linear bases on this edge
-
-if (grid%edge(edge)%degree < 2) return
-
-! Dirichlet boundary conditions override initial conditions
-
-if (what == "i" .and. grid%edge_type(edge,sysrank) == DIRICHLET) return
-
-! useful constants
-
-nev = max(1,grid%num_eval)
-ss = grid%system_size
-
-! local copy of the vertex coordinates, plus a fake third vertex to make
-! a triangle
-
-xv(1) = grid%vertex(grid%edge(edge)%vertex(1))%coord%x
-xv(2) = grid%vertex(grid%edge(edge)%vertex(2))%coord%x
-xv(3) = (xv(1)+xv(2))/2
-yv(1) = grid%vertex(grid%edge(edge)%vertex(1))%coord%y
-yv(2) = grid%vertex(grid%edge(edge)%vertex(2))%coord%y
-yv(3) = (yv(1)+yv(2))/2
-if (abs(xv(2)-xv(1)) > abs(yv(2)-yv(1))) then
-   yv(3) = yv(3) + 1
-else
-   xv(3) = xv(3) + 1
-endif
-
-! get the quadrature rule for the edge
-
-call quadrature_rule_line(min(MAX_QUAD_ORDER_LINE,grid%edge(edge)%degree+1), &
-                          xv(1:2), yv(1:2), nqp, weight, xq, yq, jerr)
-if (jerr /= 0) then
-   ierr = PHAML_INTERNAL_ERROR
-   call fatal("Error getting quadrature rule in edge_exact",intlist=(/jerr/))
-   stop
-endif
-
-! evaluate basis functions at the quadrature points
-
-allocate(basis(3+grid%edge(edge)%degree-1,nqp),stat=astat)
-if (astat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in edge_exact")
-   stop
-endif
-
-deg = 1
-deg(3) = grid%edge(edge)%degree
-
-call p_hier_basis_func(xq,yq,xv,yv,deg,"a",basis)
-
-! evaluate the function at the quadrature points
-
-allocate(true(nqp,nev),stat=astat)
-if (astat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in edge_exact")
-   stop
-endif
-
-select case (what)
-case ("d")
-   do i=1,nqp
-      call bconds(xq(i),yq(i),grid%edge(edge)%bmark,itype,c,rs)
-      true(i,:) = rs(sysrank)
-   end do
-case ("i")
-   do j=1,nev
-      do i=1,nqp
-         true(i,j) = iconds(xq(i),yq(i),sysrank,j)
-      end do
-   end do
-case ("t")
-   do j=1,nev
-      do i=1,nqp
-         true(i,j) = trues(xq(i),yq(i),sysrank,j)
-         if (true(i,j) == huge(0.0_my_real)) true(i,j) = 0.0_my_real
-      end do
-   end do
-end select
-
-! take off the linear bases part of the function
-
-do j=1,nev
- if (what == "t") then
-  if (associated(grid%vertex_exact)) then
-   true(:,j) = true(:,j) - &
-    grid%vertex_exact(grid%edge(edge)%vertex(1),sysrank,j)*basis(1,:)-&
-    grid%vertex_exact(grid%edge(edge)%vertex(2),sysrank,j)*basis(2,:)
-  endif
- else
-  true(:,j) = true(:,j) - &
-   grid%vertex_solution(grid%edge(edge)%vertex(1),sysrank,j)*basis(1,:) - &
-   grid%vertex_solution(grid%edge(edge)%vertex(2),sysrank,j)*basis(2,:)
- endif
-end do
-
-! set up least squares linear system, storing the matrix in LAPACK symmetric
-! packed form
-
-n = grid%edge(edge)%degree - 1
-
-allocate(a((n*(n+1))/2),b(n,nev),ipiv(n),stat=astat)
-if (astat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in edge_exact")
-   stop
-endif
-
-do i=1,n
-   do j=i,n
-      a(i+(j*(j-1))/2) = sum(weight*basis(3+i,:)*basis(3+j,:))
-   end do
-   do j=1,nev
-      b(i,j) = sum(weight*basis(3+i,:)*true(:,j))
-   end do
-end do
-
-! solve the least squares system
-
-if (my_real == kind(1.0e0)) then
-   call sspsv("U",n,nev,a,ipiv,b,n,jerr)
-elseif (my_real == kind(1.0d0)) then
-   call dspsv("U",n,nev,a,ipiv,b,n,jerr)
-else
-   ierr = PHAML_INTERNAL_ERROR
-      call fatal("my_real is neither single nor double precision. Can't call LAPACK")
-   stop 
-endif
-
-! copy the solution to the edge data structure
-
-do j=1,nev
-   if (what == "t") then
-      if (grid%have_true) then
-         do i=1,n
-            grid%edge(edge)%exact(i,sysrank,j) = b(i,j)
-         end do
-      endif
-   else
-      do i=1,n
-         grid%edge(edge)%solution(i,sysrank,j) = b(i,j)
-      end do
-   endif
-end do
-
-deallocate(weight,xq,yq,basis,a,b,true,ipiv)
-
-end subroutine edge_exact
-
-!          ----------
-subroutine elem_exact(grid,elem,sysrank,what)
-!          ----------
-
-!----------------------------------------------------
-! This routine sets "exact" solutions for face basis functions.
-! what indicates what is being set, and can be "i" for initial conditions
-! or "t" for the true solution.
-! It assumes the coefficients for the linear elements at the vertices of
-! elem and edge basis functions are already set, and computes the
-! coefficients of the high order face bases in elem as a least squares
-! fit to the function.
-! For multiple eigenvalue problems, all eigenfunctions are set.  It is
-! assumed that they have different initial conditions
-! and true solutions (iconds and trues are defined for component=1..system_size
-! and eigen=1..num_eval)
-!----------------------------------------------------
-
-!----------------------------------------------------
-! Dummy arguments
-
-type(grid_type), intent(inout) :: grid
-integer, intent(in) :: elem, sysrank
-character(len=1), intent(in) :: what
-!----------------------------------------------------
-! Local variables:
-
-integer :: i, j, k, nqp, nev, ss, jerr, deg(4), astat, n, degree, nbasis, isub
-real(my_real) :: xv(3),yv(3)
-real(my_real), pointer :: weight(:), xq(:), yq(:)
-real(my_real), allocatable :: basis(:,:), wbasis(:,:), a(:), b(:,:), true(:,:),&
-                              afull(:,:)
-integer, allocatable :: ipiv(:)
-
-!----------------------------------------------------
-! Non-module procedures used are:
-
-interface
-
-   function trues(x,y,comp,eigen) ! real (my_real)
-   use global
-   real (my_real), intent(in) :: x,y
-   integer, intent(in) :: comp,eigen
-   real (my_real) :: trues
-   end function trues
-
-   function iconds(x,y,comp,eigen)
-   use global
-   real(my_real), intent(in) :: x,y
-   integer, intent(in) :: comp, eigen
-   real(my_real) :: iconds
-   end function iconds
-
-end interface
-
-!----------------------------------------------------
-! Begin executable code
-
-! must be at least cubics to have face bases
-
-if (grid%element(elem)%degree < 3) return
-
-! useful constants
-
-nev = max(1,grid%num_eval)
-ss = grid%system_size
-
-! local copy of the vertex coordinates
-
-xv = grid%vertex(grid%element(elem)%vertex)%coord%x
-yv = grid%vertex(grid%element(elem)%vertex)%coord%y
-
-! get the quadrature rule for the triangle
-
-degree = grid%element(elem)%degree
-do i=1,EDGES_PER_ELEMENT
-   degree = max(degree,grid%edge(grid%element(elem)%edge(i))%degree)
-end do
-if (degree > 1) then
-   degree = min(MAX_QUAD_ORDER_TRI,2*degree-2)
-endif
-call quadrature_rule_tri(degree,xv,yv,nqp,weight,xq,yq,jerr,stay_in=.true.)
-if (jerr /= 0) then
-   ierr = PHAML_INTERNAL_ERROR
-   call fatal("Error getting quadrature rule in elem_exact",intlist=(/jerr/))
-   stop
-endif
-
-! evaluate basis functions at the quadrature points
-
-nbasis = 3
-do i=1,EDGES_PER_ELEMENT 
-   deg(i) = grid%edge(grid%element(elem)%edge(i))%degree
-   nbasis = nbasis + max(0,deg(i)-1)
-end do
-deg(4) = grid%element(elem)%degree
-nbasis = nbasis + ((deg(4)-1)*(deg(4)-2))/2
-allocate(basis(nbasis,nqp),stat=astat)
-if (astat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in elem_exact")
-   stop
-endif
-
-call p_hier_basis_func(xq,yq,xv,yv,deg,"a",basis)
-
-! evaluate the function at the quadrature points
-
-allocate(true(nqp,nev),stat=astat)
-if (astat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in elem_exact")
-   stop
-endif
-
-do j=1,nev
-   do i=1,nqp
-      if (what == "t") then
-         true(i,j) = trues(xq(i),yq(i),sysrank,j)
-         if (true(i,j) == huge(0.0_my_real)) true(i,j) = 0.0_my_real
-      else
-         true(i,j) = iconds(xq(i),yq(i),sysrank,j)
-      endif
-   end do
-end do
-
-! take off the vertex- and edge-basis parts of the function
-
-do i=1,nev
- if (what == "t") then
-  if (associated(grid%vertex_exact)) then
-   true(:,i) = true(:,i) - &
-        grid%vertex_exact(grid%element(elem)%vertex(1),sysrank,i)*basis(1,:) - &
-        grid%vertex_exact(grid%element(elem)%vertex(2),sysrank,i)*basis(2,:) - &
-        grid%vertex_exact(grid%element(elem)%vertex(3),sysrank,i)*basis(3,:)
-   isub = 3
-   do j=1,EDGES_PER_ELEMENT
-      do k=1,grid%edge(grid%element(elem)%edge(j))%degree-1
-         isub = isub + 1
-         if (grid%have_true) then
-            true(:,i) = true(:,i) - &
-               grid%edge(grid%element(elem)%edge(j))%exact(k,sysrank,i)*basis(isub,:)
-         endif
-      end do
-   end do
-  endif
- else
-   true(:,i) = true(:,i) - &
-      grid%vertex_solution(grid%element(elem)%vertex(1),sysrank,i)*basis(1,:) -&
-      grid%vertex_solution(grid%element(elem)%vertex(2),sysrank,i)*basis(2,:) -&
-      grid%vertex_solution(grid%element(elem)%vertex(3),sysrank,i)*basis(3,:)
-   isub = 3
-   do j=1,EDGES_PER_ELEMENT
-      do k=1,grid%edge(grid%element(elem)%edge(j))%degree-1
-        isub = isub + 1
-        true(:,i) = true(:,i) - &
-         grid%edge(grid%element(elem)%edge(j))%solution(k,sysrank,i)*basis(isub,:)
-      end do
-   end do
- endif
-end do
-
-! set up least squares linear system, storing the matrix in LAPACK symmetric
-! packed form
-
-n = ((grid%element(elem)%degree-1)*(grid%element(elem)%degree-2))/2
-
-allocate(a((n*(n+1))/2),b(n,nev),ipiv(n),stat=astat)
-if (astat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in elem_exact")
-   stop
-endif
-
-isub = 3
-do i=1,EDGES_PER_ELEMENT 
-   isub = isub + max(0,grid%edge(grid%element(elem)%edge(i))%degree-1)
-end do
-
-allocate(afull(n,n),wbasis(nqp,n),stat=astat)
-if (astat /= 0) then
-   ierr = ALLOC_FAILED
-   call fatal("memory allocation failed in elem_exact")
-   stop
-endif
-afull = 0.0_my_real
-basis(1:n,:) = basis(isub+1:nbasis,:)
-do i=1,nqp
-   wbasis(i,1:n) = weight(i)*basis(1:n,i)
-end do
-
-if (my_real == kind(1.0)) then
-   call sgemm("N","N",n,n,nqp,1.0_my_real,basis,nbasis,wbasis,nqp, &
-              0.0_my_real,afull,n)
-elseif (my_real == kind(1.0d0)) then
-   call dgemm("N","N",n,n,nqp,1.0_my_real,basis,nbasis,wbasis,nqp, &
-              0.0_my_real,afull,n)
-else
-   ierr = PHAML_INTERNAL_ERROR
-   call fatal("my_real is neither single nor double precision. Can't call GEMM")
-   stop 
-endif
-
-do i=1,n
-   do j=i,n
-      a(i+(j*(j-1))/2) = afull(i,j)
-   end do
-end do
-
-if (my_real == kind(1.0)) then
-   call sgemm("T","N",n,nev,nqp,1.0_my_real,wbasis,nqp,true,nqp,0.0_my_real,b,n)
-elseif (my_real == kind(1.0d0)) then
-   call dgemm("T","N",n,nev,nqp,1.0_my_real,wbasis,nqp,true,nqp,0.0_my_real,b,n)
-endif
-
-! solve the least squares system
-
-if (my_real == kind(1.0e0)) then
-   call sspsv("U",n,nev,a,ipiv,b,n,jerr)
-elseif (my_real == kind(1.0d0)) then
-   call dspsv("U",n,nev,a,ipiv,b,n,jerr)
-else
-   ierr = PHAML_INTERNAL_ERROR
-      call fatal("my_real is neither single nor double precision. Can't call LAPACK")
-   stop
-endif
-
-! copy the solution to the element data structure
-
-do j=1,nev
-   if (what == "t") then
-      if (grid%have_true) then
-         do i=1,n
-            grid%element(elem)%exact(i,sysrank,j) = b(i,j)
-         end do
-      endif
-   else
-      do i=1,n
-         grid%element(elem)%solution(i,sysrank,j) = b(i,j)
-      end do
-   endif
-end do
-
-deallocate(weight,xq,yq,basis,wbasis,a,b,true,ipiv,afull)
-
-end subroutine elem_exact
 
 ! TEMP080114 charged particles
 ! Undocumented feature for computing the electric field of charged particles

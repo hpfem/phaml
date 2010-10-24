@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -254,21 +254,21 @@ Total Linear System:
    coarse (half) bandwidth =           0
 
 Norms of error:
-   energy norm of error       4.6561417645E-01
-      reduced by              6.1350287427E-01
-   energy error estimate      1.5366787991E-01
-      reduced by              6.2146631317E-01
-      effectivity             3.3003264866E-01
-   Linf norm of error         3.0902415916E-02
-      reduced by              7.5991840826E-01
-   Linf error estimate        3.4629136092E-03
-      reduced by              3.7632913916E-01
-      effectivity             1.1205964021E-01
-   L2 norm of error           3.6380489464E-03
-      reduced by              3.8134929136E-01
-   L2 error estimate          1.0059106388E-03
-      reduced by              4.1562681889E-01
-      effectivity             2.7649728018E-01
+   energy norm of error       4.6561440088E-01
+      reduced by              6.1350316998E-01
+   energy error estimate      1.5366745744E-01
+      reduced by              6.2146460463E-01
+      effectivity             3.3003158226E-01
+   Linf norm of error         3.0902420799E-02
+      reduced by              7.5991852832E-01
+   Linf error estimate        3.4631256050E-03
+      reduced by              3.7635217762E-01
+      effectivity             1.1206648267E-01
+   L2 norm of error           3.6450299452E-03
+      reduced by              3.8208105692E-01
+   L2 error estimate          1.0059043897E-03
+      reduced by              4.1562423684E-01
+      effectivity             2.7596601531E-01
 
 Total Grid:
    number of vertices      =         730
@@ -278,15 +278,15 @@ Total Grid:
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       4.6561417645E-01
-   energy error estimate      1.5366787991E-01
-      effectivity             3.3003264866E-01
-   Linf norm of error         3.0902415916E-02
-   Linf error estimate        3.4629136092E-03
-      effectivity             1.1205964021E-01
-   L2 norm of error           3.6380489464E-03
-   L2 error estimate          1.0059106388E-03
-      effectivity             2.7649728018E-01
+   energy norm of error       4.6561440088E-01
+   energy error estimate      1.5366745744E-01
+      effectivity             3.3003158226E-01
+   Linf norm of error         3.0902420799E-02
+   Linf error estimate        3.4631256050E-03
+      effectivity             1.1206648267E-01
+   L2 norm of error           3.6450299452E-03
+   L2 error estimate          1.0059043897E-03
+      effectivity             2.7596601531E-01
 
 ---------------------------------------------------------
 phaml_solve_pde complete

@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from slave number     1
   PDE id is     0
@@ -58,8 +58,8 @@ My Grid:
    number of leaf elements  =           8
    leaf elements I own      =           8
    number of levels         =           1
-   degrees of freedom       =           9
-   degrees of freedom I own =           9
+   degrees of freedom       =          18
+   degrees of freedom I own =          18
    min and max degree       =           1          1
 
 Norms of error:
@@ -82,8 +82,8 @@ My Grid:
    number of leaf elements  =          23
    leaf elements I own      =          23
    number of levels         =           3
-   degrees of freedom       =          18
-   degrees of freedom I own =          18
+   degrees of freedom       =          36
+   degrees of freedom I own =          36
    min and max degree       =           1          1
 
 Norms of error:
@@ -112,8 +112,8 @@ My Grid:
    number of leaf elements  =          55
    leaf elements I own      =          55
    number of levels         =           5
-   degrees of freedom       =          37
-   degrees of freedom I own =          37
+   degrees of freedom       =          74
+   degrees of freedom I own =          74
    min and max degree       =           1          1
 
 Norms of error:
@@ -142,8 +142,8 @@ My Grid:
    number of leaf elements  =         128
    leaf elements I own      =         128
    number of levels         =           6
-   degrees of freedom       =          78
-   degrees of freedom I own =          78
+   degrees of freedom       =         156
+   degrees of freedom I own =         156
    min and max degree       =           1          1
 
 Norms of error:
@@ -172,8 +172,8 @@ My Grid:
    number of leaf elements  =         252
    leaf elements I own      =         252
    number of levels         =           7
-   degrees of freedom       =         147
-   degrees of freedom I own =         147
+   degrees of freedom       =         294
+   degrees of freedom I own =         294
    min and max degree       =           1          1
 
 Norms of error:
@@ -202,8 +202,8 @@ My Grid:
    number of leaf elements  =         607
    leaf elements I own      =         607
    number of levels         =           9
-   degrees of freedom       =         332
-   degrees of freedom I own =         332
+   degrees of freedom       =         664
+   degrees of freedom I own =         664
    min and max degree       =           1          1
 
 Norms of error:
@@ -232,8 +232,8 @@ My Grid:
    number of leaf elements  =         607
    leaf elements I own      =         607
    number of levels         =           9
-   degrees of freedom       =         332
-   degrees of freedom I own =         332
+   degrees of freedom       =         664
+   degrees of freedom I own =         664
    min and max degree       =           1          1
 
 Norms of error:

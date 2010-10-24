@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -321,54 +321,54 @@ Norms of error:
       effectivity             3.2740927979E-01
 
 Total Grid:
-   number of vertices      =         730
-   number of leaf elements =        1314
+   number of vertices      =         740
+   number of leaf elements =        1334
    number of levels        =          12
-   degrees of freedom      =         730
+   degrees of freedom      =         740
    min and max degree      =           1          1
 
 L2 norm of linear system residual
 
       iteration    absolute residual    relative residual      reduction
 
-           0  1.2954585142E+01  8.3723795156E+00
-           1  1.1662596271E+00  7.5373839487E-01  9.0026783123E-02
-           2  7.5377363633E-02  4.8715407578E-02  6.4631718258E-02
+           0  1.3205115309E+01  8.6201996629E+00
+           1  1.1680539379E+00  7.6249679964E-01  8.8454656442E-02
+           2  7.5426720628E-02  4.9237994257E-02  6.4574689730E-02
 After solution, condensed matrix:
 
 L2 norm of linear system residual
 
       iteration    absolute residual    relative residual      reduction
 
-           0  7.5377363633E-02  4.8715407578E-02
+           0  7.5426720628E-02  4.9237994257E-02
 After solution, full matrix:
 
 L2 norm of linear system residual
 
       iteration    absolute residual    relative residual      reduction
 
-           0  7.5377363633E-02  4.8715407578E-02
+           0  7.5426720628E-02  4.9237994257E-02
 
 Total Linear System:
-   number of equations =         730
-   number of nonzeroes =        4816
-   condensed matrix number of equations =         730
-   condensed matrix number of nonzeroes =        4816
+   number of equations =         740
+   number of nonzeroes =        4886
+   condensed matrix number of equations =         740
+   condensed matrix number of nonzeroes =        4886
    coarse matrix neq =           1
    coarse (half) bandwidth =           0
 
 Norms of error:
-   energy norm of error       4.7010171200E-01
-      reduced by              6.1916355455E-01
-   energy error estimate      1.5612688352E-01
-      reduced by              6.2805873233E-01
-      effectivity             3.3211298648E-01
+   energy norm of error       4.6890742300E-01
+      reduced by              6.1759057534E-01
+   energy error estimate      1.5502307722E-01
+      reduced by              6.2361840039E-01
+      effectivity             3.3060486913E-01
 
 Total Grid:
-   number of vertices      =         730
-   number of leaf elements =        1314
+   number of vertices      =         740
+   number of leaf elements =        1334
    number of levels        =          12
-   degrees of freedom      =         730
+   degrees of freedom      =         740
    min and max degree      =           1          1
 
 ---------------------------------------------------------

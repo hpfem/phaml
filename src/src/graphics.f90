@@ -145,7 +145,7 @@ integer :: label_elements = LABEL_NOLABEL, &
            preproc_func   = PREPROC_NONE, &
            color_scheme   = SCHEME_RAINBOW, &
            step_scheme_steps = 4, &
-           step_scheme_hues  = 4, &
+           step_scheme_hues  = 6, &
            subelement_resolution = 0, &
            contour_location = CONT_XYPLANE
 logical :: vert_associated_element=.false., edge_associated_element=.false.
@@ -160,7 +160,7 @@ real(my_real) :: xcrop1 = -huge(myzero), &
 ! contour plot parameters
 
 logical :: contour_values_given  = .false.
-integer :: num_contour = 21
+integer :: num_contour = 16
 real(my_real), allocatable :: actual_contours(:)
 
 ! parameters for exploding the grid into partitions
@@ -194,6 +194,7 @@ logical :: indiv_compnt_scale = .true.
 logical :: draw_axes_flag  = .false., &
            draw_sfc_flag   = .false., &
            draw_sfcio_flag = .false., &
+           show_key_flag   = .false., &
            grid_newview    = .true.
 integer :: eigen          = 1, &
            compnt         = 1
@@ -516,7 +517,7 @@ real (my_real), intent(in) :: rmess(:)
 
 integer :: ind,rind,elem,vert,i,allocstat,other_lid,part,oldvert,newvert, &
            num_elem,iedge,ssize
-real (my_real) :: perim,xcent,ycent,valcent(1)
+real (my_real) :: perim,xcent,ycent,valcent(1),elem_size
 logical :: duplicate
 type(hash_key), allocatable :: vert_gid(:,:), edge_gid(:,:), invert(:), &
                                outvert(:)
@@ -815,24 +816,15 @@ do elem=1,num_elem
    element(elem)%in      = hash_decode_key(invert(elem),grid%vert_hash)
    element(elem)%out     = hash_decode_key(outvert(elem),grid%vert_hash)
    if (element(elem)%isleaf) then
-      minsize = min(minsize,sqrt( &
-         (vertex(element(elem)%vertex(1))%coord%x-vertex(element(elem)%vertex(2))%coord%x)**2 + &
-         (vertex(element(elem)%vertex(1))%coord%y-vertex(element(elem)%vertex(2))%coord%y)**2))
-      maxsize = max(maxsize,sqrt( &
-         (vertex(element(elem)%vertex(1))%coord%x-vertex(element(elem)%vertex(2))%coord%x)**2 + &
-         (vertex(element(elem)%vertex(1))%coord%y-vertex(element(elem)%vertex(2))%coord%y)**2))
-      minsize = min(minsize,sqrt( &
-         (vertex(element(elem)%vertex(2))%coord%x-vertex(element(elem)%vertex(3))%coord%x)**2 + &
-         (vertex(element(elem)%vertex(2))%coord%y-vertex(element(elem)%vertex(3))%coord%y)**2))
-      maxsize = max(maxsize,sqrt( &
-         (vertex(element(elem)%vertex(2))%coord%x-vertex(element(elem)%vertex(3))%coord%x)**2 + &
-         (vertex(element(elem)%vertex(2))%coord%y-vertex(element(elem)%vertex(3))%coord%y)**2))
-      minsize = min(minsize,sqrt( &
-         (vertex(element(elem)%vertex(3))%coord%x-vertex(element(elem)%vertex(1))%coord%x)**2 + &
-         (vertex(element(elem)%vertex(3))%coord%y-vertex(element(elem)%vertex(1))%coord%y)**2))
-      maxsize = max(maxsize,sqrt( &
-         (vertex(element(elem)%vertex(3))%coord%x-vertex(element(elem)%vertex(1))%coord%x)**2 + &
-         (vertex(element(elem)%vertex(3))%coord%y-vertex(element(elem)%vertex(1))%coord%y)**2))
+      elem_size = maxval( &
+         (/ sqrt((vertex(element(elem)%vertex(1))%coord%x-vertex(element(elem)%vertex(2))%coord%x)**2 + &
+                 (vertex(element(elem)%vertex(1))%coord%y-vertex(element(elem)%vertex(2))%coord%y)**2), &
+            sqrt((vertex(element(elem)%vertex(2))%coord%x-vertex(element(elem)%vertex(3))%coord%x)**2 + &
+                 (vertex(element(elem)%vertex(2))%coord%y-vertex(element(elem)%vertex(3))%coord%y)**2), &
+            sqrt((vertex(element(elem)%vertex(3))%coord%x-vertex(element(elem)%vertex(1))%coord%x)**2 + &
+                 (vertex(element(elem)%vertex(3))%coord%y-vertex(element(elem)%vertex(1))%coord%y)**2) /) )
+      minsize = min(minsize,elem_size)
+      maxsize = max(maxsize,elem_size)
    endif
 end do
 minsize = log(minsize)
@@ -1967,6 +1959,12 @@ if (draw_axes_flag) then
 
    call draw_axes
 
+endif
+
+! draw the color key
+
+if (show_key_flag) then
+   call draw_key
 endif
 
 call glendlist
@@ -3563,64 +3561,6 @@ case (SCHEME_STEP_SEQ)
    v = 0.8_gldouble + 0.2_gldouble*sbase
    call hsv2rgb(h,s,v,c(1),c(2),c(3))
 
-! stepped sequential scheme from
-! http://geography.uoregon.edu/datagraphics/color_scales.htm
-!   c(4) = 1.0_gldouble
-!   select case (floor(25*f))
-!   case (0)
-!      c(1) = 0.600_gldouble; c(2) = 0.060_gldouble; c(3) = 0.060_gldouble
-!   case (1)
-!      c(1) = 0.700_gldouble; c(2) = 0.175_gldouble; c(3) = 0.175_gldouble
-!   case (2)
-!      c(1) = 0.800_gldouble; c(2) = 0.320_gldouble; c(3) = 0.320_gldouble
-!   case (3)
-!      c(1) = 0.900_gldouble; c(2) = 0.495_gldouble; c(3) = 0.495_gldouble
-!   case (4)
-!      c(1) = 1.000_gldouble; c(2) = 0.700_gldouble; c(3) = 0.700_gldouble
-!   case (5)
-!      c(1) = 0.600_gldouble; c(2) = 0.330_gldouble; c(3) = 0.060_gldouble
-!   case (6)
-!      c(1) = 0.700_gldouble; c(2) = 0.438_gldouble; c(3) = 0.175_gldouble
-!   case (7)
-!      c(1) = 0.800_gldouble; c(2) = 0.560_gldouble; c(3) = 0.320_gldouble
-!   case (8)
-!      c(1) = 0.900_gldouble; c(2) = 0.697_gldouble; c(3) = 0.495_gldouble
-!   case (9)
-!      c(1) = 1.000_gldouble; c(2) = 0.850_gldouble; c(3) = 0.700_gldouble
-!   case (10)
-!      c(1) = 0.420_gldouble; c(2) = 0.600_gldouble; c(3) = 0.060_gldouble
-!   case (11)
-!      c(1) = 0.525_gldouble; c(2) = 0.700_gldouble; c(3) = 0.175_gldouble
-!   case (12)
-!      c(1) = 0.640_gldouble; c(2) = 0.800_gldouble; c(3) = 0.320_gldouble
-!   case (13)
-!      c(1) = 0.765_gldouble; c(2) = 0.900_gldouble; c(3) = 0.495_gldouble
-!   case (14)
-!      c(1) = 0.900_gldouble; c(2) = 1.000_gldouble; c(3) = 0.700_gldouble
-!   case (15)
-!      c(1) = 0.060_gldouble; c(2) = 0.420_gldouble; c(3) = 0.600_gldouble
-!   case (16)
-!      c(1) = 0.175_gldouble; c(2) = 0.525_gldouble; c(3) = 0.700_gldouble
-!   case (17)
-!      c(1) = 0.320_gldouble; c(2) = 0.640_gldouble; c(3) = 0.800_gldouble
-!   case (18)
-!      c(1) = 0.495_gldouble; c(2) = 0.765_gldouble; c(3) = 0.900_gldouble
-!   case (19)
-!      c(1) = 0.700_gldouble; c(2) = 0.900_gldouble; c(3) = 1.000_gldouble
-!   case (20)
-!      c(1) = 0.150_gldouble; c(2) = 0.060_gldouble; c(3) = 0.600_gldouble
-!   case (21)
-!      c(1) = 0.262_gldouble; c(2) = 0.175_gldouble; c(3) = 0.700_gldouble
-!   case (22)
-!      c(1) = 0.400_gldouble; c(2) = 0.320_gldouble; c(3) = 0.800_gldouble
-!   case (23)
-!      c(1) = 0.562_gldouble; c(2) = 0.495_gldouble; c(3) = 0.900_gldouble
-!   case (24)
-!      c(1) = 0.750_gldouble; c(2) = 0.700_gldouble; c(3) = 1.000_gldouble
-!   case default
-!      c(1) = 0.000_gldouble; c(2) = 0.000_gldouble; c(3) = 0.000_gldouble
-!   end select
-
 end select
 
 return
@@ -4334,6 +4274,8 @@ end subroutine write_postscript
 subroutine menu_handler(selection)
 !          ------------
 integer(glcint), intent(in out) :: selection
+integer(glcint) :: xsize, ysize, scr_width
+logical, save :: full_screen = .false.
 
 select case(selection)
 case(12)
@@ -4345,11 +4287,206 @@ case(13)
    read *,xcrop1, xcrop2, ycrop1, ycrop2
    grid_newview = .true.
    call draw_grid
+case(14)
+   xsize = glutGet(GLUT_WINDOW_WIDTH)
+   ysize = glutGet(GLUT_WINDOW_HEIGHT)
+   scr_width = glutGet(GLUT_SCREEN_WIDTH)
+   if (show_key_flag) then
+      if (.not. full_screen) then
+         xsize = 2.0d0*xsize/3.0d0
+      endif
+      show_key_flag = .false.
+   else
+      xsize = 3.0d0*xsize/2.0d0
+      if (xsize >= scr_width .and. scr_width /= 0) then
+         xsize = scr_width
+         full_screen = .true.
+      else
+         full_screen = .false.
+      endif
+      show_key_flag = .true.
+   endif
+   call glutreshapewindow(xsize,ysize)
+   call gluttimerfunc(20_glcuint,finish_toggle_key,0_glcint)
 
 end select
 
 return
 end subroutine menu_handler
+
+!          -----------------
+subroutine finish_toggle_key(selection)
+!          -----------------
+integer(glcint), intent(in out) :: selection
+integer :: i
+
+! This routine finishes the process of toggling the color key.  It seems that
+! the window is not really resized as far as glutGet is concerned until we
+! return to the main loop.  So we return to the main loop with a timer set
+! to call this routine after a very short amount of time.
+
+i = selection ! just to shut up compilers that warn about unused arguments
+
+call reset_view(.true.)
+grid_newview = .true.
+call draw_grid
+
+end subroutine finish_toggle_key
+
+!          --------
+subroutine draw_key
+!          --------
+
+! draw the color key
+
+real(gldouble) :: color(4), xmin,xmax,ymin,ymax, dval, dminval, dmaxval, dnum
+real(my_real) :: rminval, rmaxval, ppval, ppssval, ppssmin, ppssmax
+integer :: i, iminval, imaxval, inum, nbox, nlabel, ival
+integer(glcint) :: xsize, ysize, xstart, scr_width
+
+! no key if the color is transparent or white
+
+if (color_elements==COLOR_TRANSPARENT .or. color_elements==COLOR_WHITE) return
+
+! set the view
+
+call gldisable(gl_lighting)
+call glMatrixMode(GL_MODELVIEW)
+call glpushmatrix()
+call glloadidentity()
+call glMatrixMode(GL_PROJECTION)
+call glpushmatrix
+call glloadidentity()
+call glortho(0._gldouble,1.0_gldouble,0._gldouble,1._gldouble,-1._gldouble,1._gldouble)
+scr_width = glutGet(GLUT_SCREEN_WIDTH)
+ysize = glutGet(GLUT_WINDOW_HEIGHT)
+xsize = glutGet(GLUT_WINDOW_WIDTH)
+xstart = 2.0d0*xsize/3.0d0
+call glViewport(xstart,0,xsize,ysize)
+
+! determine how many color boxes to draw
+
+select case(color_elements)
+case (COLOR_SOLUTION, COLOR_TRUE, COLOR_ERROR, COLOR_ERRIND, COLOR_SIZE)
+   if (color_scheme == SCHEME_STRIPE) then
+      nbox = num_contour-1
+   else
+      nbox = 256
+   endif
+case (COLOR_OWNER, COLOR_DEGREE)
+   select case(color_scheme)
+   case (SCHEME_STEP_SEQ)
+      if (color_elements == COLOR_OWNER) then
+         nbox = nproc
+      else
+         nbox = step_scheme_steps*step_scheme_hues
+      endif
+   case (SCHEME_RAINBOW, SCHEME_GRAY, SCHEME_DOUBLE_RAINBOW)
+      select case(color_elements)
+      case (COLOR_OWNER)
+         nbox = nproc
+      case (COLOR_DEGREE)
+         nbox = MAX_DEGREE
+      end select
+   case (SCHEME_STRIPE)
+      if (color_elements == COLOR_OWNER) then
+         nbox = nproc
+      else
+         nbox = num_contour - 1
+      endif
+   end select
+end select
+
+! determine the minumum and maximum values for the key
+
+select case(color_elements)
+case(COLOR_SOLUTION, COLOR_TRUE, COLOR_ERROR, COLOR_ERRIND)
+   call preproc_and_scale(color_elements,1.0_my_real,ppval,ppssval,rminval, &
+                             ppssmin,rmaxval,ppssmax)
+   dminval = rminval
+   dmaxval = rmaxval
+case(COLOR_SIZE)
+   dminval = minsize
+   dmaxval = maxsize
+case(COLOR_OWNER)
+   iminval = 1
+   imaxval = nproc
+   dminval = iminval
+   dmaxval = imaxval
+case(COLOR_DEGREE)
+   if (color_scheme == SCHEME_STEP_SEQ) then
+      iminval = 1
+      imaxval = step_scheme_steps*step_scheme_hues
+   else
+      iminval = 1
+      imaxval = MAX_DEGREE
+   endif
+   dminval = iminval
+   dmaxval = imaxval
+end select
+
+! draw the color boxes
+
+xmin = 0.05_gldouble
+xmax = 0.1_gldouble
+do i=1,nbox
+   if (color_elements == COLOR_OWNER) then
+      ival = iminval + (i-1)*(imaxval-iminval)/(nbox-1)
+      color = owner_color(:,ival)
+   else
+      dval = dminval + (i-1)*(dmaxval-dminval)/(nbox-1)
+      if (color_scheme == SCHEME_STRIPE .and. i==nbox) then
+         dval = dval - 1.0d-12
+      endif
+      call get_rainbow(dval,dminval,dmaxval,color)
+   endif
+   call glpolygonmode(gl_front_and_back, gl_fill)
+   call glcolor4dv(color)
+   ymin = .1_gldouble + (i-1)*.8_gldouble/nbox
+   ymax = .1_gldouble +     i*.8_gldouble/nbox
+   call glrectd(xmin,ymin,xmax,ymax)
+   if (nbox /= 256) then
+     call glpolygonmode(gl_front_and_back, gl_line)
+     call glcolor4d(0.0_gldouble,0.0_gldouble,0.0_gldouble,0.0_gldouble)
+     call glrectd(xmin,ymin,xmax,ymax)
+     call glpolygonmode(gl_front_and_back, gl_fill)
+   endif
+end do
+
+! label some of the color boxes
+
+call glcolor4d(0.0_gldouble,0.0_gldouble,0.0_gldouble,0.0_gldouble)
+select case(color_elements)
+case (COLOR_SOLUTION, COLOR_TRUE, COLOR_ERROR, COLOR_ERRIND, COLOR_SIZE)
+   xmin = 0.1875_gldouble
+   nlabel = 5
+case (COLOR_OWNER, COLOR_DEGREE)
+   xmin = 0.125_gldouble
+   nlabel = min(5,nbox)
+end select
+do i=1,nlabel
+   ymin = .1_gldouble + (i-1)*.8_gldouble*(nbox-1)/((nlabel-1.0d0)*nbox)
+   select case(color_elements)
+   case (COLOR_SOLUTION, COLOR_TRUE, COLOR_ERROR, COLOR_ERRIND, COLOR_SIZE)
+      dnum = dminval + ((i-1)*(dmaxval-dminval))/(nlabel-1)
+      if (color_elements == COLOR_SIZE) then
+         dnum = exp(dnum)
+      endif
+      call real_number(dnum,xmin,ymin,0.0_gldouble,0.5_gldouble)
+   case (COLOR_OWNER, COLOR_DEGREE)
+      inum = iminval + ((i-1)*(imaxval-1))/(nlabel-1)
+      call number(inum,xmin,ymin,0.0_gldouble,0.5_gldouble)
+   end select
+end do
+
+! restore the grid view
+
+call glMatrixMode(GL_PROJECTION)
+call glpopmatrix()
+call glMatrixMode(GL_MODELVIEW)
+call glpopmatrix()
+
+end subroutine draw_key
 
 !          ------------
 subroutine init_windows
@@ -4373,7 +4510,8 @@ character(len=32) :: str
    lookfrom_y = lookat_y - 9.0_gldouble*max(xmax-xmin,ymax-ymin)
    lookfrom_z = lookat_z + 4.0_gldouble*max(xmax-xmin,ymax-ymin)
    menuid = view_modifier_init(lookfrom_x, lookfrom_y, lookfrom_z, &
-                               lookat_x,   lookat_y,   lookat_z)
+                               lookat_x,   lookat_y,   lookat_z, &
+                               real(maxdomain,gldouble))
 
 ! create menu for grid window
 
@@ -4528,6 +4666,7 @@ character(len=32) :: str
    call glutaddsubmenu("grid offset",off)
    call glutaddmenuentry("crop (debug window)",13_glcint)
    call glutaddmenuentry("toggle axes",12_glcint)
+   call glutaddmenuentry("toggle color key",14_glcint)
    call glutaddsubmenu("write postscript",postscript)
    call glutattachmenu(glut_right_button)
 

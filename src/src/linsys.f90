@@ -47,6 +47,7 @@ module linear_system
    use hypre_interf
    use linsys_util
    use hash_mod
+   use grid_util
 
 !----------------------------------------------------
 
@@ -700,13 +701,6 @@ if (associated(ls%need_r_others)) mem = mem + rsize*size(ls%need_r_others)
 ! blocks for condensed matrix
 
 mem = mem + p1size*2
-if (associated(ls%edge_block)) then
-   mem = mem + (p1size + p2size + isize)*size(ls%edge_block)
-   do i=1,size(ls%edge_block)
-      if (associated(ls%edge_block(i)%matrix)) mem = mem + rsize*size(ls%edge_block(i)%matrix)
-      if (associated(ls%edge_block(i)%ipiv)) mem = mem + isize*size(ls%edge_block(i)%ipiv)
-   end do
-endif
 if (associated(ls%elem_block)) then
    mem = mem + (p1size + p2size + isize)*size(ls%elem_block)
    do i=1,size(ls%elem_block)

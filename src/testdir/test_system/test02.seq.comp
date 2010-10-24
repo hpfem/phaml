@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from slave number     1
   PDE id is     0
@@ -61,8 +61,8 @@ My Grid:
    number of leaf elements  =           8
    leaf elements I own      =           8
    number of levels         =           1
-   degrees of freedom       =          49
-   degrees of freedom I own =          49
+   degrees of freedom       =          98
+   degrees of freedom I own =          98
    min and max degree       =           3          3
 
 Norms of error:
@@ -85,8 +85,8 @@ My Grid:
    number of leaf elements  =          24
    leaf elements I own      =          24
    number of levels         =           3
-   degrees of freedom       =         133
-   degrees of freedom I own =         133
+   degrees of freedom       =         266
+   degrees of freedom I own =         266
    min and max degree       =           3          3
 
 Norms of error:
@@ -97,7 +97,7 @@ Norms of error:
       effectivity             8.3488670678E-01
   Component           1
    Linf norm of error         4.2967622716E-05
-      reduced by              8.9451191630E-02
+      reduced by              8.9451191631E-02
    Linf error estimate        9.2331974471E-05
       reduced by              1.0534317525E-01
       effectivity             2.1488732360E+00
@@ -115,8 +115,8 @@ My Grid:
    number of leaf elements  =          40
    leaf elements I own      =          40
    number of levels         =           4
-   degrees of freedom       =         205
-   degrees of freedom I own =         205
+   degrees of freedom       =         410
+   degrees of freedom I own =         410
    min and max degree       =           3          3
 
 Norms of error:
@@ -127,9 +127,9 @@ Norms of error:
       effectivity             6.2491589344E-01
   Component           1
    Linf norm of error         3.6061210861E-05
-      reduced by              8.3926474359E-01
+      reduced by              8.3926474357E-01
    Linf error estimate        7.7411132983E-05
-      reduced by              8.3840006051E-01
+      reduced by              8.3840006050E-01
       effectivity             2.1466592811E+00
   Component           2
    Linf norm of error         5.9684451540E-05
@@ -145,8 +145,8 @@ My Grid:
    number of leaf elements  =          88
    leaf elements I own      =          88
    number of levels         =           5
-   degrees of freedom       =         445
-   degrees of freedom I own =         445
+   degrees of freedom       =         890
+   degrees of freedom I own =         890
    min and max degree       =           3          3
 
 Norms of error:
@@ -156,11 +156,11 @@ Norms of error:
       reduced by              3.3548573136E-01
       effectivity             8.6442094006E-01
   Component           1
-   Linf norm of error         3.0536091307E-06
-      reduced by              8.4678496859E-02
-   Linf error estimate        6.4910002441E-06
-      reduced by              8.3850991375E-02
-      effectivity             2.1256814367E+00
+   Linf norm of error         3.0536091313E-06
+      reduced by              8.4678496879E-02
+   Linf error estimate        6.4910002442E-06
+      reduced by              8.3850991377E-02
+      effectivity             2.1256814363E+00
   Component           2
    Linf norm of error         6.8907811785E-06
       reduced by              1.1545353942E-01
@@ -175,8 +175,8 @@ My Grid:
    number of leaf elements  =         172
    leaf elements I own      =         172
    number of levels         =           6
-   degrees of freedom       =         823
-   degrees of freedom I own =         823
+   degrees of freedom       =        1646
+   degrees of freedom I own =        1646
    min and max degree       =           3          3
 
 Norms of error:
@@ -186,17 +186,17 @@ Norms of error:
       reduced by              3.3089415109E-01
       effectivity             6.5480281088E-01
   Component           1
-   Linf norm of error         2.4988098013E-06
-      reduced by              8.1831357400E-01
-   Linf error estimate        5.5410901948E-06
-      reduced by              8.5365736966E-01
-      effectivity             2.2174917803E+00
+   Linf norm of error         2.4988098004E-06
+      reduced by              8.1831357353E-01
+   Linf error estimate        5.5410901947E-06
+      reduced by              8.5365736962E-01
+      effectivity             2.2174917810E+00
   Component           2
-   Linf norm of error         3.7732039961E-06
-      reduced by              5.4757274950E-01
+   Linf norm of error         3.7732039960E-06
+      reduced by              5.4757274948E-01
    Linf error estimate        5.7800089650E-06
       reduced by              4.3554078838E-01
-      effectivity             1.5318570029E+00
+      effectivity             1.5318570030E+00
 
 My Grid:
    number of vertices       =         255
@@ -205,8 +205,8 @@ My Grid:
    number of leaf elements  =         444
    leaf elements I own      =         444
    number of levels         =           7
-   degrees of freedom       =        2095
-   degrees of freedom I own =        2095
+   degrees of freedom       =        4190
+   degrees of freedom I own =        4190
    min and max degree       =           3          3
 
 Norms of error:
@@ -214,19 +214,19 @@ Norms of error:
       reduced by              2.3168575714E-01
    energy error estimate      1.3240011553E-05
       reduced by              2.7730504566E-01
-      effectivity             7.8373451011E-01
+      effectivity             7.8373451012E-01
   Component           1
-   Linf norm of error         1.7689075182E-07
-      reduced by              7.0790002397E-02
-   Linf error estimate        3.4455896956E-07
-      reduced by              6.2182523195E-02
-      effectivity             1.9478631077E+00
+   Linf norm of error         1.7689075271E-07
+      reduced by              7.0790002778E-02
+   Linf error estimate        3.4455896949E-07
+      reduced by              6.2182523184E-02
+      effectivity             1.9478630975E+00
   Component           2
-   Linf norm of error         4.3287552277E-07
-      reduced by              1.1472359385E-01
-   Linf error estimate        8.0823327705E-07
-      reduced by              1.3983253001E-01
-      effectivity             1.8671263089E+00
+   Linf norm of error         4.3287552264E-07
+      reduced by              1.1472359382E-01
+   Linf error estimate        8.0823327701E-07
+      reduced by              1.3983253000E-01
+      effectivity             1.8671263094E+00
 
 My Grid:
    number of vertices       =         403
@@ -235,27 +235,27 @@ My Grid:
    number of leaf elements  =         740
    leaf elements I own      =         740
    number of levels         =           8
-   degrees of freedom       =        3427
-   degrees of freedom I own =        3427
+   degrees of freedom       =        6854
+   degrees of freedom I own =        6854
    min and max degree       =           3          3
 
 Norms of error:
    energy norm of error       6.9807106586E-06
       reduced by              4.1321896332E-01
-   energy error estimate      5.0631928360E-06
-      reduced by              3.8241604365E-01
-      effectivity             7.2531194654E-01
+   energy error estimate      5.0631928359E-06
+      reduced by              3.8241604364E-01
+      effectivity             7.2531194652E-01
   Component           1
-   Linf norm of error         1.7997724733E-07
-      reduced by              1.0174485974E+00
-   Linf error estimate        3.7117064539E-07
-      reduced by              1.0772340243E+00
-      effectivity             2.0623198260E+00
+   Linf norm of error         1.7997724777E-07
+      reduced by              1.0174485948E+00
+   Linf error estimate        3.7117064503E-07
+      reduced by              1.0772340235E+00
+      effectivity             2.0623198189E+00
   Component           2
    Linf norm of error         2.3541163729E-07
-      reduced by              5.4383217554E-01
+      reduced by              5.4383217572E-01
    Linf error estimate        3.6131216761E-07
-      reduced by              4.4703945986E-01
+      reduced by              4.4703945987E-01
       effectivity             1.5348101384E+00
 
 My Grid:
@@ -265,18 +265,18 @@ My Grid:
    number of leaf elements  =         740
    leaf elements I own      =         740
    number of levels         =           8
-   degrees of freedom       =        3427
-   degrees of freedom I own =        3427
+   degrees of freedom       =        6854
+   degrees of freedom I own =        6854
    min and max degree       =           3          3
 
 Norms of error:
    energy norm of error       6.9807106586E-06
-   energy error estimate      5.0631928360E-06
-      effectivity             7.2531194654E-01
+   energy error estimate      5.0631928359E-06
+      effectivity             7.2531194652E-01
   Component           1
-   Linf norm of error         1.7997724733E-07
-   Linf error estimate        3.7117064539E-07
-      effectivity             2.0623198260E+00
+   Linf norm of error         1.7997724777E-07
+   Linf error estimate        3.7117064503E-07
+      effectivity             2.0623198189E+00
   Component           2
    Linf norm of error         2.3541163729E-07
    Linf error estimate        3.6131216761E-07
@@ -289,4 +289,4 @@ number of loops through phases =           6
 termination condition:
   maximum vertices achieved
 ---------------------------------------------------------
-Linf errors from query  1.799772473277E-07 2.354116372893E-07
+Linf errors from query  1.799772477717E-07 2.354116372889E-07

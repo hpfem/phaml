@@ -64,6 +64,13 @@ echo "OMPI_FC=$MPIF" 1>>$f
 echo "export OMPI_F77" 1>>$f
 echo "export OMPI_FC" 1>>$f
 fi
+if [ $PHAML_PARLIB = "mpich2" ]
+then
+echo "MPICH_F77=$MPIF" 1>>$f
+echo "MPICH_F90=$MPIF" 1>>$f
+echo "export MPICH_F77" 1>>$f
+echo "export MPICH_F90" 1>>$f
+fi
 echo "" 1>>$f
 echo "PHAML_HOME=$PHAML_HOME" 1>>$f
 echo 'PHAML_MODDIR=$(PHAML_HOME)/modules' 1>>$f

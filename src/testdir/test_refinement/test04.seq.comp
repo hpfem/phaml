@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from slave number     1
   PDE id is     0
@@ -67,7 +67,7 @@ termination condition:
   maximum loops through phases achieved
 ---------------------------------------------------------
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from slave number     1
   PDE id is     0
@@ -167,19 +167,8 @@ My Grid:
    number of leaf elements  =         108
    leaf elements I own      =         108
    number of levels         =           8
-   degrees of freedom       =         897
-   degrees of freedom I own =         897
-   min and max degree       =           2          4
-
-My Grid:
-   number of vertices       =          75
-   number of vertices I own =          75
-   number of elements       =         208
-   number of leaf elements  =         108
-   leaf elements I own      =         108
-   number of levels         =           8
-   degrees of freedom       =        1013
-   degrees of freedom I own =        1013
+   degrees of freedom       =         937
+   degrees of freedom I own =         937
    min and max degree       =           2          5
 
 My Grid:
@@ -189,8 +178,19 @@ My Grid:
    number of leaf elements  =         108
    leaf elements I own      =         108
    number of levels         =           8
-   degrees of freedom       =        1013
-   degrees of freedom I own =        1013
+   degrees of freedom       =        1018
+   degrees of freedom I own =        1018
+   min and max degree       =           2          5
+
+My Grid:
+   number of vertices       =          75
+   number of vertices I own =          75
+   number of elements       =         208
+   number of leaf elements  =         108
+   leaf elements I own      =         108
+   number of levels         =           8
+   degrees of freedom       =        1018
+   degrees of freedom I own =        1018
    min and max degree       =           2          5
 
 ---------------------------------------------------------

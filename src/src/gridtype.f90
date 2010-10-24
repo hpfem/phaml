@@ -173,7 +173,7 @@ type refine_options
               max_vert, max_elem, max_dof, max_lev, max_deg, t3s_nunif, &
               t3s_maxref, t3s_maxdeginc, t3s_reftype, nlp_max_h_dec, &
               nlp_max_h_inc, nlp_max_p_dec, nlp_max_p_inc
-   logical :: derefine
+   logical :: derefine, stop_on_maxlev, stop_on_maxdeg
 end type refine_options
 
 ! error indicator lists, to determine which elements get refined next during

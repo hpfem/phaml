@@ -1417,7 +1417,8 @@ real(my_real) :: u(hold_grid%system_size,max(1,hold_grid%num_eval),size(x)), &
                  cxy(hold_grid%system_size,hold_grid%system_size,size(x)), &
                  cyy(hold_grid%system_size,hold_grid%system_size,size(x)), &
                  cx (hold_grid%system_size,hold_grid%system_size,size(x)), &
-                 cy (hold_grid%system_size,hold_grid%system_size,size(x))
+                 cy (hold_grid%system_size,hold_grid%system_size,size(x)), &
+                 uxsum(size(x)), uysum(size(x))
 real(my_real) :: xx(size(x)),yy(size(y)) ! TEMP081103 battery cludge
 !----------------------------------------------------
 ! Begin executable code
@@ -1471,12 +1472,22 @@ if (bmark == huge(0)) then
 ! add normal derivative of solution to right side
 
    do i=1,hold_grid%system_size
-      rs(i,:) = normal(1)*(ux(i,1,:)*cxx(i,i,:)+uy(i,1,:)*cxy(i,i,:)) &
-              + normal(2)*uy(i,1,:)*cyy(i,i,:)
+      uxsum = 0.0_my_real
+      uysum = 0.0_my_real
+      do j=1,ss
+         uxsum = uxsum + ux(j,1,:)*cxx(i,j,:)+uy(j,1,:)*cxy(i,j,:)
+         uysum = uysum + uy(j,1,:)*cyy(i,j,:)
+      end do
+      rs(i,:) = normal(1)*uxsum + normal(2)*uysum
       if (present(extra_rs)) then
          do k=1,size(extra_rs,dim=2)
-            extra_rs(i,k,:) = normal(1)*(ux(i,k+1,:)*cxx(i,i,:)+uy(i,k+1,:)*cxy(i,i,:)) &
-                            + normal(2)*uy(i,k+1,:)*cyy(i,i,:)
+            uxsum = 0.0_my_real
+            uysum = 0.0_my_real
+            do j=1,ss
+               uxsum = uxsum + ux(j,k+1,:)*cxx(i,j,:)+uy(j,k+1,:)*cxy(i,j,:)
+               uysum = uysum + uy(j,k+1,:)*cyy(i,j,:)
+            end do
+            extra_rs(i,k,:) = normal(1)*uxsum + normal(2)*uysum
          end do
       endif
    end do
@@ -1504,15 +1515,23 @@ if (bmark == huge(0)) then
 !      is the only thing that works
 
    do i=1,hold_grid%system_size
-      rs(i,:) = rs(i,:) - &
-                (normal(1)*(ux(i,1,:)*cxx(i,i,:)+uy(i,1,:)*cxy(i,i,:)) &
-               + normal(2)*uy(i,1,:)*cyy(i,i,:) - rs(i,:))/2
+      uxsum = 0.0_my_real
+      uysum = 0.0_my_real
+      do j=1,ss
+         uxsum = uxsum + ux(j,1,:)*cxx(i,j,:)+uy(j,1,:)*cxy(i,j,:)
+         uysum = uysum + uy(j,1,:)*cyy(i,j,:)
+      end do
+      rs(i,:) = rs(i,:) - (normal(1)*uxsum + normal(2)*uysum - rs(i,:))/2
       if (present(extra_rs)) then
          do k=1,size(extra_rs,dim=2)
-            extra_rs(i,k,:) = extra_rs(i,k,:) &
-                            - (normal(1)*(ux(i,k+1,:)*cxx(i,i,:) + &
-                                          uy(i,k+1,:)*cxy(i,i,:)) + &
-                               normal(2)*uy(i,k+1,:)*cyy(i,i,:) - extra_rs(i,k,:))/2
+            uxsum = 0.0_my_real
+            uysum = 0.0_my_real
+            do j=1,ss
+               uxsum = uxsum + ux(j,k+1,:)*cxx(i,j,:)+uy(j,k+1,:)*cxy(i,j,:)
+               uysum = uysum + uy(j,k+1,:)*cyy(i,j,:)
+            end do
+            extra_rs(i,k,:) = extra_rs(i,k,:) - &
+                        (normal(1)*uxsum + normal(2)*uysum - extra_rs(i,k,:))/2
          end do
       endif
    end do
@@ -1538,16 +1557,25 @@ else
 
    do i=1,ss
       if (itype(i) == NATURAL .or. itype(i) == MIXED) then
-         call evaluate_soln_local(grid,x,y,elem,(/i/),(/(i,i=1,max(1,grid%num_eval))/), &
-                                  ux=ux,uy=uy)
-         rs(i,:) = rs(i,:) - normal(1)*(ux(1,1,:)*cxx(i,i,:)+uy(1,1,:)*cxy(i,i,:)) &
-                           - normal(2)*uy(1,1,:)*cyy(i,i,:)
+         call evaluate_soln_local(grid,x,y,elem,(/i/), &
+                                  (/(i,i=1,max(1,grid%num_eval))/),ux=ux,uy=uy)
+         uxsum = 0.0_my_real
+         uysum = 0.0_my_real
+         do j=1,ss
+            uxsum = uxsum + ux(j,1,:)*cxx(i,j,:) + uy(j,1,:)*cxy(i,j,:)
+            uysum = uysum + uy(j,1,:)*cyy(i,j,:)
+         end do
+         rs(i,:) = rs(i,:) - normal(1)*uxsum - normal(2)*uysum
          if (present(extra_rs)) then
             do k=1,size(extra_rs,dim=2)
+               uxsum = 0.0_my_real
+               uysum = 0.0_my_real
+               do j=1,ss
+                  uxsum = uxsum + ux(j,k+1,:)*cxx(i,j,:) + uy(j,k+1,:)*cxy(i,j,:)
+                  uysum = uysum + uy(j,k+1,:)*cyy(i,j,:)
+               end do
                extra_rs(i,k,:) = extra_rs(i,k,:) - &
-                              normal(1)*(ux(1,k+1,:)*cxx(i,i,:) + &
-                                         uy(1,k+1,:)*cxy(i,i,:)) &
-                            - normal(2)*uy(1,k+1,:)*cyy(i,i,:)
+                                 normal(1)*uxsum - normal(2)*uysum
             end do
          endif
       endif
@@ -2016,7 +2044,6 @@ endif
 if (method == REFSOLN_ERREST) then
    grid%errest_energy = grid%refsoln_errest
 endif
-
 
 if (method == EQUILIBRATED_RESIDUAL) then
    deallocate(all_energy,all_work,all_energy_est,all_Linf,all_L2)

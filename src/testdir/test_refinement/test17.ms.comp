@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -91,17 +91,17 @@ Total Grid:
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =         614
-   number of leaf elements =        1112
-   number of levels        =          12
-   degrees of freedom      =         614
+   number of vertices      =         611
+   number of leaf elements =        1106
+   number of levels        =          11
+   degrees of freedom      =         611
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =         614
-   number of leaf elements =        1112
-   number of levels        =          12
-   degrees of freedom      =         614
+   number of vertices      =         611
+   number of leaf elements =        1106
+   number of levels        =          11
+   degrees of freedom      =         611
    min and max degree      =           1          1
 
 ---------------------------------------------------------
@@ -112,7 +112,7 @@ termination condition:
   maximum equations achieved
 ---------------------------------------------------------
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -162,24 +162,24 @@ Subroutine phaml_solve_pde parameters:
 ---------------------------------------------------------
 
 Total Grid:
-   number of vertices      =         614
-   number of leaf elements =        1112
-   number of levels        =          12
-   degrees of freedom      =         614
+   number of vertices      =         611
+   number of leaf elements =        1106
+   number of levels        =          11
+   degrees of freedom      =         611
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =         681
-   number of leaf elements =        1217
+   number of vertices      =         693
+   number of leaf elements =        1241
    number of levels        =          12
-   degrees of freedom      =         681
+   degrees of freedom      =         693
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =         681
-   number of leaf elements =        1217
+   number of vertices      =         693
+   number of leaf elements =        1241
    number of levels        =          12
-   degrees of freedom      =         681
+   degrees of freedom      =         693
    min and max degree      =           1          1
 
 ---------------------------------------------------------

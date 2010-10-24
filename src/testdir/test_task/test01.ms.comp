@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -215,7 +215,7 @@ termination condition:
   maximum vertices achieved
 ---------------------------------------------------------
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -269,7 +269,7 @@ Individual Grids:
    number of vertices I own =          46         34         45         40
    number of elements       =         262        336        336        262
    number of leaf elements  =         135        172        172        135
-   leaf elements I own      =          73         71         70         74
+   leaf elements I own      =          72         72         71         73
    number of levels         =           8          8          8          8
    degrees of freedom       =          79         98         98         79
    degrees of freedom I own =          46         34         45         40
@@ -291,7 +291,7 @@ termination condition:
   one trip load balance
 ---------------------------------------------------------
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -348,7 +348,7 @@ Individual Grids:
    number of vertices I own =          46         34         45         40
    number of elements       =         262        336        336        262
    number of leaf elements  =         135        172        172        135
-   leaf elements I own      =          73         71         70         74
+   leaf elements I own      =          72         72         71         73
    number of levels         =           8          8          8          8
    degrees of freedom       =          79         98         98         79
    degrees of freedom I own =          46         34         45         40
@@ -363,55 +363,55 @@ Total Grid:
    min and max degree      =           1          1
 
 Individual Grids:
-   number of vertices       =         146        190        174        149
-   number of vertices I own =          91         94         88         92
-   number of elements       =         520        698        638        532
-   number of leaf elements  =         264        353        323        270
-   leaf elements I own      =         153        197        150        175
+   number of vertices       =         147        191        174        149
+   number of vertices I own =          92         94         88         92
+   number of elements       =         524        702        638        532
+   number of leaf elements  =         266        355        323        270
+   leaf elements I own      =         153        199        152        173
    number of levels         =           9          9          9          8
-   degrees of freedom       =         146        190        174        149
-   degrees of freedom I own =          91         94         88         92
+   degrees of freedom       =         147        191        174        149
+   degrees of freedom I own =          92         94         88         92
    min degree               =           1          1          1          1
    max degree               =           1          1          1          1
 
 Total Grid:
-   number of vertices      =         365
-   number of leaf elements =         675
+   number of vertices      =         366
+   number of leaf elements =         677
    number of levels        =           9
-   degrees of freedom      =         365
+   degrees of freedom      =         366
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       1.0933128867E-01
-      reduced by              3.3148268003E-01
+   energy norm of error       1.0923169244E-01
+      reduced by              3.3118071316E-01
    Linf norm of error         9.5215152862E-03
       reduced by              7.1390318813E-01
-   L2 norm of error           3.2862664368E-03
-      reduced by              3.1796239038E-01
+   L2 norm of error           3.2850488414E-03
+      reduced by              3.1784458206E-01
 
 Individual Grids:
-   number of vertices       =         146        190        174        149
-   number of vertices I own =          91         94         88         92
-   number of elements       =         520        698        638        532
-   number of leaf elements  =         264        353        323        270
-   leaf elements I own      =         153        197        150        175
+   number of vertices       =         147        191        174        149
+   number of vertices I own =          92         94         88         92
+   number of elements       =         524        702        638        532
+   number of leaf elements  =         266        355        323        270
+   leaf elements I own      =         153        199        152        173
    number of levels         =           9          9          9          8
-   degrees of freedom       =         146        190        174        149
-   degrees of freedom I own =          91         94         88         92
+   degrees of freedom       =         147        191        174        149
+   degrees of freedom I own =          92         94         88         92
    min degree               =           1          1          1          1
    max degree               =           1          1          1          1
 
 Total Grid:
-   number of vertices      =         365
-   number of leaf elements =         675
+   number of vertices      =         366
+   number of leaf elements =         677
    number of levels        =           9
-   degrees of freedom      =         365
+   degrees of freedom      =         366
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       1.0933128867E-01
+   energy norm of error       1.0923169244E-01
    Linf norm of error         9.5215152862E-03
-   L2 norm of error           3.2862664368E-03
+   L2 norm of error           3.2850488414E-03
 
 ---------------------------------------------------------
 phaml_solve_pde complete
@@ -421,7 +421,7 @@ termination condition:
   one trip refinement
 ---------------------------------------------------------
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -474,30 +474,30 @@ Subroutine phaml_solve_pde parameters:
 ---------------------------------------------------------
 
 Total Grid:
-   number of vertices      =         365
-   number of leaf elements =         675
+   number of vertices      =         366
+   number of leaf elements =         677
    number of levels        =           9
-   degrees of freedom      =         365
+   degrees of freedom      =         366
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =         365
-   number of leaf elements =         675
+   number of vertices      =         366
+   number of leaf elements =         677
    number of levels        =           9
-   degrees of freedom      =         365
+   degrees of freedom      =         366
    min and max degree      =           1          1
 
 Total Grid:
-   number of vertices      =         365
-   number of leaf elements =         675
+   number of vertices      =         366
+   number of leaf elements =         677
    number of levels        =           9
-   degrees of freedom      =         365
+   degrees of freedom      =         366
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       1.0470854889E-01
-   Linf norm of error         9.6857544762E-03
-   L2 norm of error           3.1729420879E-03
+   energy norm of error       1.0457054535E-01
+   Linf norm of error         9.6857228497E-03
+   L2 norm of error           3.1684149965E-03
 
 ---------------------------------------------------------
 phaml_solve_pde complete

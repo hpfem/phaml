@@ -1950,7 +1950,7 @@ endif
 end subroutine exchange_fudop_vect
 
 !          ----------------------------
-subroutine old_exchange_fudop_soln_residual(procs,linear_system,tag1,tag2,tag3, &
+subroutine o_exchange_fudop_soln_residual(procs,linear_system,tag1,tag2,tag3, &
                                         no_soln,max_lev)
 !          ----------------------------
 
@@ -2167,7 +2167,7 @@ deallocate(recv_int,recv_real,nrecv,stat=allocstat)
 
 call stop_watch((/cpsolve,ctsolve/))
 
-end subroutine old_exchange_fudop_soln_residual
+end subroutine o_exchange_fudop_soln_residual
 
 !          ----------------------------
 subroutine exchange_fudop_soln_residual(procs,linear_system,tag1,tag2,tag3, &
@@ -2213,7 +2213,7 @@ type(real_arrays), allocatable :: send_real(:), send_real_next(:)
 ! Begin executable code
 
 if (.not. new_comm) then ! TEMP090209
-   call old_exchange_fudop_soln_residual(procs,linear_system,tag1,tag2,tag3, &
+   call o_exchange_fudop_soln_residual(procs,linear_system,tag1,tag2,tag3, &
                                         no_soln,max_lev) ! TEMP090209
    return ! TEMP090209
 endif ! TEMP090209

@@ -1,4 +1,4 @@
-if [ ! $PHAML_PARALLEL = "sequential" -a ! $PHAML_PARALLEL = "messpass_nospawn" ]
+if [ ! $PHAML_PARALLEL = "sequential" -a ! $PHAML_PARALLEL = "openmp" -a ! $PHAML_PARALLEL = "messpass_nospawn" -a ! $PHAML_PARALLEL = "hybrid_nospawn" ]
 then
 echo "phaml_slave: "'\' 1>>$f
 echo "	"'slave.o \' 1>>$f
@@ -66,7 +66,7 @@ fi
 echo "" 1>>$f
 fi
 
-if [ $PHAML_PARALLEL = "messpass_spawn" ]
+if [ $PHAML_PARALLEL = "messpass_spawn" -o $PHAML_PARALLEL = "hybrid_spawn" ]
 then
 echo 'slave.o: $(PHAML_SRCDIR)/slave.f90' 1>>$f
 echo "	"'$(F90) $(FFLAGS) '"$MODFLAG"'$(PHAML_MODDIR)'" $ZOLTANMOD "'-o slave.o -c $(PHAML_SRCDIR)/slave.f90' 1>>$f

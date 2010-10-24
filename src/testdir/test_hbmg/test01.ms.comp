@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -128,28 +128,28 @@ Norms of error:
       reduced by              1.9540165252E-01
 
 Total Grid:
-   number of vertices      =         632
-   number of leaf elements =        1177
+   number of vertices      =         638
+   number of leaf elements =        1189
    number of levels        =          11
-   degrees of freedom      =         632
+   degrees of freedom      =         638
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       2.4590938817E-01
-      reduced by              7.4222719184E-01
-   L2 norm of error           3.4521607102E-03
-      reduced by              6.5910561204E-01
+   energy norm of error       2.4539664381E-01
+      reduced by              7.4067957785E-01
+   L2 norm of error           3.3453968180E-03
+      reduced by              6.3872165938E-01
 
 Total Grid:
-   number of vertices      =         632
-   number of leaf elements =        1177
+   number of vertices      =         638
+   number of leaf elements =        1189
    number of levels        =          11
-   degrees of freedom      =         632
+   degrees of freedom      =         638
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       2.4590938817E-01
-   L2 norm of error           3.4521607102E-03
+   energy norm of error       2.4539664381E-01
+   L2 norm of error           3.3453968180E-03
 
 ---------------------------------------------------------
 phaml_solve_pde complete

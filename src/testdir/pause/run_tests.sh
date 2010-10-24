@@ -35,7 +35,7 @@ then
    RUN1=
 fi
 
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    RUN1=
 fi

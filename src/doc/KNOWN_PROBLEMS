@@ -34,3 +34,7 @@ when you run mkmkfile.sh.
 *) the explicit and equilibrated residual error estimators do not get
 the optimal convergence rate when the cross derivative term cxy is nonzero.
 Use one of the other error estimators.
+
+*) the color key does not get resized when the graphics window is resized.
+You have to toggle the key off and back on again to resize it, or better yet,
+resize the window with the key off and then toggle it on.

@@ -6,15 +6,15 @@ THISDIR="test_multiple"
 echo "PHAML TEST:"
 echo "PHAML TEST: $THISDIR: tests of multiple PDEs that communicate"
 
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    echo "PHAML TEST:"
-   echo "PHAML TEST: PHAML compiled for sequential; cannot have multiple PDEs"
+   echo "PHAML TEST: PHAML compiled for sequential or OpenMP; cannot have multiple PDEs"
    echo "PHAML TEST: Skipping tests."
    exit 0
 fi
 
-if [ $PHAML_PARALLEL = "messpass_nospawn" ]
+if [ $PHAML_PARALLEL = "messpass_nospawn" -o $PHAML_PARALLEL = "hybrid_nospawn" ]
 then
    echo "PHAML TEST:"
    echo "PHAML TEST: PHAML compiled for nospawn; cannot spawn multiple PDEs"
@@ -35,15 +35,15 @@ fi
 
 ERR=0
 RUN1="$RUNMPI -np 1 "
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    RUN1=
 fi
 
 case "$PHAML_PARALLEL" in
-   messpass_spawn) FORM="ms" ;;
-   messpass_nospawn) FORM="spmd" ;;
-   sequential) FORM="seq" ;;
+   messpass_spawn|hybrid_spawn) FORM="ms" ;;
+   messpass_nospawn|hybrid_nospawn) FORM="spmd" ;;
+   sequential|openmp) FORM="seq" ;;
 esac
 
 for PROG in `ls test*.f90`;

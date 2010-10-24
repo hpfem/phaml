@@ -24,13 +24,14 @@ module view_modifier
 !
 ! 3) call view_modifier_init after glutCreateWindow
 !    It takes six real(gldouble) arguments to give the point you are looking
-!    from and the point you are looking at.
+!    from, the point you are looking at, and the domain size (xmax-xmin or
+!    ymax-ymin, use 1.0 if you don't know).
 !    This is a function that returns integer(kind=glcint) menuid.  The menuid
 !    is the ID returned by glutCreateMenu.  You can either use the view_modifier
 !    menu as your menu by calling glutAttachMenu immediately after
 !    view_modifier_init, as in
 !       menuid = view_modifier_init(lookfrom_x, lookfrom_y, lookfrom_z, &
-!                                   lookat_x,   lookat_y,   lookat_z)
+!                                   lookat_x,   lookat_y,   lookat_z, maxdomain)
 !       call glutAttachMenu(GLUT_RIGHT_BUTTON)
 !    or by using the menuid to attach a submenu to your own menu, as in
 !       call glutAddSubMenu("View Modifier",menuid)
@@ -225,18 +226,29 @@ return
 end subroutine view_from_above_origin
 
 !          ----------
-subroutine reset_view
+subroutine reset_view(toggle_color_key)
 !          ----------
 
 ! This routine resets the view to the current orientation and scale
 
+logical, intent(in), optional :: toggle_color_key
+logical, save :: show_color_key = .false.
 integer :: win
+integer(glcint) :: xsize, ysize
+
+if (present(toggle_color_key)) then
+   if (toggle_color_key) show_color_key = .not. show_color_key
+endif
 
 win = find_win()
 
 call glMatrixMode(GL_MODELVIEW)
 call glPopMatrix
 call glPushMatrix
+xsize = glutGet(GLUT_WINDOW_WIDTH)
+ysize = glutGet(GLUT_WINDOW_HEIGHT)
+if (show_color_key) xsize = 2.0d0*xsize/3.0d0
+call glViewPort(0_glcint,0_glcint,xsize,ysize)
 call glTranslated(shift(win)%x, shift(win)%y, shift(win)%z)
 call glRotated(angle(win)%x, 0.0_gldouble, 0.0_gldouble, 1.0_gldouble)
 call glRotated(angle(win)%y, cos(PI*angle(win)%x/180.0_gldouble), &
@@ -573,10 +585,11 @@ end subroutine set_arrow_keys
 
 !        ------------------
 function view_modifier_init(lookfrom_x, lookfrom_y, lookfrom_z, &
-                            lookat_x,   lookat_y,   lookat_z) result(menuid)
+                            lookat_x,   lookat_y,   lookat_z, maxdomain) &
+                            result(menuid)
 !        ------------------
 real(kind=gldouble), intent(in) :: lookfrom_x, lookfrom_y, lookfrom_z, &
-                                   lookat_x,   lookat_y,   lookat_z
+                                   lookat_x,   lookat_y,   lookat_z, maxdomain
 integer(kind=glcint) :: menuid
 
 ! This initializes the view modifier variables and sets initial view.
@@ -659,9 +672,12 @@ call glutAddMenuEntry("quit",QUIT)
 ! bits are lost.
 
 call glMatrixMode(GL_PROJECTION)
-!call gluPerspective(10.0_gldouble, 1.0_gldouble, 0.1_gldouble, 200.0_gldouble)
-!call gluPerspective(10.0_gldouble, 1.0_gldouble, 0.0001_gldouble, 1000.0_gldouble)
-call gluPerspective(10.0_gldouble, 1.0_gldouble, 0.05_gldouble, 500.0_gldouble)
+!call gluPerspective(10.0_gldouble, 1.0_gldouble, maxdomain*0.1_gldouble, &
+!                     maxdomain*200.0_gldouble)
+!call gluPerspective(10.0_gldouble, 1.0_gldouble, maxdomain*0.0001_gldouble, &
+!                     maxdomain*1000.0_gldouble)
+call gluPerspective(10.0_gldouble, 1.0_gldouble, maxdomain*0.05_gldouble, &
+                    maxdomain*500.0_gldouble)
 
 ! set the initial view
 

@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -85,131 +85,131 @@ Norms of error:
    Linf error estimate        1.7696533626E-01
 
 Total Grid:
-   number of vertices      =         317
-   number of leaf elements =         600
+   number of vertices      =         313
+   number of leaf elements =         592
    number of levels        =           6
-   degrees of freedom      =         317
+   degrees of freedom      =         313
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       3.7394493486E-01
-      reduced by              4.3655662147E-01
-   energy error estimate      1.0035715460E-01
-      reduced by              3.0089056165E-01
-      effectivity             2.6837415149E-01
-   Linf norm of error         2.9972794591E-02
-      reduced by              2.2409758935E-01
-   Linf error estimate        7.0308647289E-03
-      reduced by              7.1270319002E-02
-      effectivity             2.3457488115E-01
+   energy norm of error       3.7459628437E-01
+      reduced by              4.3731703005E-01
+   energy error estimate      1.0116796797E-01
+      reduced by              3.0332154020E-01
+      effectivity             2.7007200068E-01
+   Linf norm of error         3.0168626015E-02
+      reduced by              2.2556176213E-01
+   Linf error estimate        7.0249076943E-03
+      reduced by              7.1209933861E-02
+      effectivity             2.3285474422E-01
  Eigenvector           2
-   energy error estimate      1.6106761419E-01
-      reduced by              2.6755909635E-01
-   Linf error estimate        9.0429340339E-03
-      reduced by              8.1363921193E-02
+   energy error estimate      1.6386169076E-01
+      reduced by              2.7220050490E-01
+   Linf error estimate        9.0466287830E-03
+      reduced by              8.1397164747E-02
  Eigenvector           3
-   energy error estimate      2.2587434038E-01
-      reduced by              3.1116653123E-01
-   Linf error estimate        1.1981475661E-02
-      reduced by              6.7705212297E-02
+   energy error estimate      2.2823070777E-01
+      reduced by              3.1441268423E-01
+   Linf error estimate        1.1978777053E-02
+      reduced by              6.7689962943E-02
 
 Eigenvalues and error estimates:
-     9.8600071855E+00  7.1653343576E-02
-     1.7170757484E+01  1.0783103536E-01
-     2.4515845806E+01  1.4190394862E-01
+     9.8607300457E+00  7.3373469641E-02
+     1.7176276791E+01  1.1386428066E-01
+     2.4526354310E+01  1.4758213554E-01
 
 Total Grid:
-   number of vertices      =         613
-   number of leaf elements =        1192
+   number of vertices      =         620
+   number of leaf elements =        1206
    number of levels        =           8
-   degrees of freedom      =         613
+   degrees of freedom      =         620
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       2.1491650601E-01
-      reduced by              2.8736384154E-01
-   energy error estimate      5.8914597186E-02
-      reduced by              2.9352464915E-01
-      effectivity             2.7412783820E-01
-   Linf norm of error         1.1133640549E-02
-      reduced by              3.7145820739E-01
-   Linf error estimate        2.9803036643E-03
-      reduced by              4.2388863664E-01
-      effectivity             2.6768455934E-01
+   energy norm of error       2.0867536961E-01
+      reduced by              2.7853368856E-01
+   energy error estimate      5.7558059495E-02
+      reduced by              2.8446780464E-01
+      effectivity             2.7582584184E-01
+   Linf norm of error         1.0394255819E-02
+      reduced by              3.4453858831E-01
+   Linf error estimate        3.1365281469E-03
+      reduced by              4.4648674166E-01
+      effectivity             3.0175591227E-01
  Eigenvector           2
-   energy error estimate      9.4808270309E-02
-      reduced by              2.9431202166E-01
-   Linf error estimate        2.7242963052E-03
-      reduced by              3.0126243263E-01
+   energy error estimate      9.4674998644E-02
+      reduced by              2.8888692106E-01
+   Linf error estimate        3.7311932178E-03
+      reduced by              4.1244018157E-01
  Eigenvector           3
-   energy error estimate      1.3237971681E-01
-      reduced by              2.9303841372E-01
-   Linf error estimate        4.3295855321E-03
-      reduced by              3.6135661873E-01
+   energy error estimate      1.4363651690E-01
+      reduced by              3.1467395055E-01
+   Linf error estimate        9.0049889477E-03
+      reduced by              7.5174526644E-01
 
 Eigenvalues and error estimates:
-     9.7269760342E+00  2.8032498212E-02
-     1.6882104679E+01  4.1177505923E-02
-     2.4084354142E+01  5.6402385994E-02
+     9.7231725071E+00  2.7219075838E-02
+     1.6876481272E+01  4.0160147016E-02
+     2.2152371272E+01  7.4355206858E-02
 
 Total Grid:
-   number of vertices      =        1281
-   number of leaf elements =        2528
+   number of vertices      =        1263
+   number of leaf elements =        2492
    number of levels        =          10
-   degrees of freedom      =        1281
+   degrees of freedom      =        1263
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       1.3769007280E-01
-      reduced by              6.4066774281E-01
-   energy error estimate      3.8054690818E-02
-      reduced by              6.4592974637E-01
-      effectivity             2.7637933544E-01
-   Linf norm of error         4.7338667360E-03
-      reduced by              4.2518587833E-01
-   Linf error estimate        9.8998925958E-04
-      reduced by              3.3217731181E-01
-      effectivity             2.0912909357E-01
+   energy norm of error       1.4012611501E-01
+      reduced by              6.7150289593E-01
+   energy error estimate      3.7980764578E-02
+      reduced by              6.5986874664E-01
+      effectivity             2.7104701059E-01
+   Linf norm of error         5.1094713090E-03
+      reduced by              4.9156682288E-01
+   Linf error estimate        9.9104236478E-04
+      reduced by              3.1596794876E-01
+      effectivity             1.9396182205E-01
  Eigenvector           2
-   energy error estimate      6.2065343355E-02
-      reduced by              6.5464060417E-01
-   Linf error estimate        1.3518541236E-03
-      reduced by              4.9622139892E-01
+   energy error estimate      6.3296447173E-02
+      reduced by              6.6856559894E-01
+   Linf error estimate        1.4282681191E-03
+      reduced by              3.8279125087E-01
  Eigenvector           3
-   energy error estimate      8.9561471921E-02
-      reduced by              6.7654980746E-01
-   Linf error estimate        3.3443972120E-03
-      reduced by              7.7245204817E-01
+   energy error estimate      7.5831355364E-02
+      reduced by              5.2793925249E-01
+   Linf error estimate        1.7383156250E-03
+      reduced by              1.9303917363E-01
 
 Eigenvalues and error estimates:
-     9.6872173535E+00  1.1726355155E-02
-     1.6796960945E+01  1.7616814271E-02
-     2.2001357265E+01  3.1769130089E-02
+     9.6882548386E+00  1.0588238284E-02
+     1.6796913469E+01  2.0695727018E-02
+     2.1993126240E+01  2.0481939385E-02
 
 Total Grid:
-   number of vertices      =        1281
-   number of leaf elements =        2528
+   number of vertices      =        1263
+   number of leaf elements =        2492
    number of levels        =          10
-   degrees of freedom      =        1281
+   degrees of freedom      =        1263
    min and max degree      =           1          1
 
 Norms of error:
  Eigenvector           1
-   energy norm of error       1.3769007280E-01
-   energy error estimate      3.8054690818E-02
-      effectivity             2.7637933544E-01
-   Linf norm of error         4.7338667360E-03
-   Linf error estimate        9.8998925958E-04
-      effectivity             2.0912909357E-01
+   energy norm of error       1.4012611501E-01
+   energy error estimate      3.7980764578E-02
+      effectivity             2.7104701059E-01
+   Linf norm of error         5.1094713090E-03
+   Linf error estimate        9.9104236478E-04
+      effectivity             1.9396182205E-01
  Eigenvector           2
-   energy error estimate      6.2065343355E-02
-   Linf error estimate        1.3518541236E-03
+   energy error estimate      6.3296447173E-02
+   Linf error estimate        1.4282681191E-03
  Eigenvector           3
-   energy error estimate      8.9561471921E-02
-   Linf error estimate        3.3443972120E-03
+   energy error estimate      7.5831355364E-02
+   Linf error estimate        1.7383156250E-03
 
 ---------------------------------------------------------
 phaml_solve_pde complete

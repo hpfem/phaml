@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from slave number     1
   PDE id is     0
@@ -127,25 +127,25 @@ My Grid:
    min and max degree       =           3          5
 
 My Grid:
-   number of vertices       =         415
-   number of vertices I own =         415
-   number of elements       =        1536
-   number of leaf elements  =         772
-   leaf elements I own      =         772
-   number of levels         =           9
-   degrees of freedom       =        5358
-   degrees of freedom I own =        5358
+   number of vertices       =         417
+   number of vertices I own =         417
+   number of elements       =        1544
+   number of leaf elements  =         776
+   leaf elements I own      =         776
+   number of levels         =          10
+   degrees of freedom       =        5408
+   degrees of freedom I own =        5408
    min and max degree       =           3          6
 
 My Grid:
-   number of vertices       =         415
-   number of vertices I own =         415
-   number of elements       =        1536
-   number of leaf elements  =         772
-   leaf elements I own      =         772
-   number of levels         =           9
-   degrees of freedom       =        5358
-   degrees of freedom I own =        5358
+   number of vertices       =         417
+   number of vertices I own =         417
+   number of elements       =        1544
+   number of leaf elements  =         776
+   leaf elements I own      =         776
+   number of levels         =          10
+   degrees of freedom       =        5408
+   degrees of freedom I own =        5408
    min and max degree       =           3          6
 
 ---------------------------------------------------------

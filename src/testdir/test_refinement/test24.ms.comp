@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from the master process
   PDE id is     0
@@ -166,69 +166,69 @@ Norms of error:
       effectivity             1.0000000000E+00
 
 Total Grid:
-   number of vertices      =         344
-   number of leaf elements =         623
+   number of vertices      =         425
+   number of leaf elements =         766
    number of levels        =          12
-   degrees of freedom      =         344
+   degrees of freedom      =         425
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       6.5862763836E-01
-      reduced by              3.7294207431E-01
-   energy error estimate      1.5268756441E-01
-      reduced by              3.6520757183E-01
-      effectivity             2.3182684041E-01
-   Linf norm of error         3.6837173838E-02
-      reduced by              2.9866368567E-01
-   Linf error estimate        3.6837173838E-02
-      reduced by              2.9866368567E-01
+   energy norm of error       5.3993253157E-01
+      reduced by              3.0573202002E-01
+   energy error estimate      1.3383278866E-01
+      reduced by              3.2010955160E-01
+      effectivity             2.4786946670E-01
+   Linf norm of error         3.5679705158E-02
+      reduced by              2.8927931044E-01
+   Linf error estimate        3.5679705158E-02
+      reduced by              2.8927931044E-01
       effectivity             1.0000000000E+00
-   L2 norm of error           7.8046938521E-03
-      reduced by              2.5538175684E-01
-   L2 error estimate          7.8046938521E-03
-      reduced by              2.5538175684E-01
+   L2 norm of error           6.4570420613E-03
+      reduced by              2.1128448813E-01
+   L2 error estimate          6.4570420613E-03
+      reduced by              2.1128448813E-01
       effectivity             1.0000000000E+00
 
 Total Grid:
-   number of vertices      =         659
-   number of leaf elements =        1217
+   number of vertices      =         638
+   number of leaf elements =        1186
    number of levels        =          12
-   degrees of freedom      =         659
+   degrees of freedom      =         638
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       4.1793354819E-01
-      reduced by              6.3455209567E-01
-   energy error estimate      1.1342019331E-01
-      reduced by              7.4282534892E-01
-      effectivity             2.7138331871E-01
-   Linf norm of error         2.0478683791E-02
-      reduced by              5.5592440074E-01
-   Linf error estimate        2.0478683791E-02
-      reduced by              5.5592440074E-01
+   energy norm of error       4.1391047807E-01
+      reduced by              7.6659666508E-01
+   energy error estimate      1.0129349330E-01
+      reduced by              7.5686604395E-01
+      effectivity             2.4472319177E-01
+   Linf norm of error         1.5598733940E-02
+      reduced by              4.3718785990E-01
+   Linf error estimate        1.5598733940E-02
+      reduced by              4.3718785990E-01
       effectivity             1.0000000000E+00
-   L2 norm of error           4.1822174538E-03
-      reduced by              5.3585925765E-01
-   L2 error estimate          4.1822174538E-03
-      reduced by              5.3585925765E-01
+   L2 norm of error           3.1831217727E-03
+      reduced by              4.9296903171E-01
+   L2 error estimate          3.1831217727E-03
+      reduced by              4.9296903171E-01
       effectivity             1.0000000000E+00
 
 Total Grid:
-   number of vertices      =         659
-   number of leaf elements =        1217
+   number of vertices      =         638
+   number of leaf elements =        1186
    number of levels        =          12
-   degrees of freedom      =         659
+   degrees of freedom      =         638
    min and max degree      =           1          1
 
 Norms of error:
-   energy norm of error       4.1793354819E-01
-   energy error estimate      1.1342019331E-01
-      effectivity             2.7138331871E-01
-   Linf norm of error         2.0478683791E-02
-   Linf error estimate        2.0478683791E-02
+   energy norm of error       4.1391047807E-01
+   energy error estimate      1.0129349330E-01
+      effectivity             2.4472319177E-01
+   Linf norm of error         1.5598733940E-02
+   Linf error estimate        1.5598733940E-02
       effectivity             1.0000000000E+00
-   L2 norm of error           4.1822174538E-03
-   L2 error estimate          4.1822174538E-03
+   L2 norm of error           3.1831217727E-03
+   L2 error estimate          3.1831217727E-03
       effectivity             1.0000000000E+00
 
 ---------------------------------------------------------

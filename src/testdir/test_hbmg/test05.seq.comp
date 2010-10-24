@@ -1,5 +1,5 @@
 ---------------------------------------------------------
-           PHAML   Version 1.6.2
+           PHAML   Version 1.8.0
 
 Output from slave number     1
   PDE id is     0
@@ -168,7 +168,7 @@ My Grid:
 Norms of error:
    energy norm of error       9.4261746475E-06
       reduced by              3.6772374878E-01
-   L2 norm of error           9.0415310987E-08
+   L2 norm of error           9.0415310986E-08
       reduced by              2.4466917266E-01
 
 My Grid:
@@ -183,10 +183,10 @@ My Grid:
    min and max degree       =           4          4
 
 Norms of error:
-   energy norm of error       1.9385029392E-06
-      reduced by              2.0565107392E-01
+   energy norm of error       1.9385029391E-06
+      reduced by              2.0565107391E-01
    L2 norm of error           1.6337773231E-08
-      reduced by              1.8069697547E-01
+      reduced by              1.8069697546E-01
 
 My Grid:
    number of vertices       =         688
@@ -200,7 +200,7 @@ My Grid:
    min and max degree       =           4          4
 
 Norms of error:
-   energy norm of error       1.9385029392E-06
+   energy norm of error       1.9385029391E-06
    L2 norm of error           1.6337773231E-08
 
 ---------------------------------------------------------

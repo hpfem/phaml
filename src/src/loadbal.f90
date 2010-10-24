@@ -33,15 +33,19 @@ use global
 use message_passing
 use hash_mod
 use gridtype_mod
-use grid_mod
+use grid_util
 use zoltan_interf
 use stopwatch
+use refine_elements
+use error_estimators
+use hp_strategies
+use linsys_io
 
 !----------------------------------------------------
 
 implicit none
 private
-public partition, redistribute
+public partition, redistribute, set_weights, check_balance
 
 !----------------------------------------------------
 ! The following parameters are defined:
@@ -104,7 +108,7 @@ call start_watch((/ppartition,tpartition/))
 
 ! set the weights
 
-call set_weights(grid,predictive_load_balance,balance_what,refcont)
+call set_weights(grid,predictive_load_balance,balance_what,refcont,procs)
 
 ! select method for partitioning.
 
@@ -129,6 +133,311 @@ end select
 call stop_watch((/ppartition,tpartition/))
 
 end subroutine partition
+
+!          -----------
+subroutine set_weights(grid,predictive,balance_what,refcont,procs)
+!          -----------
+
+!----------------------------------------------------
+! This routine sets the weights for each element
+!----------------------------------------------------
+
+!----------------------------------------------------
+! Dummy arguments
+
+type(grid_type), intent(inout) :: grid
+logical, intent(in) :: predictive
+integer, intent(in) :: balance_what
+type (refine_options), intent(in) :: refcont
+type(proc_info), intent(in) :: procs
+!----------------------------------------------------
+! Local variables:
+
+integer :: assoc_verts(size(grid%element))
+integer :: lev, vert, elem, elem_deg, side, edge, total
+real(my_real) :: global_max_errind, reftol, normsoln, eta, eta_max, R, &
+                 two_div_log2, loggamma
+character(len=1) :: reftype(size(grid%element))
+!----------------------------------------------------
+! Begin executable code
+
+! count the number of associated vertices for each element
+
+assoc_verts = 0
+do lev=1,grid%nlev
+   vert = grid%head_level_vert(lev)
+   do while (vert /= END_OF_LIST)
+      assoc_verts(grid%vertex(vert)%assoc_elem) = &
+         assoc_verts(grid%vertex(vert)%assoc_elem) + 1
+      vert = grid%vertex(vert)%next
+   end do
+end do
+
+! compute error indicators if needed
+
+if (.not. grid%errind_up2date) then
+   call all_error_indicators(grid,refcont%error_estimator)
+endif
+
+! compute maximum error indicator
+
+global_max_errind = compute_global_max_errind(grid,procs)
+
+! some constants for predictive load balancing
+
+eta_max = global_max_errind
+R = 100000.0_my_real
+two_div_log2 = 2.0_my_real/log(2.0_my_real)
+loggamma = log(0.125_my_real)
+
+! for predictive load balancing, determine the refinement tolerance for the
+! ONE_REF terminations
+
+reftol = 0.0_my_real
+if (predictive .and. refcont%refterm == ONE_REF) then
+   call get_grid_info(grid,procs,.false.,3344, &
+                      total_nelem_leaf=total,no_master=.true.)
+   reftol = refcont%reftol/sqrt(real(total,my_real))
+! TEMP only using first component of first eigenvalue
+   if (grid%errtype == RELATIVE_ERROR .and. .not. (refcont%reftype == HP_ADAPTIVE .and. &
+    (refcont%hp_strategy == HP_T3S .or. refcont%hp_strategy == HP_ALTERNATE))) then
+      call norm_solution(grid,procs,.false.,1,1,energy=normsoln)
+      if (normsoln /= 0.0_my_real) reftol = reftol*normsoln
+   endif
+endif
+if (predictive .and. refcont%refterm == ONE_REF_HALF_ERRIND) then
+   reftol = global_max_errind/refcont%inc_factor
+endif
+
+! for each element ...
+
+do lev=1,grid%nlev
+   elem = grid%head_level_elem(lev)
+   do while (elem /= END_OF_LIST)
+      if (grid%element(elem)%isleaf .and. grid%element(elem)%iown) then
+
+         elem_deg = grid%element(elem)%degree
+
+         if (predictive) then
+
+! for predictive load balancing, first make a guess as to whether or not this
+! element will be refined and whether it will be refined by h or p
+
+! For ONE_REF terminations, check the tolerance to determine if it will be
+! refined.  If so, or if it is not a ONE_REF termination, determine h or p.
+! TEMP this is a bit expensive because we are determining the h or p
+!      refinement choice twice
+
+            if ((refcont%refterm /= ONE_REF .and. &
+                 refcont%refterm /= ONE_REF_HALF_ERRIND) .or. &
+                 maxval(grid%element_errind(elem,:)) > reftol) then
+               call mark_reftype_one(elem,grid,refcont,global_max_errind, &
+                                     reftype,.false.)
+            else
+               reftype(elem) = "n"
+            endif
+
+            select case (reftype(elem))
+
+            case ("n")
+
+! if it will not be refined, just assign the weight to be the number of
+! whatever we are balancing on associated with this element
+
+               select case (balance_what)
+
+               case (BALANCE_NONE)
+                  grid%element(elem)%weight = 0.0_my_real
+
+               case (BALANCE_ELEMENTS)
+                  grid%element(elem)%weight = 1.0_my_real
+
+               case (BALANCE_VERTICES)
+                  grid%element(elem)%weight = assoc_verts(elem)
+
+               case (BALANCE_EQUATIONS)
+                  grid%element(elem)%weight = assoc_verts(elem) + &
+                                       ((elem_deg-1)*(elem_deg-2))/2.0_my_real
+                  do side=1,3
+                     edge = grid%element(elem)%edge(side)
+                     if (grid%edge(edge)%assoc_elem == elem) then
+                        grid%element(elem)%weight = grid%element(elem)%weight +&
+                           grid%edge(edge)%degree - 1
+                     endif
+                  end do
+
+               case default
+                  ierr = PHAML_INTERNAL_ERROR
+                  call fatal("unknown value for balance_what in set_weights")
+                  stop
+
+               end select
+
+            case ("h")
+
+! if it will be refined by h, assign the number of entities there should be
+! associated with the children
+
+               select case (balance_what)
+
+               case (BALANCE_NONE)
+                  grid%element(elem)%weight = 0.0_my_real
+
+               case (BALANCE_ELEMENTS)
+                  grid%element(elem)%weight = 2.0_my_real
+
+               case (BALANCE_VERTICES)
+                  grid%element(elem)%weight = assoc_verts(elem) + 1
+
+               case (BALANCE_EQUATIONS)
+! the equations are: the associated vertices, the new vertex (guess that it
+! will be associated, could be wrong), the face equations, the equations on
+! the new edge, and the edge equations for associated edges (note the base
+! will be refined and has twice as many, and guess they will be associated)
+                  grid%element(elem)%weight = assoc_verts(elem)+1 + &
+                                              (elem_deg-1)*(elem_deg-2) + &
+                                              elem_deg-1
+                  do side=1,3
+                     edge = grid%element(elem)%edge(side)
+                     if (grid%edge(edge)%assoc_elem == elem) then
+                        if (side == 3) then
+                           grid%element(elem)%weight = &
+                                                   grid%element(elem)%weight + &
+                                                   2*(grid%edge(edge)%degree-1)
+                        else
+                           grid%element(elem)%weight = &
+                                                   grid%element(elem)%weight + &
+                                                   grid%edge(edge)%degree - 1
+                        endif
+                     endif
+                  end do
+
+               case default
+                  ierr = PHAML_INTERNAL_ERROR
+                  call fatal("unknown value for balance_what in set_weights")
+                  stop
+
+               end select
+
+            case ("p")
+
+! if it will be refined by p, assign the number of entities there should be
+! associated after p refinement
+
+               select case (balance_what)
+
+               case (BALANCE_NONE)
+                  grid%element(elem)%weight = 0.0_my_real
+
+               case (BALANCE_ELEMENTS)
+                  grid%element(elem)%weight = 1.0_my_real
+
+               case (BALANCE_VERTICES)
+                  grid%element(elem)%weight = assoc_verts(elem)
+
+               case (BALANCE_EQUATIONS)
+! for associated edges, guess the edge degree is the same as this element
+                  grid%element(elem)%weight = assoc_verts(elem) + &
+                                              (elem_deg*(elem_deg-1))/2
+                  do side=1,3
+                     edge = grid%element(elem)%edge(side)
+                     if (grid%edge(edge)%assoc_elem == elem) then
+                        grid%element(elem)%weight = grid%element(elem)%weight +&
+                                                    elem_deg
+                     endif
+                  end do
+
+               case default
+                  ierr = PHAML_INTERNAL_ERROR
+                  call fatal("unknown value for balance_what in set_weights")
+                  stop
+
+               end select
+
+            case default
+               ierr = PHAML_INTERNAL_ERROR
+               call fatal("unknown value for reftype in set_weights")
+               stop
+
+            end select
+
+! For terminations that are not ONE_REF, multiply by a factor that will be
+! larger in elements we expect to be refined more times.  For simplicity,
+! we just multiply by an estimate of how many times we think the element
+! would have to be refined to reach a certain error, rather than properly
+! estimating the number of entities there would be after that many refinements.
+! Given: the error estimate for the element, eta
+!        the maximum error estimate over all elements, eta_max
+!        some artificial factor by which to reduce the maximum error, R
+!        a factor by which we believe p refinement reduces the error, gamma
+!        the current element degree, p
+! the number of refinements needed to reduce the error to eta_max/R is
+! ceiling(A log(R*eta/eta_max)) where A is 2/(p*log(2)) for h refinement
+! and -log(gamma) for p refinement.
+! If eta is already less than eta_max/R, don't multiply by the factor.
+! And don't worry about the ceiling.
+
+            if (refcont%refterm /= ONE_REF .and. &
+                 refcont%refterm /= ONE_REF_HALF_ERRIND) then
+               eta = maxval(grid%element_errind(elem,:))
+               if (eta > eta_max/R) then
+                  if (reftype(elem) == "h") then
+                     grid%element(elem)%weight = grid%element(elem)%weight * &
+                      two_div_log2*log(eta*R/eta_max)/grid%element(elem)%degree
+                  elseif (reftype(elem) == "p") then
+                     grid%element(elem)%weight = grid%element(elem)%weight * &
+                      (-loggamma)*log(eta*R/eta_max)
+                  endif
+               endif
+            endif
+
+         else ! not predictive
+
+! if it is not predictive load balancing, just assign the weight to be
+! the number of whatever we are balancing on associated with this element
+
+            select case (balance_what)
+
+            case (BALANCE_NONE)
+               grid%element(elem)%weight = 0.0_my_real
+
+            case (BALANCE_ELEMENTS)
+               grid%element(elem)%weight = 1.0_my_real
+
+            case (BALANCE_VERTICES)
+               grid%element(elem)%weight = assoc_verts(elem)
+
+            case (BALANCE_EQUATIONS)
+               grid%element(elem)%weight = assoc_verts(elem) + &
+                                       ((elem_deg-1)*(elem_deg-2))/2.0_my_real
+               do side=1,3
+                  edge = grid%element(elem)%edge(side)
+                  if (grid%edge(edge)%assoc_elem == elem) then
+                     grid%element(elem)%weight = grid%element(elem)%weight + &
+                        grid%edge(edge)%degree - 1
+                  endif
+               end do
+
+            case default
+               ierr = PHAML_INTERNAL_ERROR
+               call fatal("unknown value for balance_what in set_weights")
+               stop
+
+            end select
+
+         endif ! predictive
+
+      else ! not a leaf or I don't own it
+
+         grid%element(elem)%weight = 0.0_my_real
+
+      endif
+
+      elem = grid%element(elem)%next
+   end do
+end do
+
+end subroutine set_weights
 
 !          ------------
 subroutine reftree_kway(grid,procs,new_num_part,export_gid, &
@@ -844,20 +1153,21 @@ do i=1,size(export_gid)
       grid%element(elemlid)%iown = .false.
       call disown_parent(grid,export_gid(i))
       if (grid%element(elemlid)%degree >= 3) then
-         grid%dof_own = grid%dof_own - &
+         grid%dof_own = grid%dof_own - grid%system_size * &
               ((grid%element(elemlid)%degree-2)*(grid%element(elemlid)%degree-1))/2
       endif
       do j=1,VERTICES_PER_ELEMENT
          if (grid%vertex(grid%element(elemlid)%vertex(j))%assoc_elem == elemlid) then
             grid%nvert_own = grid%nvert_own - 1
-            grid%dof_own = grid%dof_own - 1
+            grid%dof_own = grid%dof_own - grid%system_size
          endif
       end do
       do j=1,EDGES_PER_ELEMENT
          if (grid%edge(grid%element(elemlid)%edge(j))%assoc_elem == elemlid) then
             grid%nedge_own = grid%nedge_own - 1
             if (grid%edge(grid%element(elemlid)%edge(j))%degree >= 2) then
-               grid%dof_own = grid%dof_own - grid%edge(grid%element(elemlid)%edge(j))%degree + 1
+               grid%dof_own = grid%dof_own - grid%system_size * &
+                          (grid%edge(grid%element(elemlid)%edge(j))%degree - 1)
             endif
          endif
       end do
@@ -1155,21 +1465,21 @@ if (.not. skip_comm) then
             call own_parent(grid,elemgid)
             grid%nelem_leaf_own = grid%nelem_leaf_own + 1
             if (grid%element(elemlid)%degree >= 3) then
-               grid%dof_own = grid%dof_own + &
+               grid%dof_own = grid%dof_own + grid%system_size * &
                   ((grid%element(elemlid)%degree-2)*(grid%element(elemlid)%degree-1))/2
             endif
             do j=1,VERTICES_PER_ELEMENT
                if (grid%vertex(grid%element(elemlid)%vertex(j))%assoc_elem == elemlid) then
                   grid%nvert_own = grid%nvert_own + 1
-                  grid%dof_own = grid%dof_own + 1
+                  grid%dof_own = grid%dof_own + grid%system_size
                endif
             end do
             do j=1,EDGES_PER_ELEMENT
                if (grid%edge(grid%element(elemlid)%edge(j))%assoc_elem == elemlid) then
                   grid%nedge_own = grid%nedge_own - 1
                   if (grid%edge(grid%element(elemlid)%edge(j))%degree >= 2) then
-                     grid%dof_own = grid%dof_own + &
-                             grid%edge(grid%element(elemlid)%edge(j))%degree - 1
+                     grid%dof_own = grid%dof_own + grid%system_size * &
+                           (grid%edge(grid%element(elemlid)%edge(j))%degree - 1)
                   endif
                endif
             end do
@@ -1365,6 +1675,108 @@ endif ! .not. skip_comm
 call stop_watch((/pdistribute,tdistribute/))
 
 end subroutine redistribute
+
+!          -----------------------
+subroutine delete_unowned_elements(grid,refcont)
+!          -----------------------
+
+!----------------------------------------------------
+! This routine removes any elements that are not owned by this partition
+! and are not needed for compatibility.
+!----------------------------------------------------
+
+!----------------------------------------------------
+! Dummy arguments
+
+type(grid_type), intent(inout) :: grid
+type(refine_options), intent(in) :: refcont
+!----------------------------------------------------
+! Local variables:
+
+integer :: elem
+logical :: owned_child
+!----------------------------------------------------
+! Begin executable code
+
+elem = grid%head_level_elem(1)
+do while (elem /= END_OF_LIST)
+   call delete_unowned_elements_recur(grid,elem,owned_child,refcont)
+   elem = grid%element(elem)%next
+end do
+
+end subroutine delete_unowned_elements
+
+!                    -----------------------------
+recursive subroutine delete_unowned_elements_recur(grid,elem,owned_child, &
+                                                   refcont)
+!                    -----------------------------
+
+!----------------------------------------------------
+! This routine does the work of delete_unowned_elements
+!----------------------------------------------------
+
+!----------------------------------------------------
+! Dummy arguments
+
+type(grid_type), intent(inout) :: grid
+integer, intent(in) :: elem
+logical, intent(out) :: owned_child
+type(refine_options), intent(in) :: refcont
+
+!----------------------------------------------------
+! Local variables:
+
+integer :: child(MAX_CHILD), i, mate, errcode, allc(MAX_CHILD)
+logical :: this_owned_child
+!----------------------------------------------------
+! Begin executable code
+
+allc = ALL_CHILDREN
+child = get_child_lid(grid%element(elem)%gid,allc,grid%elem_hash)
+
+! if this is a leaf, return with an indication of whether it is owned by
+! this partition
+
+if (child(1) == NO_CHILD) then
+   owned_child = grid%element(elem)%iown
+else
+
+! otherwise, see if any of the descendents are owned
+
+   owned_child = .false.
+   do i=1,MAX_CHILD
+      if (child(i) == NO_CHILD) cycle
+      call delete_unowned_elements_recur(grid,child(i),this_owned_child,refcont)
+      owned_child = owned_child .or. this_owned_child
+   end do
+
+! also check the descendents of the mate
+
+   if (.not. owned_child) then
+      if (.not. (grid%element(elem)%mate == BOUNDARY)) then
+         mate = hash_decode_key(grid%element(elem)%mate,grid%elem_hash)
+         if (mate /= HASH_NOT_FOUND) then
+            child = get_child_lid(grid%element(mate)%gid,allc, &
+                                        grid%elem_hash)
+            do i=1,MAX_CHILD
+              if (child(i) == NO_CHILD) cycle
+              call delete_unowned_elements_recur(grid,child(i), &
+                                                 this_owned_child,refcont)
+              owned_child = owned_child .or. this_owned_child
+            end do
+         endif
+      endif
+   endif
+
+! if not, derefine this element
+
+   if (.not. owned_child) then
+      call unbisect_triangle_pair(grid,elem,errcode,refcont)
+   endif
+
+endif
+
+end subroutine delete_unowned_elements_recur
 
 !                    -------------
 recursive subroutine disown_parent(grid,child)
@@ -1568,5 +1980,121 @@ if (children(1) /= NO_CHILD) then
 endif
 
 end subroutine unset_oldleaf
+
+!          -------------
+subroutine check_balance(grid,procs,what,fileunit)
+!          -------------
+
+!----------------------------------------------------
+! This routine prints information about how well "what" is balanced.
+!----------------------------------------------------
+
+!----------------------------------------------------
+! Dummy arguments
+
+type(grid_type), intent(in) :: grid
+type (proc_info), intent(in) :: procs
+integer, intent(in) :: what
+integer, intent(in), optional :: fileunit
+!----------------------------------------------------
+! Local variables:
+
+integer :: nproc, i, p, ni, nr
+integer, allocatable :: nentities(:), neq(:)
+integer, pointer :: irecv(:)
+real(my_real), pointer :: rrecv(:)
+real(my_real) :: ave, aveeq
+!----------------------------------------------------
+! Begin executable code
+
+if (what == BALANCE_NONE) return
+
+nproc = num_proc(procs)
+
+if (my_proc(procs) == MASTER) then
+
+! receive the number of entities owned by each processor
+
+   allocate(nentities(nproc),neq(nproc))
+   do i=1,num_proc(procs)
+      call phaml_recv(procs,p,irecv,ni,rrecv,nr,501)
+      nentities(p) = irecv(1)
+      neq(p) = irecv(2)
+      deallocate(irecv)
+      if (associated(rrecv)) deallocate(rrecv)
+   end do
+
+! print the number of entities owned by each
+
+   write(outunit,"(A)")
+   write(outunit,"(A)") "checking processor balance"
+   write(outunit,"(A)")
+   select case(what)
+   case (BALANCE_ELEMENTS)
+      write(outunit,"(A)") "number of elements owned by each processor"
+   case (BALANCE_VERTICES)
+      write(outunit,"(A)") "number of vertices owned by each processor"
+   case (BALANCE_EQUATIONS)
+      write(outunit,"(A)") "number of equations owned by each processor"
+   case default
+      call warning("bad value for what in check_balance")
+   end select
+! RESTRICTION no more than 1024 processors
+   write(outunit,"(1024I11)") nentities
+
+! print the biggest deviation from the mean
+
+   ave = sum(nentities)/real(nproc,my_real)
+   aveeq = sum(neq)/real(nproc,my_real)
+   write(outunit,"(A,E18.10E2)") "Largest deviation from the mean (per cent)",&
+                                 100*maxval(abs(nentities-ave))/ave
+   if (present(fileunit)) write(fileunit,"(i10,2e18.10e2)") sum(neq), &
+                                 100*maxval(abs(nentities-ave))/ave, &
+                                 100*maxval(abs(neq-aveeq))/aveeq
+
+   deallocate(nentities,neq)
+
+! barrier so the slaves don't call this again before the master finishes
+
+   call phaml_send(procs,1,(/0/),1,(/0.0_my_real/),0,502)
+
+else ! SLAVE
+
+! get the number of entities I own
+
+   allocate(nentities(2))
+   select case(what)
+   case (BALANCE_ELEMENTS)
+      nentities(1) = grid%nelem_leaf_own
+      nentities(2) = count_dof(grid,just_owned=.true.)
+   case (BALANCE_VERTICES)
+      nentities(1) = grid%nvert_own
+      nentities(2) = count_dof(grid,just_owned=.true.)
+   case (BALANCE_EQUATIONS)
+      nentities(1) = count_dof(grid,just_owned=.true.)
+      nentities(2) = count_dof(grid,just_owned=.true.)
+   case default
+      call warning("bad value for what in check_balance")
+      nentities = 0
+   end select
+
+! send it to the master
+
+   call phaml_send(procs,MASTER,nentities,2,(/0.0_my_real/),0,501)
+
+   deallocate(nentities)
+
+! barrier so the slaves don't call this again before the master finishes
+
+   if (my_proc(procs) == 1) then
+      call phaml_recv(procs,p,irecv,ni,rrecv,nr,502)
+      deallocate(irecv)
+      if (associated(rrecv)) deallocate(rrecv)
+   endif
+   call phaml_barrier(procs)
+
+endif ! MASTER or SLAVE
+
+end subroutine check_balance
 
 end module load_balance

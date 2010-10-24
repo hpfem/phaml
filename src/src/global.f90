@@ -69,7 +69,7 @@ character(len=5), parameter :: scratch = "/tmp/"
 
 ! version number
 
-character(len=5), parameter :: version_number = "1.6.2"
+character(len=5), parameter :: version_number = "1.8.0"
 
 ! termination codes
 

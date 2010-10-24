@@ -46,7 +46,10 @@ use petsc_type_mod
 use linsystype_mod
 use zoltan_interf
 use grid_io
-use grid_mod
+use grid_init_mod
+use refine_top
+use grid_util
+use hp_strategies
 use linear_system
 use load_balance
 use error_estimators
@@ -247,7 +250,7 @@ integer :: loc_clocks, loc_sequential_vert, loc_max_refsolveloop, &
            loc_postbalance, loc_print_header_who, &
            loc_print_trailer_who, loc_print_eval_when, loc_print_eval_who, &
            loc_degree
-logical :: loc_solve_init, loc_stop_on_maxlev, loc_stop_on_maxdeg
+logical :: loc_solve_init
 type (io_options) :: io_control
 type (solver_options) :: solver_control
 type(refine_options) :: refine_control
@@ -497,7 +500,6 @@ mainloop: do
          call balance(phaml_solution, grid, procs, io_control, refine_control, &
                       loc_partition_method, loc_postbalance, still_sequential, &
                       loop, -1, .false.)
-
       endif
    endif
 
@@ -645,10 +647,10 @@ mainloop: do
          ierr = MAX_EQUATIONS_ACHIEVED
       endif
       if (ierr == NO_ERROR .and. total_nlev >= refine_control%max_lev .and. &
-          loc_stop_on_maxlev) then
+          refine_control%stop_on_maxlev) then
          ierr = MAX_LEV_ACHIEVED
       endif
-      if (loc_stop_on_maxdeg) then
+      if (refine_control%stop_on_maxdeg) then
          call get_grid_info(grid,procs,still_sequential,260+loop, &
                             maxdeg=total_deg)
          if (ierr == NO_ERROR .and. total_deg >= refine_control%max_deg) then
@@ -947,7 +949,13 @@ endif
 if (present(inc_factor)) then
    refine_control%inc_factor = inc_factor
 else
-   refine_control%inc_factor = 2.0_my_real
+   if (refine_control%reftype == HP_ADAPTIVE .and. &
+       (refine_control%hp_strategy == HP_REFSOLN_EDGE .or. &
+        refine_control%hp_strategy == HP_REFSOLN_ELEM)) then
+      refine_control%inc_factor = 10.0_my_real
+   else
+      refine_control%inc_factor = 2.0_my_real
+   endif
 endif
 
 if (refine_control%reftype == HP_ADAPTIVE .and. &
@@ -1389,15 +1397,15 @@ else
 endif
 
 if (present(stop_on_maxlev)) then
-   loc_stop_on_maxlev = stop_on_maxlev
+   refine_control%stop_on_maxlev = stop_on_maxlev
 else
-   loc_stop_on_maxlev = .false.
+   refine_control%stop_on_maxlev = .false.
 endif
 
 if (present(stop_on_maxdeg)) then
-   loc_stop_on_maxdeg = stop_on_maxdeg
+   refine_control%stop_on_maxdeg = stop_on_maxdeg
 else
-   loc_stop_on_maxdeg = .false.
+   refine_control%stop_on_maxdeg = .false.
 endif
 
 if (present(term_energy_err)) then
@@ -2115,14 +2123,6 @@ if (refine_control%reftype == HP_ADAPTIVE .and. &
    refine_control%derefine = .false.
 endif
 
-! TEMP until implementation of REFSOLN_EDGE is completed
-
-if (refine_control%reftype == HP_ADAPTIVE .and. &
-    refine_control%hp_strategy == HP_REFSOLN_EDGE) then
-   call fatal("REFSOLN_EDGE strategy not yet implemented")
-   stop
-endif
-
 end subroutine defaults
 
 !          ------------
@@ -2178,13 +2178,13 @@ if (refine_control%max_lev == huge(0)) then
 else
    write(outunit,"(A,I11)") "  max_lev           ",refine_control%max_lev
 endif
-if (loc_stop_on_maxlev) then
+if (refine_control%stop_on_maxlev) then
    write(outunit,"(A)") "  stop_on_maxlev     true"
 else
    write(outunit,"(A)") "  stop_on_maxlev     false"
 endif
 write(outunit,"(A,I11)") "  max_deg           ",refine_control%max_deg
-if (loc_stop_on_maxdeg) then
+if (refine_control%stop_on_maxdeg) then
    write(outunit,"(A)") "  stop_on_maxdeg     true"
 else
    write(outunit,"(A)") "  stop_on_maxdeg     false"
@@ -3495,12 +3495,12 @@ if (loc_solve_init) then
 else
    send_int(96) = 0
 endif
-if (loc_stop_on_maxlev) then
+if (refine_control%stop_on_maxlev) then
    send_int(97) = 1
 else
    send_int(97) = 0
 endif
-if (loc_stop_on_maxdeg) then
+if (refine_control%stop_on_maxdeg) then
    send_int(98) = 1
 else
    send_int(98) = 0
@@ -4577,20 +4577,23 @@ if (nvert > sequential_vert) then
 
    still_sequential = .false.
    loop_end_sequential = loop
-   if (prebalance /= BALANCE_NONE) then
-      call partition(grid,procs,phaml_solution%lb,refine_control,.true., &
-                     partition_method,prebalance,num_proc(procs),export_gid, &
-                     export_proc,first_call=.true.)
-   else
-      call partition(grid,procs,phaml_solution%lb,refine_control,.false., &
-                     partition_method,postbalance,num_proc(procs),export_gid, &
-                     export_proc,first_call=.true.)
-   endif
-   call redistribute(grid,procs,refine_control,export_gid,export_proc, &
-                     first_call=.true.)
-   call reconcile(grid,procs,refine_control,still_sequential)
-   if (associated(export_gid)) then
-      deallocate(export_gid,export_proc)
+   if (my_proc(procs) /= MASTER .and. num_proc(procs) /= 1 .and. &
+       PARALLEL/=SEQUENTIAL) then
+      if (prebalance /= BALANCE_NONE) then
+         call partition(grid,procs,phaml_solution%lb,refine_control,.true., &
+                        partition_method,prebalance,num_proc(procs),export_gid,&
+                        export_proc,first_call=.true.)
+      else
+         call partition(grid,procs,phaml_solution%lb,refine_control,.false., &
+                       partition_method,postbalance,num_proc(procs),export_gid,&
+                        export_proc,first_call=.true.)
+      endif
+      call redistribute(grid,procs,refine_control,export_gid,export_proc, &
+                        first_call=.true.)
+      call reconcile(grid,procs,refine_control,still_sequential)
+      if (associated(export_gid)) then
+         deallocate(export_gid,export_proc)
+      endif
    endif
    grid_changed = .true.
    call draw_grid(grid,procs,io_control,refine_control, &
@@ -4625,7 +4628,7 @@ logical, intent(in) :: still_sequential, prebalancecall
 ! Local variables:
 
 logical :: repart, redist
-integer :: nleaf, minleaf, maxleaf, numexp, astat
+integer :: nentity, minentity, maxentity, numexp, astat
 type(hash_key), pointer :: export_gid(:)
 integer, pointer :: export_proc(:)
 !----------------------------------------------------
@@ -4637,11 +4640,12 @@ integer, pointer :: export_proc(:)
 !   master does not participate
 !   number of processors is 1
 !   program compiled for sequential execution
+!   balancing nothing
 !   haven't changed to parallel execution yet
 !   first time in parallel execution (prebalancing only)
 if (my_proc(procs) == MASTER .or. num_proc(procs) == 1 .or. &
-    PARALLEL==SEQUENTIAL .or. still_sequential .or. &
-    (prebalancecall .and. loop == loop_end_sequential)) then
+    PARALLEL==SEQUENTIAL .or. still_sequential .or. balance_what==BALANCE_NONE &
+    .or. (prebalancecall .and. loop == loop_end_sequential)) then
    repart = .false.
 
 ! some cases where partitioning must be done
@@ -4652,11 +4656,22 @@ elseif (prebalancecall) then
 
 ! otherwise, partition if the load is sufficiently out of balance
 else
-   call get_grid_info(grid,procs,still_sequential,160+loop, &
-                      nelem_leaf_own=nleaf,no_master=.true.)
-   minleaf = phaml_global_min(procs,nleaf,170+loop)
-   maxleaf = phaml_global_max(procs,nleaf,180+loop)
-   repart = ( (maxleaf-minleaf)/float(maxleaf) > 0.05)
+   select case (balance_what)
+   case (BALANCE_ELEMENTS)
+      call get_grid_info(grid,procs,still_sequential,160+loop, &
+                         nelem_leaf_own=nentity,no_master=.true.)
+   case (BALANCE_VERTICES)
+      call get_grid_info(grid,procs,still_sequential,160+loop, &
+                         nvert_own=nentity,no_master=.true.)
+   case (BALANCE_EQUATIONS)
+      call get_grid_info(grid,procs,still_sequential,160+loop, &
+                         dof_own=nentity,no_master=.true.)
+   case default
+      call fatal("bad value for balance what in subroutine balance")
+   end select
+   minentity = phaml_global_min(procs,nentity,170+loop)
+   maxentity = phaml_global_max(procs,nentity,180+loop)
+   repart = ( (maxentity-minentity)/float(maxentity) > 0.05)
 endif
 
 ! partition
@@ -4676,8 +4691,8 @@ if (repart) then
    endif
    numexp = phaml_global_sum(procs,numexp,190+loop)
    call get_grid_info(grid,procs,still_sequential,200+loop, &
-                      total_nelem_leaf=nleaf,no_master=.true.)
-   redist = (numexp/float(nleaf) > .05)
+                      total_nelem_leaf=nentity,no_master=.true.)
+   redist = (numexp/float(nentity) > .05)
    if (redist) then
       call redistribute(grid,procs,refine_control,export_gid,export_proc)
       call reconcile(grid,procs,refine_control,still_sequential)
@@ -8178,7 +8193,7 @@ if (loc_draw_grid) then
                                 0.0_my_real,0.0_my_real,0.0_my_real, &
                                 EXPLICIT_ERRIND, &
                                 HP_ADAPTIVE,0,0,HP_BIGGER_ERRIND,0,0,0,0,0,0, &
-                                0,0,0,0,0,0,0,.false.)
+                                0,0,0,0,0,0,0,.false.,.false.,.false.)
    call draw_grid(phaml_solution%grid,phaml_solution%procs, &
                   io_control,ref_control,phaml_solution%i_draw_grid, &
                   phaml_solution%master_draws_grid, &

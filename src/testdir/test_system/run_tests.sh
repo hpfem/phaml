@@ -19,15 +19,15 @@ fi
 
 ERR=0
 RUN1="$RUNMPI -np 1 "
-if [ $PHAML_PARALLEL = "sequential" ]
+if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" ]
 then
    RUN1=
 fi
 
 case "$PHAML_PARALLEL" in
-   messpass_spawn) FORM="ms" ;;
-   messpass_nospawn) FORM="spmd" ;;
-   sequential) FORM="seq" ;;
+   messpass_spawn|hybrid_spawn) FORM="ms" ;;
+   messpass_nospawn|hybrid_nospawn) FORM="spmd" ;;
+   sequential|openmp) FORM="seq" ;;
 esac
 
 for PROG in `ls test*.f90`;
