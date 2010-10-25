@@ -21,7 +21,16 @@ if [ $? -ne 0 ]; then
    exit 1
 fi
 
-#make install
+cd phaml
+./compile
+if [ $? -ne 0 ]; then
+   echo "Error building $PACKAGE_NAME."
+   exit 1
+fi
+cd ..
+
+rm -rf "$SPKG_LOCAL/lib/python/site-packages/phaml/"
+cp -r phaml "$SPKG_LOCAL/lib/python/site-packages/"
 if [ $? -ne 0 ]; then
    echo "Error installing $PACKAGE_NAME."
    exit 1
