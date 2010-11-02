@@ -1,92 +1,98 @@
 module python_gets
 
-double precision, allocatable :: xvert(:), yvert(:)
-integer, allocatable :: element_vertices(:,:), element_order(:)
-integer :: nvert, nelem
+use iso_c_utilities
+use iso_c_binding
+use phaml
+
+implicit none
+
+type(phaml_solution_type) :: this
+
 
 contains
 
-subroutine c_run(n, x, y, sol, triangle_files, triangle_files_len) bind(c)
+! c_phaml_* act like methods of a "Phaml" object, whose data is represented by
+! the 'phaml_solution_type' object. The c_phaml_create() returns it, and then
+! you pass it as the first parameter of all the other methods.
 
-use phaml
-use iso_c_binding
-use iso_c_utilities
-implicit none
-
-interface
-   subroutine get_grid_params(soln)
-   use global
-   use gridtype_mod
-   use phaml_type_mod
-   !use python_defs
-   type(phaml_solution_type), intent(in), target :: soln
-   end subroutine get_grid_params
-end interface
-!----------------------------------------------------
-
-
-integer(c_int) :: n
-real(c_double) :: x(n), y(n), sol(n)
-!f2py intent(in) x
-!f2py intent(in) y
-!f2py intent(out) sol
-!----------------------------------------------------
-! Local variables
-
-type(phaml_solution_type) :: soln
-integer :: i
+subroutine c_phaml_init(triangle_files, triangle_files_len) bind(c)
 integer(c_int) :: triangle_files_len
 character(c_char) :: triangle_files(triangle_files_len)
-character(len=triangle_files_len) :: triangle_files_fortran
-triangle_files_fortran = char_array_to_string(triangle_files)
-!real(my_real), allocatable :: x(:), y(:), u(:)
 
-!----------------------------------------------------
-! Begin executable code
+call phaml_create(this, nproc=2, &
+    triangle_files=char_array_to_string(triangle_files))
+end subroutine
 
-print*, "Start"
-
-call phaml_create(soln,nproc=2,triangle_files=triangle_files_fortran)
-
-call phaml_solve_pde(soln,                   &
+subroutine c_phaml_solve( n, x, y, sol) bind(c)
+integer(c_int) :: n
+real(c_double) :: x(n), y(n), sol(n)
+call phaml_solve_pde(this,                   &
                      max_vert=100,          &
                      print_grid_when=PHASES, &
                      print_grid_who=MASTER,  &
                      print_error_when=PHASES,&
-		     reftype=HP_ADAPTIVE, &
-		     refterm=DOUBLE_NELEM, &
+                     reftype=HP_ADAPTIVE, &
+                     refterm=DOUBLE_NELEM, &
                      print_time_when=FINAL, print_time_who=MASTER, &
                      print_error_what=ENERGY_LINF_ERR, &
                      print_errest_what=ENERGY_LINF_ERREST, &
                      print_error_who=MASTER)
+end subroutine
 
-!allocate(x(3), y(3), u(3))
-!x(1) = 0
-!x(2) = 0.5
-!x(3) = 1
-!y(1) = 0
-!y(2) = 0.5
-!y(3) = 1
 
-call phaml_evaluate(soln, x, y, sol)
+subroutine c_phaml_get_mesh() bind(c)
+use global
+use gridtype_mod
+use phaml_type_mod
+type(phaml_solution_type), target :: soln
+type(grid_type), pointer :: grid
+integer :: ind, lev, elem
+double precision, allocatable :: xvert(:), yvert(:)
+integer, allocatable :: element_vertices(:,:), element_order(:)
+integer :: nvert, nelem
 
-print*, "x=", x
-print*, "y=", y
-print*, "u=", sol
 
-call get_grid_params(soln)
-print *,"xvert ",xvert(1:5)
-print *,"yvert ",yvert(1:5)
-do i=1,5
-   print *,"elem verts ",element_vertices(i,:)
+soln = this
+grid => soln%grid
+
+nvert = grid%nvert
+nelem = grid%nelem_leaf
+
+allocate(xvert(size(grid%vertex)),yvert(size(grid%vertex)), &
+         element_vertices(nelem,3),element_order(nelem))
+
+xvert = grid%vertex%coord%x
+yvert = grid%vertex%coord%y
+
+ind = 0
+do lev = 1,grid%nlev
+   elem = grid%head_level_elem(lev)
+   do while (elem /= END_OF_LIST)
+      if (grid%element(elem)%isleaf) then
+        ind = ind + 1
+        element_vertices(ind,:) = grid%element(elem)%vertex
+        element_order(ind) = grid%element(elem)%degree
+        print *,"elem ind vertices ",elem,ind,element_vertices(ind,:)
+      endif
+      elem = grid%element(elem)%next
+   end do
 end do
-print *,"elem deg ", element_order(1:5)
-do i=nelem-5,size(element_vertices,dim=1)
-   print *,"elem verts last ",element_vertices(i,:)
-end do
-print *,"elem deg last ", element_order(nelem-5:)
 
-call phaml_destroy(soln)
-end subroutine c_run
+end subroutine
+
+
+subroutine c_phaml_get_solution_values(n, x, y, values) bind(c)
+integer(c_int) :: n
+real(c_double) :: x(n), y(n), values(n)
+
+integer :: i
+
+call phaml_evaluate(this, x, y, values)
+end subroutine
+
+
+subroutine c_phaml_del() bind(c)
+call phaml_destroy(this)
+end subroutine
 
 end module python_gets
