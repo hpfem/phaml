@@ -35,14 +35,10 @@ real(c_double) :: x(n), y(n), sol(n)
 
 type(phaml_solution_type) :: soln
 integer :: i
-! doesn't work:
-!character(len=*) :: triangle_files = "domain"
 integer(c_int) :: triangle_files_len
 character(c_char) :: triangle_files(triangle_files_len)
 character(len=triangle_files_len) :: triangle_files_fortran
-do i=1,triangle_files_len
-    triangle_files_fortran(i:i) = triangle_files(i)
-enddo
+triangle_files_fortran = char_array_to_string(triangle_files)
 !real(my_real), allocatable :: x(:), y(:), u(:)
 
 !----------------------------------------------------
