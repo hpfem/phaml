@@ -2,12 +2,22 @@
 
 set -e
 
+if [ "$SPKG_LOCAL" = "" ]; then
+   echo "SPKG_LOCAL undefined. Using systemwide Python+NumPy";
+   SPKG_LOCAL=/usr
+else
+   echo "SPKG_LOCAL defined. Using FEMhub's Python";
+fi
+
+
 PREFIX=../src
 PYTHON_INC=$SPKG_LOCAL/include/python2.6
+NUMPY_INC=$SPKG_LOCAL/lib/python2.6/site-packages/numpy/core/include/
 gfortran -fPIC -c -o iso_c_utilities.o iso_c_utilities.f90
 gfortran -fPIC -I$PREFIX/modules -c -o simple.o simple.f90
 gfortran -fPIC -I$PREFIX/modules -c -o pde.o pde.f90
 cython simple_wrapper.pyx
-gcc -fPIC -I$PYTHON_INC -c -o simple_wrapper.o simple_wrapper.c
+gcc -Wfatal-errors -fPIC -I$PYTHON_INC -I$NUMPY_INC -c -o simple_wrapper.o simple_wrapper.c
 gfortran -shared -o simple_wrapper.so simple_wrapper.o simple.o pde.o $PREFIX/lib/libphaml.a
-#f2py --f90flags="-fPIC" -I$PREFIX/modules -c -m simple simple.f90 pde.o $PREFIX/lib/libphaml.a
+
+echo "Python wrappers successfully compiled."
