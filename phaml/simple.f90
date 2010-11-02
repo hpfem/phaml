@@ -6,9 +6,11 @@ integer :: nvert, nelem
 
 contains
 
-subroutine run(n, x, y, sol, triangle_files)
+subroutine run(n, x, y, sol) bind(c)
 
 use phaml
+use iso_c_binding
+use iso_c_utilities
 implicit none
 
 interface
@@ -23,8 +25,8 @@ end interface
 !----------------------------------------------------
 
 
-integer n
-double precision x(n), y(n), sol(n)
+integer(c_int) :: n
+real(c_double) :: x(n), y(n), sol(n)
 !f2py intent(in) x
 !f2py intent(in) y
 !f2py intent(out) sol
@@ -33,7 +35,8 @@ double precision x(n), y(n), sol(n)
 
 type(phaml_solution_type) :: soln
 integer :: i
-character(len=*), optional, intent(in) :: triangle_files
+! doesn't work:
+!character(len=*) :: triangle_files = "domain"
 !real(my_real), allocatable :: x(:), y(:), u(:)
 
 !----------------------------------------------------
@@ -41,7 +44,7 @@ character(len=*), optional, intent(in) :: triangle_files
 
 print*, "Start"
 
-call phaml_create(soln,nproc=2,triangle_files=triangle_files)
+call phaml_create(soln,nproc=2,triangle_files="domain")
 
 call phaml_solve_pde(soln,                   &
                      max_vert=100,          &
