@@ -22,6 +22,6 @@ cython simple_wrapper.pyx
 echo "Compiling C..."
 gcc -Wfatal-errors -fPIC -I$PYTHON_INC -I$NUMPY_INC -c -o simple_wrapper.o simple_wrapper.c
 echo "Linking..."
-gfortran -shared -o simple_wrapper.so simple_wrapper.o simple.o pde.o $PREFIX/lib/libphaml.a
+gfortran -shared -o simple_wrapper.so simple_wrapper.o simple.o pde.o iso_c_utilities.o $PREFIX/lib/libphaml.a
 
 echo "Python wrappers successfully compiled."
