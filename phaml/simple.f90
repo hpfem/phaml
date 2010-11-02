@@ -6,7 +6,7 @@ integer :: nvert, nelem
 
 contains
 
-subroutine run(n, x, y, sol) bind(c)
+subroutine c_run(n, x, y, sol) bind(c)
 
 use phaml
 use iso_c_binding
@@ -85,6 +85,6 @@ end do
 print *,"elem deg last ", element_order(nelem-5:)
 
 call phaml_destroy(soln)
-end subroutine run
+end subroutine c_run
 
 end module python_gets

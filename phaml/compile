@@ -6,4 +6,7 @@ PREFIX=../src
 gfortran -fPIC -c -o iso_c_utilities.o iso_c_utilities.f90
 gfortran -fPIC -I$PREFIX/modules -c -o simple.o simple.f90
 gfortran -fPIC -I$PREFIX/modules -c -o pde.o pde.f90
+cython simple_wrapper.pyx
+gcc -fPIC -I/usr/include/python2.6 -c -o simple_wrapper.o simple_wrapper.c
+gfortran -shared -o simple_wrapper.so simple_wrapper.o simple.o pde.o $PREFIX/lib/libphaml.a
 #f2py --f90flags="-fPIC" -I$PREFIX/modules -c -m simple simple.f90 pde.o $PREFIX/lib/libphaml.a
