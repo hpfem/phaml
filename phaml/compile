@@ -13,11 +13,15 @@ fi
 PREFIX=../src
 PYTHON_INC=$SPKG_LOCAL/include/python2.6
 NUMPY_INC=$SPKG_LOCAL/lib/python2.6/site-packages/numpy/core/include/
+echo "Compiling fortran..."
 gfortran -fPIC -c -o iso_c_utilities.o iso_c_utilities.f90
 gfortran -fPIC -I$PREFIX/modules -c -o simple.o simple.f90
 gfortran -fPIC -I$PREFIX/modules -c -o pde.o pde.f90
+echo "Cythonizing wrappers..."
 cython simple_wrapper.pyx
+echo "Compiling C..."
 gcc -Wfatal-errors -fPIC -I$PYTHON_INC -I$NUMPY_INC -c -o simple_wrapper.o simple_wrapper.c
+echo "Linking..."
 gfortran -shared -o simple_wrapper.so simple_wrapper.o simple.o pde.o $PREFIX/lib/libphaml.a
 
 echo "Python wrappers successfully compiled."
