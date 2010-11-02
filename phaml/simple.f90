@@ -6,7 +6,7 @@ integer :: nvert, nelem
 
 contains
 
-subroutine c_run(n, x, y, sol) bind(c)
+subroutine c_run(n, x, y, sol, triangle_files, triangle_files_len) bind(c)
 
 use phaml
 use iso_c_binding
@@ -37,6 +37,12 @@ type(phaml_solution_type) :: soln
 integer :: i
 ! doesn't work:
 !character(len=*) :: triangle_files = "domain"
+integer(c_int) :: triangle_files_len
+character(c_char) :: triangle_files(triangle_files_len)
+character(len=triangle_files_len) :: triangle_files_fortran
+do i=1,triangle_files_len
+    triangle_files_fortran(i:i) = triangle_files(i)
+enddo
 !real(my_real), allocatable :: x(:), y(:), u(:)
 
 !----------------------------------------------------
@@ -44,7 +50,7 @@ integer :: i
 
 print*, "Start"
 
-call phaml_create(soln,nproc=2,triangle_files="domain")
+call phaml_create(soln,nproc=2,triangle_files=triangle_files_fortran)
 
 call phaml_solve_pde(soln,                   &
                      max_vert=100,          &
