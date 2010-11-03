@@ -33,17 +33,19 @@ call phaml_create(this, nproc=2, &
 end subroutine
 
 subroutine c_phaml_solve(term_energy_err, max_eq, verbose, reftype, &
-    hp_strategy) bind(c)
+    hp_strategy, derefine) bind(c)
 real(c_double), intent(in) :: term_energy_err
 integer(c_int), intent(in) :: max_eq
 integer(c_int), intent(in) :: verbose
 integer(c_int), intent(in) :: reftype
 integer(c_int), intent(in) :: hp_strategy
+integer(c_int), intent(in) :: derefine
 
 integer :: print_grid_when
 integer :: print_error_when
 integer :: print_header_who
 integer :: print_trailer_who
+
 if (verbose == 1) then
     print_grid_when = PHASES
     print_error_when = PHASES
@@ -55,6 +57,7 @@ else
     print_header_who = NO_ONE
     print_trailer_who = NO_ONE
 endif
+
 call phaml_solve_pde(this,                   &
                      term_energy_err=term_energy_err, &
                      errtype=RELATIVE_ERROR, &
@@ -66,6 +69,7 @@ call phaml_solve_pde(this,                   &
                      print_trailer_who=print_trailer_who, &
                      reftype=reftype, &
                      refterm=ONE_REF_HALF_ERRIND, &
+                     derefine=(derefine==1), &
                      hp_strategy=hp_strategy, &
                      print_time_when=FINAL, print_time_who=MASTER, &
                      print_error_what=ENERGY_LINF_ERR, &
