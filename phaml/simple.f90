@@ -23,9 +23,7 @@ call phaml_create(this, nproc=2, &
     triangle_files=char_array_to_string(triangle_files))
 end subroutine
 
-subroutine c_phaml_solve( n, x, y, sol) bind(c)
-integer(c_int) :: n
-real(c_double) :: x(n), y(n), sol(n)
+subroutine c_phaml_solve() bind(c)
 call phaml_solve_pde(this,                   &
                      max_vert=100,          &
                      print_grid_when=PHASES, &
