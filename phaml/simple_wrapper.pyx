@@ -3,9 +3,27 @@ from numpy import empty
 
 cimport simple
 
-NEVER = 5
-PHASES = 7
-LAST = 10
+H_UNIFORM   = 1
+H_ADAPTIVE  = 2
+P_UNIFORM   = 3
+P_ADAPTIVE  = 4
+HP_ADAPTIVE = 5
+
+HP_BIGGER_ERRIND  =  1
+HP_APRIORI        =  2
+HP_PRIOR2P_E      =  3
+HP_PRIOR2P_H1     =  4
+HP_T3S            =  5
+HP_ALTERNATE      =  6
+HP_TYPEPARAM      =  7
+HP_COEF_DECAY     =  8
+HP_COEF_ROOT      =  9
+HP_SMOOTH_PRED    = 10
+HP_NEXT3P         = 11
+HP_REFSOLN_EDGE   = 12
+HP_REFSOLN_ELEM   = 13
+HP_NLP            = 14
+
 
 cdef class Phaml(object):
 
@@ -21,9 +39,9 @@ cdef class Phaml(object):
     def solve(self, params={}):
         cdef double term_energy_err = params.get("term_energy_err", 1e-5)
         cdef int max_eq = params.get("max_eq", 50000)
-        cdef int print_grid_when = params.get("print_grid_when", PHASES)
-        cdef int print_error_when = params.get("print_error_when", PHASES)
-        simple.c_phaml_solve(&term_energy_err)
+        cdef int verbose = params.get("verbose", 1)
+        cdef int reftype = params.get("reftype", HP_ADAPTIVE)
+        simple.c_phaml_solve(&term_energy_err, &max_eq, &verbose, &reftype)
 
     def get_mesh(self):
         cdef int n, nelem

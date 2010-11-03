@@ -32,10 +32,11 @@ call phaml_create(this, nproc=2, &
     triangle_files=char_array_to_string(triangle_files))
 end subroutine
 
-subroutine c_phaml_solve(term_energy_err, max_eq, verbose) bind(c)
+subroutine c_phaml_solve(term_energy_err, max_eq, verbose, reftype) bind(c)
 real(c_double), intent(in) :: term_energy_err
 integer(c_int), intent(in) :: max_eq
 integer(c_int), intent(in) :: verbose
+integer(c_int), intent(in) :: reftype
 
 integer :: print_grid_when
 integer :: print_error_when
@@ -54,13 +55,14 @@ else
 endif
 call phaml_solve_pde(this,                   &
                      term_energy_err=term_energy_err, &
+                     errtype=RELATIVE_ERROR, &
                      max_eq=max_eq, &
                      print_grid_when=print_grid_when, &
                      print_grid_who=MASTER,  &
                      print_error_when=print_error_when,&
                      print_header_who=print_header_who, &
                      print_trailer_who=print_trailer_who, &
-                     reftype=HP_ADAPTIVE, &
+                     reftype=reftype, &
                      refterm=DOUBLE_NELEM, &
                      print_time_when=FINAL, print_time_who=MASTER, &
                      print_error_what=ENERGY_LINF_ERR, &
