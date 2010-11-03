@@ -25,7 +25,7 @@ end subroutine
 
 subroutine c_phaml_solve() bind(c)
 call phaml_solve_pde(this,                   &
-                     max_vert=100,          &
+                     term_energy_err=1.0d-6, &
                      print_grid_when=PHASES, &
                      print_grid_who=MASTER,  &
                      print_error_when=PHASES,&

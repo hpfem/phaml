@@ -82,7 +82,7 @@ real(my_real), intent(out) :: cxx(:,:),cxy(:,:),cyy(:,:),cx(:,:),cy(:,:), &
 cxx(1,1) = 1.0_my_real
 cyy(1,1) = 1.0_my_real
 c(1,1) = 0.0_my_real
-rs(1) = -4.0_my_real
+rs(1) = -90*x**8 - 90*y**8
 
 cxy=0; cx=0; cy=0
 
@@ -218,7 +218,7 @@ real (my_real) :: trues
 !----------------------------------------------------
 ! Begin executable code
 
-trues = x**2 + y**2
+trues = x**10 + y**10
 
 end function trues
 
