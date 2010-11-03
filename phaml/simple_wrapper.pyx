@@ -10,6 +10,9 @@ cdef class Phaml(object):
         cdef int triangle_files_len = len(triangle_files)
         simple.c_phaml_init(s, &triangle_files_len)
 
+    def __del__(self):
+        simple.c_phaml_del()
+
     def solve(self):
         simple.c_phaml_solve()
 
