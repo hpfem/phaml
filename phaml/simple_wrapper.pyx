@@ -3,6 +3,10 @@ from numpy import empty
 
 cimport simple
 
+NEVER = 5
+PHASES = 7
+LAST = 10
+
 cdef class Phaml(object):
 
     def __cinit__(self, triangle_files, int problem_number=1):
@@ -16,6 +20,9 @@ cdef class Phaml(object):
 
     def solve(self, params={}):
         cdef double term_energy_err = params.get("term_energy_err", 1e-5)
+        cdef int max_eq = params.get("max_eq", 50000)
+        cdef int print_grid_when = params.get("print_grid_when", PHASES)
+        cdef int print_error_when = params.get("print_error_when", PHASES)
         simple.c_phaml_solve(&term_energy_err)
 
     def get_mesh(self):
@@ -39,4 +46,3 @@ cdef class Phaml(object):
         cdef ndarray[double, mode="c"] values = empty(n, dtype="double")
         simple.c_phaml_get_solution_values(&n, &x[0], &y[0], &values[0])
         return values
-

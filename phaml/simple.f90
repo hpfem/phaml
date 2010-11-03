@@ -32,13 +32,34 @@ call phaml_create(this, nproc=2, &
     triangle_files=char_array_to_string(triangle_files))
 end subroutine
 
-subroutine c_phaml_solve(term_energy_err) bind(c)
+subroutine c_phaml_solve(term_energy_err, max_eq, verbose) bind(c)
 real(c_double), intent(in) :: term_energy_err
+integer(c_int), intent(in) :: max_eq
+integer(c_int), intent(in) :: verbose
+
+integer :: print_grid_when
+integer :: print_error_when
+integer :: print_header_who
+integer :: print_trailer_who
+if (verbose == 1) then
+    print_grid_when = PHASES
+    print_error_when = PHASES
+    print_header_who = MASTER
+    print_trailer_who = MASTER
+else
+    print_grid_when = NEVER
+    print_error_when = NEVER
+    print_header_who = NO_ONE
+    print_trailer_who = NO_ONE
+endif
 call phaml_solve_pde(this,                   &
                      term_energy_err=term_energy_err, &
-                     print_grid_when=PHASES, &
+                     max_eq=max_eq, &
+                     print_grid_when=print_grid_when, &
                      print_grid_who=MASTER,  &
-                     print_error_when=PHASES,&
+                     print_error_when=print_error_when,&
+                     print_header_who=print_header_who, &
+                     print_trailer_who=print_trailer_who, &
                      reftype=HP_ADAPTIVE, &
                      refterm=DOUBLE_NELEM, &
                      print_time_when=FINAL, print_time_who=MASTER, &
