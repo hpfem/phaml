@@ -39,40 +39,42 @@ call phaml_solve_pde(this,                   &
                      print_error_who=MASTER)
 end subroutine
 
+subroutine c_phaml_get_mesh_info(n, nelem) bind(c)
+integer(c_int), intent(out) :: n
+integer(c_int), intent(out) :: nelem
 
-subroutine c_phaml_get_mesh() bind(c)
+n = size(this%grid%vertex)
+nelem = this%grid%nelem_leaf
+end subroutine
+
+subroutine c_phaml_get_mesh(n, xvert, yvert, &
+        nelem, element_vertices, orders) bind(c)
 use global
 use gridtype_mod
 use phaml_type_mod
+integer(c_int), intent(in) :: n
+real(c_double), intent(out) :: xvert(n), yvert(n)
+integer(c_int), intent(in) :: nelem
+integer(c_int), intent(out) :: element_vertices(nelem, 3), orders(nelem)
+
 type(phaml_solution_type), target :: soln
 type(grid_type), pointer :: grid
 integer :: ind, lev, elem
-double precision, allocatable :: xvert(:), yvert(:)
-integer, allocatable :: element_vertices(:,:), element_order(:)
-integer :: nvert, nelem
-
 
 soln = this
 grid => soln%grid
-
-nvert = grid%nvert
-nelem = grid%nelem_leaf
-
-allocate(xvert(size(grid%vertex)),yvert(size(grid%vertex)), &
-         element_vertices(nelem,3),element_order(nelem))
 
 xvert = grid%vertex%coord%x
 yvert = grid%vertex%coord%y
 
 ind = 0
-do lev = 1,grid%nlev
+do lev = 1, grid%nlev
    elem = grid%head_level_elem(lev)
    do while (elem /= END_OF_LIST)
       if (grid%element(elem)%isleaf) then
         ind = ind + 1
         element_vertices(ind,:) = grid%element(elem)%vertex
-        element_order(ind) = grid%element(elem)%degree
-        print *,"elem ind vertices ",elem,ind,element_vertices(ind,:)
+        orders(ind) = grid%element(elem)%degree
       endif
       elem = grid%element(elem)%next
    end do
