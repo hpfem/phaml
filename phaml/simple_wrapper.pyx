@@ -18,10 +18,10 @@ cdef class Phaml(object):
         simple.c_phaml_get_mesh_info(&n, &nelem)
         cdef ndarray[double, mode="c"] xvert = empty(n, dtype="double")
         cdef ndarray[double, mode="c"] yvert = empty(n, dtype="double")
-        cdef ndarray[int, mode="c"] element_vertices = empty(nelem,
-                dtype="int32")
-        cdef ndarray[int, mode="c"] orders = empty(nelem,
-                dtype="int32")
+        cdef ndarray[int, ndim=2, mode="fortran"] element_vertices = \
+                empty((nelem, 3), dtype="int32", order="F")
+        cdef ndarray[int, mode="c"] orders = \
+                empty(nelem, dtype="int32")
         simple.c_phaml_get_mesh(&n, &xvert[0], &yvert[0],
-            &nelem, &element_vertices[0], &orders[0])
+            &nelem, &element_vertices[0, 0], &orders[0])
         return xvert, yvert, element_vertices, orders
