@@ -5,16 +5,18 @@ cimport simple
 
 cdef class Phaml(object):
 
-    def __cinit__(self, triangle_files):
+    def __cinit__(self, triangle_files, int problem_number=1):
         cdef char *s = triangle_files
         cdef int triangle_files_len = len(triangle_files)
-        simple.c_phaml_init(s, &triangle_files_len)
+        print "X1"
+        simple.c_phaml_init(s, &triangle_files_len, &problem_number)
 
     def __dealloc__(self):
         simple.c_phaml_del()
 
-    def solve(self):
-        simple.c_phaml_solve()
+    def solve(self, params={}):
+        cdef double term_energy_err = params.get("term_energy_err", 1e-5)
+        simple.c_phaml_solve(&term_energy_err)
 
     def get_mesh(self):
         cdef int n, nelem

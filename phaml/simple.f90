@@ -15,14 +15,13 @@ contains
 ! the 'phaml_solution_type' object. The c_phaml_create() returns it, and then
 ! you pass it as the first parameter of all the other methods.
 
-subroutine c_phaml_init(triangle_files, triangle_files_len) &
+subroutine c_phaml_init(triangle_files, triangle_files_len, problem_number) &
     bind(c)
 use example1
 use example2
 integer(c_int), intent(in) :: triangle_files_len
 character(c_char), intent(in) :: triangle_files(triangle_files_len)
-integer(c_int) :: problem_number
-problem_number = 2
+integer(c_int), intent(in) :: problem_number
 
 select case(problem_number)
 case (1); call setup_example1()
@@ -33,9 +32,10 @@ call phaml_create(this, nproc=2, &
     triangle_files=char_array_to_string(triangle_files))
 end subroutine
 
-subroutine c_phaml_solve() bind(c)
+subroutine c_phaml_solve(term_energy_err) bind(c)
+real(c_double), intent(in) :: term_energy_err
 call phaml_solve_pde(this,                   &
-                     term_energy_err=1.0d-6, &
+                     term_energy_err=term_energy_err, &
                      print_grid_when=PHASES, &
                      print_grid_who=MASTER,  &
                      print_error_when=PHASES,&
