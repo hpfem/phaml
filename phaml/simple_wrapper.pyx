@@ -51,7 +51,7 @@ cdef class Phaml(object):
         cdef int max_eq = params.get("max_eq", 50000)
         cdef int verbose = params.get("verbose", 1)
         cdef int reftype = params.get("reftype", HP_ADAPTIVE)
-        cdef int hp_strategy = params.get("reftype", HP_PRIOR2P_H1)
+        cdef int hp_strategy = params.get("hp_strategy", HP_PRIOR2P_H1)
         cdef int derefine = params.get("derefine", 1)
         cdef int degree = params.get("degree", 1)
         cdef int error_estimator = params.get("error_estimator",
