@@ -41,7 +41,9 @@ cdef class Phaml(object):
         cdef int max_eq = params.get("max_eq", 50000)
         cdef int verbose = params.get("verbose", 1)
         cdef int reftype = params.get("reftype", HP_ADAPTIVE)
-        simple.c_phaml_solve(&term_energy_err, &max_eq, &verbose, &reftype)
+        cdef int hp_strategy = params.get("reftype", HP_PRIOR2P_H1)
+        simple.c_phaml_solve(&term_energy_err, &max_eq, &verbose, &reftype,
+                &hp_strategy)
 
     def get_mesh(self):
         cdef int n, nelem
