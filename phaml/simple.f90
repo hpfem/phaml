@@ -15,9 +15,19 @@ contains
 ! the 'phaml_solution_type' object. The c_phaml_create() returns it, and then
 ! you pass it as the first parameter of all the other methods.
 
-subroutine c_phaml_init(triangle_files, triangle_files_len) bind(c)
-integer(c_int) :: triangle_files_len
-character(c_char) :: triangle_files(triangle_files_len)
+subroutine c_phaml_init(triangle_files, triangle_files_len) &
+    bind(c)
+use example1
+!use example2
+integer(c_int), intent(in) :: triangle_files_len
+character(c_char), intent(in) :: triangle_files(triangle_files_len)
+integer(c_int) :: problem_number
+problem_number = 1
+
+select case(problem_number)
+case (1); call setup_example1()
+!case (2); call setup_example2()
+end select
 
 call phaml_create(this, nproc=2, &
     triangle_files=char_array_to_string(triangle_files))
