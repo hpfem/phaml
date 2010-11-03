@@ -17,12 +17,13 @@ echo "Compiling fortran..."
 gfortran -fPIC -c -o iso_c_utilities.o iso_c_utilities.f90
 gfortran -fPIC -I$PREFIX/modules -c -o pde_pointers.o pde_pointers.f90
 gfortran -fPIC -I$PREFIX/modules -c -o example1.o example1.f90
+gfortran -fPIC -I$PREFIX/modules -c -o example2.o example2.f90
 gfortran -fPIC -I$PREFIX/modules -c -o simple.o simple.f90
 echo "Cythonizing wrappers..."
 cython simple_wrapper.pyx
 echo "Compiling C..."
 gcc -Wfatal-errors -fPIC -I$PYTHON_INC -I$NUMPY_INC -c -o simple_wrapper.o simple_wrapper.c
 echo "Linking..."
-gfortran -shared -o simple_wrapper.so simple_wrapper.o simple.o pde_pointers.o example1.o iso_c_utilities.o $PREFIX/lib/libphaml.a
+gfortran -shared -o simple_wrapper.so simple_wrapper.o simple.o pde_pointers.o example1.o example2.o iso_c_utilities.o $PREFIX/lib/libphaml.a
 
 echo "Python wrappers successfully compiled."
