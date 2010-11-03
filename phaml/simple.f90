@@ -33,13 +33,14 @@ call phaml_create(this, nproc=2, &
 end subroutine
 
 subroutine c_phaml_solve(term_energy_err, max_eq, verbose, reftype, &
-    hp_strategy, derefine) bind(c)
+    hp_strategy, derefine, degree) bind(c)
 real(c_double), intent(in) :: term_energy_err
 integer(c_int), intent(in) :: max_eq
 integer(c_int), intent(in) :: verbose
 integer(c_int), intent(in) :: reftype
 integer(c_int), intent(in) :: hp_strategy
 integer(c_int), intent(in) :: derefine
+integer(c_int), intent(in) :: degree
 
 integer :: print_grid_when
 integer :: print_error_when
@@ -74,7 +75,8 @@ call phaml_solve_pde(this,                   &
                      print_time_when=FINAL, print_time_who=MASTER, &
                      print_error_what=ENERGY_LINF_ERR, &
                      print_errest_what=ENERGY_LINF_ERREST, &
-                     print_error_who=MASTER)
+                     print_error_who=MASTER, &
+                     degree=degree)
 end subroutine
 
 subroutine c_phaml_get_mesh_info(n, nelem) bind(c)

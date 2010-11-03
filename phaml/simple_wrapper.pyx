@@ -43,8 +43,9 @@ cdef class Phaml(object):
         cdef int reftype = params.get("reftype", HP_ADAPTIVE)
         cdef int hp_strategy = params.get("reftype", HP_PRIOR2P_H1)
         cdef int derefine = params.get("derefine", 1)
+        cdef int degree = params.get("degree", 1)
         simple.c_phaml_solve(&term_energy_err, &max_eq, &verbose, &reftype,
-                &hp_strategy, &derefine)
+                &hp_strategy, &derefine, &degree)
 
     def get_mesh(self):
         cdef int n, nelem
