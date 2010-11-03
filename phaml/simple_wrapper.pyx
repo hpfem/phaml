@@ -30,7 +30,6 @@ cdef class Phaml(object):
     def __cinit__(self, triangle_files, int problem_number=1):
         cdef char *s = triangle_files
         cdef int triangle_files_len = len(triangle_files)
-        print "X1"
         simple.c_phaml_init(s, &triangle_files_len, &problem_number)
 
     def __dealloc__(self):

@@ -46,17 +46,20 @@ integer :: print_grid_when
 integer :: print_error_when
 integer :: print_header_who
 integer :: print_trailer_who
+integer :: print_time_when
 
 if (verbose == 1) then
     print_grid_when = PHASES
     print_error_when = PHASES
     print_header_who = MASTER
     print_trailer_who = MASTER
+    print_time_when = FINAL
 else
     print_grid_when = NEVER
     print_error_when = NEVER
     print_header_who = NO_ONE
     print_trailer_who = NO_ONE
+    print_time_when = NEVER
 endif
 
 call phaml_solve_pde(this,                   &
@@ -72,9 +75,9 @@ call phaml_solve_pde(this,                   &
                      refterm=ONE_REF_HALF_ERRIND, &
                      derefine=(derefine==1), &
                      hp_strategy=hp_strategy, &
-                     print_time_when=FINAL, print_time_who=MASTER, &
-                     print_error_what=ENERGY_LINF_ERR, &
-                     print_errest_what=ENERGY_LINF_ERREST, &
+                     print_time_when=print_time_when, print_time_who=MASTER, &
+                     print_error_what=ENERGY_LINF_L2_ERR, &
+                     print_errest_what=ENERGY_LINF_L2_ERREST, &
                      print_error_who=MASTER, &
                      degree=degree)
 end subroutine
