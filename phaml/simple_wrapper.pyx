@@ -25,6 +25,17 @@ HP_REFSOLN_ELEM   = 13
 HP_NLP            = 14
 
 
+HIERARCHICAL_COEFFICIENT = 1
+TRUE_DIFF                = 2
+LOCAL_PROBLEM_H          = 4
+LOCAL_PROBLEM_P          = 5
+INITIAL_CONDITION        = 6
+EXPLICIT_ERRIND          = 7
+EQUILIBRATED_RESIDUAL    = 8
+REFSOLN_ERREST           = 9
+
+
+
 cdef class Phaml(object):
 
     def __cinit__(self, triangle_files, int problem_number=1):
@@ -43,8 +54,10 @@ cdef class Phaml(object):
         cdef int hp_strategy = params.get("reftype", HP_PRIOR2P_H1)
         cdef int derefine = params.get("derefine", 1)
         cdef int degree = params.get("degree", 1)
+        cdef int error_estimator = params.get("error_estimator",
+                EXPLICIT_ERRIND)
         simple.c_phaml_solve(&term_energy_err, &max_eq, &verbose, &reftype,
-                &hp_strategy, &derefine, &degree)
+                &hp_strategy, &derefine, &degree, &error_estimator)
 
     def get_mesh(self):
         cdef int n, nelem

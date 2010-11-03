@@ -33,7 +33,7 @@ call phaml_create(this, nproc=2, &
 end subroutine
 
 subroutine c_phaml_solve(term_energy_err, max_eq, verbose, reftype, &
-    hp_strategy, derefine, degree) bind(c)
+    hp_strategy, derefine, degree, error_estimator) bind(c)
 real(c_double), intent(in) :: term_energy_err
 integer(c_int), intent(in) :: max_eq
 integer(c_int), intent(in) :: verbose
@@ -41,6 +41,7 @@ integer(c_int), intent(in) :: reftype
 integer(c_int), intent(in) :: hp_strategy
 integer(c_int), intent(in) :: derefine
 integer(c_int), intent(in) :: degree
+integer(c_int), intent(in) :: error_estimator
 
 integer :: print_grid_when
 integer :: print_error_when
@@ -73,6 +74,7 @@ call phaml_solve_pde(this,                   &
                      print_trailer_who=print_trailer_who, &
                      reftype=reftype, &
                      refterm=ONE_REF_HALF_ERRIND, &
+                     error_estimator=error_estimator, &
                      derefine=(derefine==1), &
                      hp_strategy=hp_strategy, &
                      print_time_when=print_time_when, print_time_who=MASTER, &
