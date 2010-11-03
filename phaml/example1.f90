@@ -53,14 +53,14 @@ function truexs(x,y,comp,eigen) ! real (my_real)
 real(my_real), intent(in) :: x,y
 integer, intent(in) :: comp,eigen
 real (my_real) :: truexs
-truexs = 2*x
+truexs = 10*x
 end function truexs
 
 function trueys(x,y,comp,eigen) ! real (my_real)
 real(my_real), intent(in) :: x,y
 integer, intent(in) :: comp,eigen
 real (my_real) :: trueys
-trueys = 2*y
+trueys = 10*y
 end function trueys
 
 
