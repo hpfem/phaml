@@ -5,12 +5,12 @@ cimport simple
 
 cdef class Phaml(object):
 
-    def __init__(self, triangle_files):
+    def __cinit__(self, triangle_files):
         cdef char *s = triangle_files
         cdef int triangle_files_len = len(triangle_files)
         simple.c_phaml_init(s, &triangle_files_len)
 
-    def __del__(self):
+    def __dealloc__(self):
         simple.c_phaml_del()
 
     def solve(self):
