@@ -10,10 +10,10 @@ from phaml.plot import plot_mesh_mpl, plot_sln_mayavi, convert_mesh
 
 problem_number = 2
 params = {
-        "term_energy_err": 1e-5,
+        "term_energy_err": 1e-4,
         #"hp_strategy": HP_PRIOR2P_H1,
-        #"hp_strategy": HP_SMOOTH_PRED,
-        "hp_strategy": HP_REFSOLN_ELEM,
+        "hp_strategy": HP_SMOOTH_PRED,
+        #"hp_strategy": HP_REFSOLN_ELEM,
         }
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

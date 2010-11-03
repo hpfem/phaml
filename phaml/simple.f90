@@ -81,7 +81,9 @@ call phaml_solve_pde(this,                   &
                      print_error_what=ENERGY_LINF_L2_ERR, &
                      print_errest_what=ENERGY_LINF_L2_ERREST, &
                      print_error_who=MASTER, &
-                     degree=degree)
+                     degree=degree, &
+                     mg_cycles=100, &
+                     max_lev=53)
 end subroutine
 
 subroutine c_phaml_get_mesh_info(n, nelem) bind(c)

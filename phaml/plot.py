@@ -72,7 +72,7 @@ def plot_mesh_mpl(polygons=None, polynomial_orders=None, edges_only=False):
             if polynomial_orders is None:
                 color = colors[0]
             else:
-                color = colors[polynomial_orders[el_id]]
+                color = colors.get(polynomial_orders[el_id], "#ffff00")
             linewidth = 1
         patch = PathPatch(p, facecolor=color, lw=linewidth,
                 edgecolor='#000000')
