@@ -29,7 +29,7 @@
 #   Graphics:          none
 #   BLAS:              source
 #   LAPACK:            source
-#   ARPACK:            no
+#   ARPACK:            yes
 #   BLOPEX:            no
 #   hypre:             no
 #   MUMPS:             no

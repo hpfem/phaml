@@ -999,9 +999,9 @@ case "$PHAML_ARPACK" in
    yes)
       if [ $PHAML_PARALLEL = "sequential" -o $PHAML_PARALLEL = "openmp" -o $PHAML_PARLIB = "pvm" ]
       then
-         ARPACKLIBS='-L$(ARPACK_HOME)/'"$PHAML_F90/$PHAML_PARLIB/lib -larpack"
+         ARPACKLIBS="-L/usr/lib -larpack"
       else
-         ARPACKLIBS='-L$(ARPACK_HOME)/'"$PHAML_F90/$PHAML_PARLIB/lib -larpack -lparpack"
+         ARPACKLIBS="-L/usr/lib -larpack -lparpack"
       fi ;;
 
    no)
