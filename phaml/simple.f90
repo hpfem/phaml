@@ -24,14 +24,20 @@ integer(c_int), intent(in) :: triangle_files_len
 character(c_char), intent(in) :: triangle_files(triangle_files_len)
 integer(c_int), intent(in) :: problem_number
 
+integer :: eq_type = ELLIPTIC
+
 select case(problem_number)
-case (1); call setup_example1()
-case (2); call setup_example2()
-case (3); call setup_example_eigen()
+case (1)
+    call setup_example1()
+case (2)
+    call setup_example2()
+case (3)
+    call setup_example_eigen()
+    eq_type = EIGENVALUE
 case default; stop "Unknown problem_number"
 end select
 
-call phaml_create(this, nproc=2, &
+call phaml_create(this, nproc=1, eq_type=eq_type, &
     triangle_files=char_array_to_string(triangle_files))
 end subroutine
 

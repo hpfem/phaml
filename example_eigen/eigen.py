@@ -14,6 +14,7 @@ params = {
         #"hp_strategy": HP_PRIOR2P_H1,
         "hp_strategy": HP_SMOOTH_PRED,
         #"hp_strategy": HP_REFSOLN_ELEM,
+        "num_eval": 3
         }
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
