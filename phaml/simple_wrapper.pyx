@@ -56,8 +56,11 @@ cdef class Phaml(object):
         cdef int degree = params.get("degree", 1)
         cdef int error_estimator = params.get("error_estimator",
                 EXPLICIT_ERRIND)
+        cdef double lambda0 = params.get("lamda0", -10**10)
+        cdef int num_eval = params.get("num_eval", 1)
         simple.c_phaml_solve(&term_energy_err, &max_eq, &verbose, &reftype,
-                &hp_strategy, &derefine, &degree, &error_estimator)
+                &hp_strategy, &derefine, &degree, &error_estimator,
+                &lambda0, &num_eval)
 
     def get_mesh(self):
         cdef int n, nelem
