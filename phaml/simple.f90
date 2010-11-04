@@ -19,6 +19,7 @@ subroutine c_phaml_init(triangle_files, triangle_files_len, problem_number) &
     bind(c)
 use example1
 use example2
+use example_eigen
 integer(c_int), intent(in) :: triangle_files_len
 character(c_char), intent(in) :: triangle_files(triangle_files_len)
 integer(c_int), intent(in) :: problem_number
@@ -26,6 +27,8 @@ integer(c_int), intent(in) :: problem_number
 select case(problem_number)
 case (1); call setup_example1()
 case (2); call setup_example2()
+case (3); call setup_example_eigen()
+case default; stop "Unknown problem_number"
 end select
 
 call phaml_create(this, nproc=2, &

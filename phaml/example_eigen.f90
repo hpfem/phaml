@@ -1,4 +1,4 @@
-module example2
+module example_eigen
 
 use phaml
 implicit none
