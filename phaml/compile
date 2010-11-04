@@ -18,6 +18,7 @@ gfortran -fPIC -c -o iso_c_utilities.o iso_c_utilities.f90
 gfortran -fPIC -I$PREFIX/modules -c -o pde_pointers.o pde_pointers.f90
 gfortran -fPIC -I$PREFIX/modules -c -o example1.o example1.f90
 gfortran -fPIC -I$PREFIX/modules -c -o example2.o example2.f90
+gfortran -fPIC -I$PREFIX/modules -c -o example_eigen.o example_eigen.f90
 gfortran -fPIC -I$PREFIX/modules -c -o simple.o simple.f90
 echo "Cythonizing wrappers..."
 cython simple_wrapper.pyx
