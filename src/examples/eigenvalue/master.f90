@@ -106,7 +106,7 @@ endif
 
 call phaml_create(pde1,nproc,eq_type=EIGENVALUE, &
 !                  spawn_form=DEBUG_SLAVE, debug_command="gdb", &
-                  draw_grid_who = MASTER)
+                  draw_grid_who = NO_ONE)
 
 ! Send prob_param to the slaves
 
