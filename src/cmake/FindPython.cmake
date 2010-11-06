@@ -20,6 +20,7 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(PYTHON DEFAULT_MSG PYTHON_INCLUDE_PATH)
 # this:
 #
 # add_library(simple_wrapper SHARED ${SRC})  # Linux only
+# set_target_properties(simple_wrapper PROPERTIES PREFIX "")
 #
 # to this:
 #
