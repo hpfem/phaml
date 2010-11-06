@@ -9,8 +9,14 @@ set(SRC
     simple_wrapper.c
 )
 
+find_package(PythonLibs REQUIRED)
+find_package(NumPy REQUIRED)
+include_directories(${PYTHON_INCLUDE_PATH} ${NUMPY_INCLUDE_PATH})
+include_directories(${PROJECT_BINARY_DIR}/src)
+
 add_library(simple_wrapper SHARED ${SRC})
 target_link_libraries(simple_wrapper phaml)
+set_target_properties(simple_wrapper PROPERTIES PREFIX "")
 
 if (WITH_ARPACK)
     target_link_libraries(simple_wrapper arpack)
