@@ -19,7 +19,7 @@ set(SRC
     hash1.f90             mpipack1.f90          superlu_interf.f90
     mpipack2.f90          superlutype.f90
     hashext1.f90          mpi_stringf.f90       sysdep.f90
-    hashext2.f90          sysdep.null.f90
+    hashext2.f90
     hbmg.f90
     hp_strategies.f90
     hypre_interf.dum.f90  openmp_stubs.f90      zoltanP_r_f_dum.f90
