@@ -44,7 +44,7 @@ macro(ADD_PYTHON_LIBRARY name)
     IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         # on Mac, we need to use the "-bundle" gcc flag, which is what MODULE
         # does:
-        add_library(${name} MODULE ${name}.cpp ${ARGN})
+        add_library(${name} MODULE ${ARGN})
         # and "-flat_namespace -undefined suppress" link flags, that we need
         # to add by hand:
         set_target_properties(${name} PROPERTIES
