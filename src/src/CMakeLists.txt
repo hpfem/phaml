@@ -1,8 +1,8 @@
 set(SRC
-    arpack.dum.f          parpack.dum.f         dbinom.f
+    dbinom.f
     basis.f90             hypretype.dum.f90     petsc_interf.dum.f90
     blopex_c.dum.f90      hypretype.f90         petsctype.dum.f90
-    krylov.f90            phaml.f90             lapack.f
+    krylov.f90            phaml.f90
     cpusec_f95.f90        lapack_solve.f90      phamltype.f90
     eigen.f90             linsys.f90            pvmpack1.f90
     errest.f90            linsys_io.f90         pvmpack2.f90
@@ -30,5 +30,13 @@ set(SRC
     linsys_util.f90
     make_linsys.f90
     )
+
+if (NOT WITH_ARPACK)
+    set(SRC ${SRC} arpack.dum.f parpack.dum.f)
+endif (NOT WITH_ARPACK)
+
+if (WITH_PHAML_LAPACK)
+    set(SRC ${SRC} lapack.f)
+endif (WITH_PHAML_LAPACK)
 
 add_library(phaml ${SRC})
