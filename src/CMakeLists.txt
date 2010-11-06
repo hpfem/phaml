@@ -11,7 +11,7 @@ if (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
 endif ()
 
 set(WITH_ARPACK yes)
-set(WITH_PHAML_BLAS_LAPACK yes)
+set(WITH_PHAML_BLAS_LAPACK no)
 set(WITH_PYTHON yes)
 
 add_subdirectory(src)
