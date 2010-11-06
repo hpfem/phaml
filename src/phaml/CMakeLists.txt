@@ -14,7 +14,7 @@ find_package(NumPy REQUIRED)
 include_directories(${PYTHON_INCLUDE_PATH} ${NUMPY_INCLUDE_PATH})
 include_directories(${PROJECT_BINARY_DIR}/src)
 
-add_library(simple_wrapper SHARED ${SRC})
+add_python_library(simple_wrapper ${SRC})
 target_link_libraries(simple_wrapper phaml)
 set_target_properties(simple_wrapper PROPERTIES PREFIX "")
 
