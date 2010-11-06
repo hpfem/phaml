@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 2.6)
 project(phaml)
 enable_language(Fortran)
 
+if (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    # for gfortran, we need to use -fPIC
+    set(CMAKE_Fortran_FLAGS "-fPIC")
+endif ()
+
 add_subdirectory(src)
 
 message("\n")
