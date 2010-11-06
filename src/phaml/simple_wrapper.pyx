@@ -37,14 +37,17 @@ REFSOLN_ERREST           = 9
 
 
 cdef class Phaml(object):
+    cdef int allocated #this is set to 0 by Cython
 
     def __cinit__(self, triangle_files, int problem_number=1):
         cdef char *s = triangle_files
         cdef int triangle_files_len = len(triangle_files)
         simple.c_phaml_init(s, &triangle_files_len, &problem_number)
+        self.allocated = 1
 
     def __dealloc__(self):
-        simple.c_phaml_del()
+        if self.allocated == 1:
+            simple.c_phaml_del()
 
     def solve(self, params={}):
         cdef double term_energy_err = params.get("term_energy_err", 1e-5)
