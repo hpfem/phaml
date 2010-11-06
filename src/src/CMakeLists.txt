@@ -2,14 +2,14 @@ set(SRC
     arpack.dum.f          parpack.dum.f         dbinom.f
     basis.f90             hypretype.dum.f90     petsc_interf.dum.f90
     blopex_c.dum.f90      hypretype.f90         petsctype.dum.f90
-    krylov.f90            phaml.f90
+    krylov.f90            phaml.f90             lapack.f
     cpusec_f95.f90        lapack_solve.f90      phamltype.f90
     eigen.f90             linsys.f90            pvmpack1.f90
     errest.f90            linsys_io.f90         pvmpack2.f90
     evaluate.f90          linsystype.f90        quadrules.f90
-    global.f90            refine_adapt.f90
+    global.f90            refine_adapt.f90      calgo582.f
     graphics.dum.f90      loadbal.f90           refine_elements.f90
-    refine_top.f90
+    refine_top.f90        templates.f
     graphmain.f90         messpass.dummy.f90    refine_uniform.f90
     grid.f90
     grid_init.f90         slave.f90
