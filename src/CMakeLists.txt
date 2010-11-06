@@ -10,7 +10,7 @@ if (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_Fortran_FLAGS "-fPIC")
 endif ()
 
-set(WITH_ARPACK no)
+set(WITH_ARPACK yes)
 set(WITH_PHAML_BLAS_LAPACK yes)
 set(WITH_PYTHON yes)
 

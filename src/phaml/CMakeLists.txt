@@ -19,5 +19,5 @@ target_link_libraries(simple_wrapper phaml)
 set_target_properties(simple_wrapper PROPERTIES PREFIX "")
 
 if (WITH_ARPACK)
-    target_link_libraries(simple_wrapper arpack)
+    target_link_libraries(simple_wrapper arpack parpack)
 endif (WITH_ARPACK)
