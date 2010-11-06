@@ -8,8 +8,7 @@ PACKAGE_NAME=phaml
 
 cd src
 
-#./configure --prefix="$SPKG_LOCAL"
-./mkmkfile.sh
+cmake .
 if [ $? -ne 0 ]; then
    echo "Error configuring $PACKAGE_NAME."
    exit 1
@@ -21,14 +20,7 @@ if [ $? -ne 0 ]; then
    exit 1
 fi
 
-cd ../phaml
-./compile
-if [ $? -ne 0 ]; then
-   echo "Error building $PACKAGE_NAME."
-   exit 1
-fi
-cd ..
-
+echo "Installing Phaml into femhub..."
 rm -rf "$SPKG_LOCAL/lib/python/site-packages/phaml/"
 cp -r phaml "$SPKG_LOCAL/lib/python/site-packages/"
 if [ $? -ne 0 ]; then
