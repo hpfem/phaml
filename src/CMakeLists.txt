@@ -10,8 +10,13 @@ endif ()
 
 set(WITH_ARPACK no)
 set(WITH_PHAML_BLAS_LAPACK yes)
+set(WITH_PYTHON yes)
 
 add_subdirectory(src)
+add_subdirectory(examples)
+if (WITH_PYTHON)
+    add_subdirectory(phaml)
+endif (WITH_PYTHON)
 
 message("\n")
 message("Configuration results")
@@ -21,3 +26,4 @@ message("Fortran compiler flags: ${CMAKE_Fortran_FLAGS}")
 message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 message("WITH_ARPACK: ${WITH_ARPACK}")
 message("WITH_PHAML_BLAS_LAPACK: ${WITH_PHAML_BLAS_LAPACK}")
+message("WITH_PYTHON: ${WITH_PYTHON}")
