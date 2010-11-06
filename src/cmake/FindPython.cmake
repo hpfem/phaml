@@ -1,0 +1,13 @@
+execute_process(
+	COMMAND python -c "from distutils.sysconfig import get_python_inc; print get_python_inc()"
+	OUTPUT_VARIABLE PYTHON_SYS_PATH
+	)
+string(STRIP ${PYTHON_SYS_PATH} PYTHON_SYS_PATH)
+FIND_PATH(PYTHON_INCLUDE_PATH Python.h
+    PATHS ${PYTHON_SYS_PATH}
+    NO_DEFAULT_PATH
+    NO_SYSTEM_ENVIRONMENT_PATH
+    )
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(PYTHON DEFAULT_MSG PYTHON_INCLUDE_PATH)

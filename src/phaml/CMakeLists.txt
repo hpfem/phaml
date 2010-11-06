@@ -9,7 +9,7 @@ set(SRC
     simple_wrapper.c
 )
 
-find_package(PythonLibs REQUIRED)
+find_package(Python REQUIRED)
 find_package(NumPy REQUIRED)
 include_directories(${PYTHON_INCLUDE_PATH} ${NUMPY_INCLUDE_PATH})
 include_directories(${PROJECT_BINARY_DIR}/src)
