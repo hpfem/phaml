@@ -5,16 +5,20 @@ import os
 
 from numpy import array
 
-from phaml import Phaml, HP_PRIOR2P_H1, HP_SMOOTH_PRED, HP_REFSOLN_ELEM
+from phaml import (Phaml, HP_PRIOR2P_H1, HP_SMOOTH_PRED, HP_REFSOLN_ELEM,
+        H_ADAPTIVE)
 from phaml.plot import plot_mesh_mpl, plot_sln_mayavi, convert_mesh
 
 problem_number = 3
 params = {
-        "term_energy_err": 1e-4,
+        "term_energy_err": 3e-2,
+        #"max_eq": 30,
         #"hp_strategy": HP_PRIOR2P_H1,
         "hp_strategy": HP_SMOOTH_PRED,
         #"hp_strategy": HP_REFSOLN_ELEM,
-        "num_eval": 3
+        #"hp_strategy": HP_REFSOLN_ELEM,
+        "reftype": H_ADAPTIVE,
+        "num_eval": 1
         }
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

@@ -42,7 +42,8 @@ call phaml_create(this, nproc=1, eq_type=eq_type, &
 end subroutine
 
 subroutine c_phaml_solve(term_energy_err, max_eq, verbose, reftype, &
-    hp_strategy, derefine, degree, error_estimator, lambda0, num_eval) bind(c)
+    hp_strategy, derefine, degree, error_estimator, lambda0, lambda_smallest, &
+    num_eval) bind(c)
 real(c_double), intent(in) :: term_energy_err
 integer(c_int), intent(in) :: max_eq
 integer(c_int), intent(in) :: verbose
@@ -52,6 +53,7 @@ integer(c_int), intent(in) :: derefine
 integer(c_int), intent(in) :: degree
 integer(c_int), intent(in) :: error_estimator
 real(c_double), intent(in) :: lambda0
+integer(c_int), intent(in) :: lambda_smallest
 integer(c_int), intent(in) :: num_eval
 
 integer :: print_grid_when
@@ -59,6 +61,7 @@ integer :: print_error_when
 integer :: print_header_who
 integer :: print_trailer_who
 integer :: print_time_when
+real(my_real) :: lambda
 
 if (verbose == 1) then
     print_grid_when = PHASES
@@ -74,29 +77,39 @@ else
     print_time_when = NEVER
 endif
 
-call phaml_solve_pde(this,                   &
+if (lambda_smallest == 1) then
+    lambda = -huge(0.0_my_real)
+else
+    lambda = lambda0
+endif
+
+call phaml_solve_pde(this,                       &
                      term_energy_err=term_energy_err, &
                      errtype=RELATIVE_ERROR, &
                      max_eq=max_eq, &
-                     print_grid_when=print_grid_when, &
-                     print_grid_who=MASTER,  &
-                     print_error_when=print_error_when,&
-                     print_header_who=print_header_who, &
-                     print_trailer_who=print_trailer_who, &
                      reftype=reftype, &
                      refterm=ONE_REF_HALF_ERRIND, &
                      error_estimator=error_estimator, &
                      derefine=(derefine==1), &
                      hp_strategy=hp_strategy, &
-                     print_time_when=print_time_when, print_time_who=MASTER, &
-                     print_error_what=ENERGY_LINF_L2_ERR, &
-                     print_errest_what=ENERGY_LINF_L2_ERREST, &
-                     print_error_who=MASTER, &
                      degree=degree, &
                      mg_cycles=100, &
                      max_lev=53, &
-                     lambda0 = lambda0, &
-                     num_eval = num_eval)
+                     lambda0 = lambda,          &
+                     num_eval = num_eval, &
+
+                     print_grid_when=print_grid_when, &
+                     print_grid_who=MASTER,  &
+                     print_error_when=print_error_when,&
+                     print_header_who=print_header_who, &
+                     print_trailer_who=print_trailer_who, &
+                     print_eval_when=PHASES, &
+                     print_eval_who=MASTER, &
+                     print_time_when=print_time_when, print_time_who=MASTER, &
+                     print_error_what=ENERGY_LINF_L2_ERR, &
+                     print_errest_what=ENERGY_LINF_L2_ERREST, &
+                     print_error_who=MASTER)
+
 end subroutine
 
 subroutine c_phaml_get_mesh_info(n, nelem) bind(c)
@@ -149,7 +162,7 @@ real(c_double) :: x(n), y(n), values(n)
 
 integer :: i
 
-call phaml_evaluate(this, x, y, values)
+call phaml_evaluate(this, x, y, values, eigen=1)
 end subroutine
 
 
