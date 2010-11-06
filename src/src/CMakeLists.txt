@@ -1,4 +1,5 @@
 set(SRC
+    arpack.dum.f          parpack.dum.f         dbinom.f
     basis.f90             hypretype.dum.f90     petsc_interf.dum.f90
     blopex_c.dum.f90      hypretype.f90         petsctype.dum.f90
     krylov.f90            phaml.f90
@@ -16,7 +17,7 @@ set(SRC
     gridtype.f90          superlu_fwrap.f90
     grid_util.f90         mpi2_stringf.f90      superlu_interf.dum.f90
     hash1.f90             mpipack1.f90          superlu_interf.f90
-    hash2.f90             mpipack2.f90          superlutype.f90
+    mpipack2.f90          superlutype.f90
     hashext1.f90          mpi_stringf.f90       sysdep.f90
     hashext2.f90          sysdep.null.f90
     hbmg.f90
