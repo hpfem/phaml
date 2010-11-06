@@ -16,7 +16,6 @@ include_directories(${PROJECT_BINARY_DIR}/src)
 
 add_python_library(simple_wrapper ${SRC})
 target_link_libraries(simple_wrapper phaml)
-set_target_properties(simple_wrapper PROPERTIES PREFIX "")
 
 if (WITH_ARPACK)
     target_link_libraries(simple_wrapper arpack parpack)
