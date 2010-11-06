@@ -1,7 +1,7 @@
 set(SRC
     dbinom.f
-    basis.f90             hypretype.dum.f90     petsc_interf.dum.f90
-    blopex_c.dum.f90      hypretype.f90         petsctype.dum.f90
+    basis.f90             hypretype.f90     petsc_interf.dum.f90
+    blopex_c.dum.f90      petsctype.dum.f90
     krylov.f90            phaml.f90
     cpusec_f95.f90        lapack_solve.f90      phamltype.f90
     eigen.f90             linsys.f90            pvmpack1.f90
