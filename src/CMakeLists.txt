@@ -9,7 +9,7 @@ if (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
 endif ()
 
 set(WITH_ARPACK no)
-set(WITH_PHAML_LAPACK yes)
+set(WITH_PHAML_BLAS_LAPACK yes)
 
 add_subdirectory(src)
 
@@ -20,4 +20,4 @@ message("Fortran compiler: ${CMAKE_Fortran_COMPILER}")
 message("Fortran compiler flags: ${CMAKE_Fortran_FLAGS}")
 message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 message("WITH_ARPACK: ${WITH_ARPACK}")
-message("WITH_PHAML_LAPACK: ${WITH_PHAML_LAPACK}")
+message("WITH_PHAML_BLAS_LAPACK: ${WITH_PHAML_BLAS_LAPACK}")

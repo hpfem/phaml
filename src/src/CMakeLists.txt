@@ -35,8 +35,8 @@ if (NOT WITH_ARPACK)
     set(SRC ${SRC} arpack.dum.f parpack.dum.f)
 endif (NOT WITH_ARPACK)
 
-if (WITH_PHAML_LAPACK)
-    set(SRC ${SRC} lapack.f)
-endif (WITH_PHAML_LAPACK)
+if (WITH_PHAML_BLAS_LAPACK)
+    set(SRC ${SRC} blas.f lapack.f)
+endif (WITH_PHAML_BLAS_LAPACK)
 
 add_library(phaml ${SRC})
