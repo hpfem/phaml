@@ -18,5 +18,5 @@ add_python_library(simple_wrapper ${SRC})
 target_link_libraries(simple_wrapper phaml)
 
 if (WITH_ARPACK)
-    target_link_libraries(simple_wrapper arpack parpack)
+    target_link_libraries(simple_wrapper arpack)
 endif (WITH_ARPACK)
