@@ -14,6 +14,10 @@ set(WITH_ARPACK yes)
 set(WITH_PHAML_BLAS_LAPACK no)
 set(WITH_PYTHON yes)
 
+if (WITH_ARPACK)
+    find_package(ARPACK REQUIRED)
+endif (WITH_ARPACK)
+
 add_subdirectory(src)
 add_subdirectory(examples)
 if (WITH_PYTHON)
