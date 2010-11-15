@@ -32,8 +32,10 @@ set(SRC
     )
 
 if (NOT WITH_ARPACK)
-    set(SRC ${SRC} arpack.dum.f parpack.dum.f)
+    set(SRC ${SRC} arpack.dum.f)
 endif (NOT WITH_ARPACK)
+# Always use dummy parpack for now:
+set(SRC ${SRC} parpack.dum.f)
 
 if (WITH_PHAML_BLAS_LAPACK)
     set(SRC ${SRC} blas.f lapack.f)
