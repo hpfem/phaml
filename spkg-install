@@ -8,13 +8,7 @@ PACKAGE_NAME=phaml
 
 cd src
 
-PY_VER=`python -c "import sys;print '%d.%d' % sys.version_info[:2]"`
-echo "Detected Python version: $PY_VER"
-
-cmake -DCMAKE_INSTALL_PREFIX="$SPKG_LOCAL" \
-    -DPYTHON_INCLUDE_PATH="$SPKG_LOCAL/include/python$PY_VER" \
-    -DPYTHON_LIBRARY="$SPKG_LOCAL/lib/python2.6/config/libpython2.6.dll.a" \
-    .
+cmake -DCMAKE_INSTALL_PREFIX="$SPKG_LOCAL" .
 if [ $? -ne 0 ]; then
    echo "Error configuring $PACKAGE_NAME."
    exit 1
