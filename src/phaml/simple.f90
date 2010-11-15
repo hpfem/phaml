@@ -171,3 +171,6 @@ call phaml_destroy(this)
 end subroutine
 
 end module python_gets
+
+subroutine etime
+end subroutine
